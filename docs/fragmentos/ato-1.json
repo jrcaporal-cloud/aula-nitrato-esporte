@@ -1,0 +1,42 @@
+[
+  {
+    "id": 10,
+    "sectionName": "Ato I · A Raiz",
+    "number": "",
+    "layout": "prose",
+    "title": "O Que Todo Mundo Sabe",
+    "subtitle": "Seis frases que circulam em consultório. Quantas resistem aos ensaios?",
+    "content": "[[COMP:VerdictVoteSim]]<h4>Fontes</h4><ul><li>Bailey SJ, Winyard P, Vanhatalo A, et al. Dietary nitrate supplementation reduces the O2 cost of low-intensity exercise and enhances tolerance to high-intensity exercise in humans. J Appl Physiol 2009;107(4):1144-1155. — o 16% é tempo até a exaustão: 583 → 675 s em 8 homens jovens saudáveis.</li><li>Lansley KE, Winyard PG, Bailey SJ, et al. Acute dietary nitrate supplementation improves cycling time trial performance. Med Sci Sports Exerc 2011;43(6):1125-1131. — contrarrelógio de 4 km e de 16,1 km em 9 ciclistas de clube: −2,8% e −2,7% do tempo.</li><li>Senefeld JW, Wiggins CC, Regimbal RJ, et al. Ergogenic effect of nitrate supplementation: a systematic review and meta-analysis. Med Sci Sports Exerc 2020;52(10):2250-2261. — meta-análise de 80 estudos: contrarrelógio d 0,086; VO₂pico ≥ 65 mL/kg/min d 0,021 (IC95% −0,103 a 0,144); melhor janela de 2 a 3,5 h antes.</li><li>Wylie LJ, Kelly J, Bailey SJ, et al. Beetroot juice and exercise: pharmacodynamic and dose-response relationships. J Appl Physiol 2013;115(3):325-336. — 4,2 mmol sem efeito; 8,4 e 16,8 mmol com tempo até a falha +14% e +12%; pico de nitrito em 2–3 h.</li><li>Lansley KE, Winyard PG, Fulford J, et al. Dietary nitrate supplementation reduces the O2 cost of walking and running: a placebo-controlled study. J Appl Physiol 2011;110(3):591-600. — suco de beterraba sem nitrato (~0,003 mmol) não alterou nenhuma resposta; tempo até a exaustão +15% com o nitrato.</li><li>Bescós R, Gonzalez-Haro C, Pujol P, et al. Effects of dietary L-arginine intake on cardiorespiratory and metabolic adaptation in athletes. Int J Sport Nutr Exerc Metab 2009;19(4):355-365. — 20,5 g/dia de L-arginina por 3 dias, sem diferença cardiorrespiratória nem no nitrato plasmático.</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 11,
+    "sectionName": "Ato I · A Raiz",
+    "number": "",
+    "layout": "prose",
+    "title": "Quatro Atletas, uma Pergunta",
+    "subtitle": "O suco de beterraba muda a vida de quem?",
+    "content": "[[COMP:CastSim]]<h4>Fontes</h4><ul><li>Personagens fictícios compostos para a aula (Lia, Tomás, Bruno e Helena); idades, esportes e VO₂max definidos no roteiro; durações aproximadas do esforço de cada um. — nenhum dado clínico real.</li><li>Lansley KE, Winyard PG, Bailey SJ, et al. Acute dietary nitrate supplementation improves cycling time trial performance. Med Sci Sports Exerc 2011;43(6):1125-1131. — contrarrelógio de 16,1 km em ~27 min por ciclistas de clube: o esforço de Lia.</li><li>Boorsma RK, Whitfield J, Spriet LL. Beetroot juice supplementation does not improve performance of elite 1500-m runners. Med Sci Sports Exerc 2014;46(12):2326-2334. — corredores de 1.500 m com VO₂pico 80 mL/kg/min e melhor marca 3:56: o perfil de Tomás.</li><li>Senefeld JW, Wiggins CC, Regimbal RJ, et al. Ergogenic effect of nitrate supplementation: a systematic review and meta-analysis. Med Sci Sports Exerc 2020;52(10):2250-2261. — 1.179 homens e 156 mulheres em 80 estudos: a lacuna que cerca o caso de Helena.</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 12,
+    "sectionName": "Ato I · A Raiz",
+    "number": "",
+    "layout": "prose",
+    "title": "O Gás que Virou Nobel",
+    "subtitle": "De produto final inerte a molécula de exercício, em 15 anos.",
+    "content": "[[COMP:NobelTimelineSim]]<h4>Fontes</h4><ul><li>Lundberg JO, Weitzberg E, Lundberg JM, Alving K. Intragastric nitric oxide production in humans: measurements in expelled air. Gut 1994;35(11):1543-1546. — 800–6.000 ppb de NO no ar expelido do estômago, mais de 100× o do ar da boca, −95% com omeprazol.</li><li>Benjamin N, O'Driscoll F, Dougall H, et al. Stomach NO synthesis. Nature 1994;368(6471):502. — mesmo ano, mesma pergunta (marco histórico; nenhum número dele na tela).</li><li>Lundberg JO, Weitzberg E, Gladwin MT. The nitrate-nitrite-nitric oxide pathway in physiology and therapeutics. Nat Rev Drug Discov 2008;7(2):156-167. — nitrato e nitrito, antes tidos como produtos finais inertes do metabolismo do NO, são reciclados a NO.</li><li>Duncan C, Dougall H, Johnston P, et al. Chemical generation of nitric oxide in the mouth from the enterosalivary circulation of dietary nitrate. Nat Med 1995;1(6):546-551. — a redução do nitrato a nitrito fica no dorso posterior da língua do rato e está ausente no rato germ-free.</li><li>The Nobel Assembly at Karolinska Institutet. Press release, 12 October 1998 (Prêmio Nobel de Fisiologia ou Medicina 1998). — Furchgott, Ignarro e Murad; Murad (1977): a nitroglicerina libera NO; a ironia de Alfred Nobel.</li><li>Larsen FJ, Ekblom B, Sahlin K, Lundberg JO, Weitzberg E. Effects of dietary nitrate on blood pressure in healthy volunteers. N Engl J Med 2006;355(26):2792-2793. — carta sobre nitrato da dieta e pressão arterial (marco; sem números).</li><li>Larsen FJ, Weitzberg E, Lundberg JO, Ekblom B. Effects of dietary nitrate on oxygen cost during exercise. Acta Physiol (Oxf) 2007;191(1):59-66. — 9 homens bem treinados, NaNO₃ por 3 dias: VO₂ submáximo 2,98 → 2,82 L/min (−5,4%), eficiência bruta 19,7 → 21,1%, “altamente surpreendente”.</li><li>Bailey SJ, Winyard P, Vanhatalo A, et al. Dietary nitrate supplementation reduces the O2 cost of low-intensity exercise and enhances tolerance to high-intensity exercise in humans. J Appl Physiol 2009;107(4):1144-1155. — 500 mL/dia de suco de beterraba por 6 dias (5,6 mmol/dia): tempo até a exaustão 583 → 675 s, nitrito 140 → 273 nM; placebo de groselha-preta.</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 13,
+    "sectionName": "Ato I · A Raiz",
+    "number": "",
+    "layout": "prose",
+    "title": "O Mapa da Aula",
+    "subtitle": "A viagem de um íon, em seis atos: a pergunta não é “funciona?”.",
+    "content": "[[COMP:AulaMapSim]]<h4>Fontes</h4><ul><li>Senefeld JW, Wiggins CC, Regimbal RJ, et al. Ergogenic effect of nitrate supplementation: a systematic review and meta-analysis. Med Sci Sports Exerc 2020;52(10):2250-2261. — efeito médio d 0,174 (IC95% 0,120–0,229) em 80 estudos, “objetivamente pequeno”; com VO₂pico ≥ 65 mL/kg/min, d 0,021.</li></ul>",
+    "cards": []
+  }
+]

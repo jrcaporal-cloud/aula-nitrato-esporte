@@ -1,0 +1,56 @@
+{
+  "40": {
+    "minutos": 4,
+    "mensagem": "Em dois anos o campo trocou o sal pelo alimento, a groselha pelo placebo sem nitrato e a exaustão pelo contrarrelógio. O +16% de tempo até a exaustão de 2009 convive com um ganho de 2,7% em contrarrelógio de ciclistas de clube em 2011: não é que o efeito encolheu, é que a régua ficou honesta. É uma autocorreção metodológica que dá para datar.",
+    "pergunta": "Se o placebo ainda fosse a groselha-preta, o que a Exeter de 2009 não poderia afirmar?",
+    "transicao": "Resta a pergunta de qualquer régua: por que o tempo até a exaustão dá números tão maiores que a prova?"
+  },
+  "41": {
+    "minutos": 4,
+    "mensagem": "O tempo até a exaustão devolve cerca de 15 vezes mais por cento que o contrarrelógio, e essa taxa varia ~28% entre atletas. O ruído cresce junto (CV 26,6% contra 3,35%), então o TTE detecta tão bem quanto o contrarrelógio: o erro é comunicar o por cento, não medir com ele.",
+    "pergunta": "Um estudo mostra +14% de TTE. Que faixa de ganho na prova você diria ao atleta?",
+    "transicao": "Se o ganho de prova é pequeno, a dose importa: quanto basta e quanto é desperdício?"
+  },
+  "42": {
+    "minutos": 4,
+    "mensagem": "Wylie 2013: 4,2 mmol não fez nada, 8,4 mmol deu +14% de tolerância e 16,8 mmol deu +12%. O custo de O₂ continuou caindo, o desempenho não: dose-resposta bioquímica não é dose-resposta de desempenho. Consensos: 5–9 mmol (IOC) e 8–16 mmol agudo (Delphi); 1 mmol = 62 mg.",
+    "pergunta": "Por que dobrar a dose não dobra o efeito, se o nitrito no sangue continua subindo?",
+    "transicao": "Dose resolvida, falta o relógio: quando tomar e por quantos dias?"
+  },
+  "43": {
+    "minutos": 3,
+    "mensagem": "O nitrito pica em 2–3 h e o nitrato do músculo em 3 h; a janela do agrupado é 2–3,5 h. O uso crônico não gera tolerância no custo de O₂ e na pressão, mas o ganho de desempenho agrupado é incerto, e somado a três semanas ou mais de treino não acrescenta (SMD 0,18, n.s.).",
+    "pergunta": "Um atleta toma o shot no aquecimento. Em que ponto da curva ele está quando a prova começa?",
+    "transicao": "Com dose e hora definidas, o que dizem as meta-análises sobre o efeito médio?"
+  },
+  "44": {
+    "minutos": 4,
+    "mensagem": "As meta-análises concordam no padrão: tempo até a exaustão grande (d ~0,32), contrarrelógio pequeno (d 0,09; −2 s, n.s.) e atletas perto de zero (0,04 contra 0,25 nos não atletas). Cuidado: SMD de desfechos diferentes não se compara, e a certeza é baixa.",
+    "pergunta": "O que muda numa meta-análise quando ela decide quem entra e qual desfecho agrupa?",
+    "transicao": "Se quem entra decide o resultado, vamos olhar para quem é o treinado: o teto."
+  },
+  "45": {
+    "minutos": 4,
+    "mensagem": "O efeito cai de forma contínua com o VO₂max: ~3% perto de 40, ~1,5% perto de 50 e ~0 acima de 65 (d 0,02). Não é interruptor: o corte de 60 é de consenso e o de 65 vem das faixas da meta-análise. A farmacocinética também responde menos no mais apto, e há quatro hipóteses fisiológicas para o teto.",
+    "pergunta": "Onde você colocaria a Lia, o Tomás e a Helena nessa curva?",
+    "transicao": "No fim da curva está o atleta de elite. O que a literatura tem para ele?"
+  },
+  "46": {
+    "minutos": 3,
+    "mensagem": "Peacock, Christensen, Boorsma e os demais: todos cruzam o zero, com n de 8 a 24, e a maioria não tinha poder para ~1% (Hopkins: 16–65 atletas). Dois corredores de Boorsma ganharam 5–7 s, mas o teste varia ~8 s: nulo na média não é nulo em todo mundo, e respondedor ainda não está medido.",
+    "pergunta": "Um estudo com n = 8 e p = 0,6 prova que o nitrato não funciona em atleta de elite?",
+    "transicao": "Menos oxigênio disponível muda esse quadro? Vamos à altitude."
+  },
+  "47": {
+    "minutos": 3,
+    "mensagem": "A hipóxia é onde a hipótese é mais forte: Vanhatalo 2011 devolveu a tolerância do nível do mar e Shannon 2016 melhorou 12 de 12 corredores. Mas Arnold e MacLeod, em atletas de VO₂ ≥60–66, não acharam nada, a FiO₂ não moderou o efeito e a meta-análise não viu efeito em SpO₂ nem em VO₂max.",
+    "pergunta": "Plausibilidade fisiológica forte basta para recomendar? O que falta?",
+    "transicao": "Da câmara de hipóxia para a estrada: o que aconteceu em Londres?"
+  },
+  "48": {
+    "minutos": 3,
+    "mensagem": "Lane 2014 simulou o contrarrelógio olímpico de Londres: cafeína +3–4%, beterraba −0,4%. O comunicado de Exeter de 2012 relata atletas usando o suco, mas é relato do próprio grupo de pesquisa, não ensaio. Uso por atleta de elite não é prova de eficácia.",
+    "pergunta": "O que o comunicado de 2012 prova, e o que ele não consegue provar?",
+    "transicao": "Fechamos a resistência. E o sprint, a força, o jogo?"
+  }
+}

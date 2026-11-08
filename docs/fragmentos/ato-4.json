@@ -1,0 +1,62 @@
+[
+ {
+  "id": 50,
+  "sectionName": "Ato IV · O Sprint e a Força",
+  "number": "",
+  "layout": "prose",
+  "title": "Bola Rolando",
+  "subtitle": "O nitrato ajuda quem corre, freia e arranca por noventa minutos?",
+  "content": "[[COMP:TeamSportSim]]<h4>Fontes</h4><ul><li>Wylie LJ, Mohr M, Krustrup P, et al. Dietary nitrate supplementation improves team sport-specific intense intermittent exercise performance. Eur J Appl Physiol 2013;113(7):1673-1684. — 14 jogadores recreacionais; Yo-Yo IR1 +4,2% (1.704 vs 1.636 m).</li><li>Nyakayiru J, Jonvik KL, Trommelen J, et al. Beetroot Juice Supplementation Improves High-Intensity Intermittent Type Exercise Performance in Trained Soccer Players. Nutrients 2017;9(3):314. — 32 futebolistas; Yo-Yo IR1 +3,4% (1.574 → 1.623 m).</li><li>Thompson C, Vanhatalo A, Jell H, et al. Dietary nitrate supplementation improves sprint and high-intensity intermittent running performance. Nitric Oxide 2016;61:55-61. — 36 jogadores; sprint de 5 m −2,3% (1,73 vs 1,77 s); Yo-Yo +3,9% com desvio-padrão de ~500 m.</li><li>Alsharif NS, Clifford T, Alhebshi A, et al. Effects of Dietary Nitrate Supplementation on Performance during Single and Repeated Bouts of Short-Duration High-Intensity Exercise: A Systematic Review and Meta-Analysis of Randomised Controlled Trials. Antioxidants (Basel) 2023;12(6):1194. — Yo-Yo IR1 agrupado SMD 0,17 (IC95% 0,09 a 0,24; k = 4); potência média 0,20; pico de potência 0,01.</li><li>Bruno é personagem fictício composto para a aula (meio-campista amador); não é paciente nem dado clínico real.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 51,
+  "sectionName": "Ato IV · O Sprint e a Força",
+  "number": "",
+  "layout": "prose",
+  "title": "O Protocolo Decide",
+  "subtitle": "O mesmo suco muda o sprint ou não, conforme o desenho do intervalo?",
+  "content": "[[COMP:SprintProtocolSim]]<h4>Fontes</h4><ul><li>Wylie LJ, Bailey SJ, Kelly J, et al. Influence of beetroot juice supplementation on intermittent exercise performance. Eur J Appl Physiol 2016;116(2):415-425. — 10 homens de esporte coletivo, 8,2 mmol/dia por 5 dias; potência média +5% só em 24 × 6 s com 24 s de pausa (568 vs 539 W); 7 × 30 s (558 vs 562 W) e 6 × 60 s (374 vs 375 W) sem efeito.</li><li>Smith K, Muggeridge DJ, Easton C, Ross MD. An acute dose of inorganic dietary nitrate does not improve high-intensity, intermittent exercise performance in temperate or hot and humid conditions. Eur J Appl Physiol 2019;119(3):723-733. — 12 homens, 6,2 mmol 3 h antes; 20 sprints de 6 s; sem efeito a 22 °C nem a 30 °C com 70% de umidade (tendência contra o suco no calor).</li><li>Martin K, Smee D, Thompson KG, Rattray B. No improvement of repeated-sprint performance with dietary nitrate. Int J Sports Physiol Perform 2014;9(5):845-850. — 16 atletas; sprints de 8 s com pausa de 30 s até a exaustão: 13 vs 15 sprints com beterraba e menos trabalho total (49,2 vs 57,8 kJ).</li><li>Bruno é personagem fictício composto para a aula; não é dado clínico real.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 52,
+  "sectionName": "Ato IV · O Sprint e a Força",
+  "number": "",
+  "layout": "prose",
+  "title": "Mais Rápido, não Mais Forte",
+  "subtitle": "Se a força máxima fica igual, o que o nitrato muda no músculo?",
+  "content": "[[COMP:PowerVelocitySim]]<h4>Fontes</h4><ul><li>Lago-Rodríguez Á, Domínguez R, Ramos-Álvarez JJ, et al. The Effect of Dietary Nitrate Supplementation on Isokinetic Torque in Adults: A Systematic Review and Meta-Analysis. Nutrients 2020;12(10):3022. — 5 estudos, 60 participantes; pico de torque isocinético ES −0,01.</li><li>Haider G, Folland JP. Nitrate supplementation enhances the contractile properties of human skeletal muscle. Med Sci Sports Exerc 2014;46(12):2234-2243. — força voluntária máxima inalterada, com twitch evocado maior.</li><li>Coggan AR, Leibowitz JL, Kadkhodayan A, et al. Effect of acute dietary nitrate intake on maximal knee extensor speed and power in healthy men and women. Nitric Oxide 2015;48:16-21. — velocidade máxima 13,1 → 14,5 rad/s; potência máxima 7,44 → 7,90 W/kg; pico +4% a 6,28 rad/s.</li><li>Coggan AR, Baranauskas MN, Hinrichs RJ, Liu Z, Carter SJ. Effect of dietary nitrate on human muscle power: a systematic review and individual participant data meta-analysis. J Int Soc Sports Nutr 2021;18(1):66. — 19 estudos, 268 pessoas; g 0,45 (0,30 a 0,61), ≈ 5%; dose aguda 0,54 × várias doses 0,22.</li><li>Coggan AR, Hoffman RL, Gray DA, et al. A Single Dose of Dietary Nitrate Increases Maximal Knee Extensor Angular Velocity and Power in Healthy Older Men and Women. J Gerontol A Biol Sci Med Sci 2020;75(6):1154-1160. — idosos: velocidade +10,9%, potência +4,4%.</li><li>Coggan AR, Broadstreet SR, Mikhalkova D, et al. Dietary nitrate-induced increases in human muscle power: high versus low responders. Physiol Rep 2018;6(2):e13575. — resposta individual de −9,6% a +26,8% (média +4,4 ± 8,1%); r = 0,60 com o aumento de nitrito. Na nuvem da tela só os extremos, a média e o DP são do estudo; os pontos intermediários são ilustrativos.</li><li>As curvas de torque e de potência são ilustrativas (hipérbole de Hill normalizada); só as âncoras de velocidade máxima e de potência máxima vêm de Coggan 2015.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 53,
+  "sectionName": "Ato IV · O Sprint e a Força",
+  "number": "",
+  "layout": "prose",
+  "title": "A Elite da Potência",
+  "subtitle": "O atleta de potência de elite responde como o amador?",
+  "content": "[[COMP:PowerEliteSim]]<h4>Fontes</h4><ul><li>Jonvik KL, Nyakayiru J, van Dijk JW, et al. Repeated-sprint performance and plasma responses following beetroot juice supplementation do not differ between recreational, competitive and elite sprint athletes. Eur J Sport Sci 2018;18(4):524-533. — 52 atletas (20 recreacionais, 22 patinadores de nível nacional, 10 ciclistas de pista olímpicos); 3 × Wingate; pico 1.338 vs 1.333 W (P = 0,62); tempo até o pico ≈ −2,8% (P = 0,007); sem interação com o nível (P > 0,30). A curva da tela é ilustrativa, com a diferença ampliada ~5×.</li><li>Xie Y, Han Y, Du Q, Xu K. Dietary Nitrate Supplementation and Exercise Performance in Athletes: A Systematic Review and Meta-Analysis of Randomised Controlled Trials. Sports (Basel) 2026;14(10):466. — 45 ECRs, 659 atletas (Tier ≥ 2); pico de potência g 0,13 (−0,07 a 0,32) e potência média g 0,04 (−0,13 a 0,21); GRADE baixo.</li><li>Eroglu MN, Pancar S, López-Torres O, Fernández-Elías VE. The Effects of Beetroot Juice Supplementation on Performance and Fatigue During Single and Repeated Sprints: A Systematic Review and Meta-Analysis. Nutrients 2026;18(15):2513. — 23 ECRs, 401 participantes; tempo até o pico (4 estudos de Wingate) SMD −0,92 (−1,29 a −0,54); sem efeito em pico, potência média, salto e sprints de 10 e 20 m; certeza baixa a muito baixa.</li><li>Poon ET, Iu JC, Sum WM, et al. Dietary Nitrate Supplementation and Exercise Performance: An Umbrella Review of 20 Published Systematic Reviews with Meta-analyses. Sports Med 2025;55(5):1213-1231. — tempo até o pico de potência SMD −0,76 (−1,18 a −0,33).</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 54,
+  "sectionName": "Ato IV · O Sprint e a Força",
+  "number": "",
+  "layout": "prose",
+  "title": "O Dia de Judô",
+  "subtitle": "Quem ajuda na primeira luta ajuda na quinta?",
+  "content": "[[COMP:JudoDaySim]]<h4>Fontes</h4><ul><li>Karabağ S, Sajedi H, Güler O, et al. The Effect of Acute Beetroot Juice and Caffeine Supplementation on Specific Judo Performance During a Simulated Competition Day in Judo Athletes. Eur J Sport Sci 2026;26(11):e70278. — 35 judocas, 4 condições, 5 randoris + SJFT: cafeína melhorou as lutas 1–3 e não a 5; suco melhorou a 5; os dois melhoraram 1–3 e 5. Estudo único e recente, sem réplica; o resumo não traz dose nem valores numéricos. Rotulado como hipótese.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 55,
+  "sectionName": "Ato IV · O Sprint e a Força",
+  "number": "",
+  "layout": "prose",
+  "title": "O Arco da Insuficiência Cardíaca",
+  "subtitle": "Por que um piloto positivo não vira terapia?",
+  "content": "[[COMP:PilotLessonSim]]<h4>Fontes</h4><ul><li>Zamani P, Rawat D, Shiva-Kumar P, et al. Effect of inorganic nitrate on exercise capacity in heart failure with preserved ejection fraction. Circulation 2015;131(4):371-380. — 17 pacientes, dose única de suco (12,9 mmol); VO₂pico 12,6 vs 11,6 mL/kg/min.</li><li>Borlaug BA, Anstrom KJ, Lewis GD, et al. Effect of Inorganic Nitrite vs Placebo on Exercise Capacity Among Patients With Heart Failure With Preserved Ejection Fraction: The INDIE-HFpEF Randomized Clinical Trial. JAMA 2018;320(17):1764-1773. — 105 pacientes; nitrito INALADO (não nitrato oral); VO₂pico 13,5 vs 13,7 (−0,20; IC95% −0,56 a 0,16).</li><li>Zamani P, Shah SJ, Cohen JB, et al. Potassium Nitrate in Heart Failure With Preserved Ejection Fraction: A Randomized Clinical Trial. JAMA Cardiol 2025;10(3):284-289. — 84 pacientes, KNO₃ oral por 6 semanas; VO₂pico 10,23 vs 10,17 (P = 0,73).</li><li>Pavitt MJ, Tanner RJ, Lewis A, et al. Oral nitrate supplementation to enhance pulmonary rehabilitation in COPD: ON-EPIC a multicentre, double-blind, placebo-controlled, randomised parallel group study. Thorax 2020;75(7):547-555. — 165 pacientes com DPOC; shuttle walk com reabilitação, efeito de 30 m (IC95% 10 a 40).</li><li>Derella CC, Anderson KC, Woessner MN, et al. Ergogenic Effect of Nitrate Supplementation in Clinical Populations: A Systematic Review and Meta-Analysis. Nutrients 2024;16(22):3832. — 22 estudos; 46% individualmente positivos, agrupado nulo (VO₂pico SMD 0,002).</li></ul>",
+  "cards": []
+ }
+]

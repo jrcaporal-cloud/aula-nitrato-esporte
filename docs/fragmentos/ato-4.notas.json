@@ -1,0 +1,38 @@
+{
+ "50": {
+  "minutos": 4,
+  "mensagem": "Em esporte coletivo o sinal mais repetido é o Yo-Yo: +4,2% em Wylie 2013, +3,4% em 32 futebolistas e −2,3% no sprint de 5 m com 36 jogadores. Somados, o efeito é pequeno, SMD 0,17, e o desvio-padrão entre jogadores é dez vezes o ganho. Para o Bruno, caso fictício, isso é um ganho modesto no teste; o jogo em si não foi medido.",
+  "pergunta": "Um ganho de 3 a 4% no Yo-Yo muda o que você diria ao Bruno antes do jogo?",
+  "transicao": "Mas esforço repetido não é uma categoria só: o desenho do sprint e da pausa decide o resultado."
+ },
+ "51": {
+  "minutos": 4,
+  "mensagem": "Com a mesma suplementação, só o protocolo de 24 sprints de 6 s com 24 s de pausa subiu a potência média (+5%); 7 × 30 s e 6 × 60 s ficaram em zero. No calor úmido e no sprint até a exaustão também não houve ganho. Só três combinações foram testadas, então não dá para separar o peso da duração e o da pausa.",
+  "pergunta": "Qual dos três protocolos mais se parece com o jogo do Bruno, e o que isso muda na expectativa?",
+  "transicao": "Se o sprint curto responde, vale perguntar o que exatamente o nitrato mexe no músculo."
+ },
+ "52": {
+  "minutos": 4,
+  "mensagem": "A força máxima e o torque isocinético não mudam (ES −0,01); a velocidade máxima sobe de 13,1 para 14,5 rad/s e a potência de 7,44 para 7,90 W/kg. Na meta-análise de dados individuais o efeito é de cerca de 5% (g 0,45), com resposta individual de −9,6% a +26,8%. As curvas são ilustrativas; as âncoras são medidas.",
+  "pergunta": "Se a força máxima não muda, em que modalidade esse ganho de velocidade faria diferença?",
+  "transicao": "A média de uns 5% vale para o amador; e para quem já é de elite na potência?"
+ },
+ "53": {
+  "minutos": 3,
+  "mensagem": "Em Jonvik 2018 todos os níveis, do recreacional ao olímpico, chegaram ao pico de potência cerca de 2,8% mais cedo, com o pico igual. Em 45 ECRs com 659 atletas não há efeito agrupado no pico (g 0,13), e a certeza em sprint é baixa a muito baixa. O sinal que sobra é chegar antes, não chegar mais alto.",
+  "pergunta": "Chegar ao pico 2,8% mais cedo vale alguma coisa numa prova de pista de poucos segundos?",
+  "transicao": "Sai a potência, entra um esporte de combate: um dia inteiro de lutas."
+ },
+ "54": {
+  "minutos": 3,
+  "mensagem": "Em 35 judocas e 5 lutas no dia, a cafeína ajudou nas lutas 1 a 3 e não na 5; o suco de beterraba ajudou justamente na 5. É um estudo único e recente, sem réplica, e o resumo não traz dose nem valores numéricos. Tratem como hipótese a testar, não como regra.",
+  "pergunta": "Que outros esportes têm um dia de várias provas em que esse raciocínio de começo e fim faria sentido?",
+  "transicao": "Do tatame, vamos para o outro extremo: pacientes, onde um piloto positivo é só o começo."
+ },
+ "55": {
+  "minutos": 3,
+  "mensagem": "Um piloto de 17 pacientes com ICFEp deu VO₂pico 12,6 contra 11,6; o ensaio de 105 pacientes, com nitrito inalado, deu 13,5 contra 13,7, e o de 84 com nitrato oral por 6 semanas, 10,23 contra 10,17. Na DPOC o ganho de 30 m veio junto com a reabilitação, e o agrupado clínico é nulo, embora 46% dos estudos individuais pareçam positivos. Piloto positivo não é terapia.",
+  "pergunta": "Que sinais num estudo pequeno e positivo deveriam fazer a gente desconfiar antes de recomendar?",
+  "transicao": "Daí a pergunta do próximo ato: como ler e criticar esses ensaios."
+ }
+}

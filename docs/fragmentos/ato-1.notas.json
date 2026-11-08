@@ -1,0 +1,26 @@
+{
+  "10": {
+    "minutos": 4,
+    "mensagem": "Seis frases que ouvimos em aula, em blog e em consultório. Peço o voto da sala antes de virar cada resposta; o número que decide cada uma vem de um ensaio, e todas falham de algum jeito. O voto fica guardado no navegador e volta no slide 87.",
+    "pergunta": "Qual destas frases vocês já repetiram a um paciente ou a um atleta?",
+    "transicao": "Se as frases falham, o que muda de pessoa para pessoa? Vamos conhecer quatro atletas."
+  },
+  "11": {
+    "minutos": 3,
+    "mensagem": "Quatro casos fictícios, Lia, Tomás, Bruno e Helena, com esforços de 4 minutos a 2 horas. Eles voltam no Ato VI, onde cada um recebe o que a evidência permite dizer. Por ora, guardem o dilema de cada um.",
+    "pergunta": "Se só um deles pudesse tomar o suco, quem vocês escolheriam, e por quê?",
+    "transicao": "Antes de julgar o suco, vale ver como o nitrato chegou à fisiologia do exercício."
+  },
+  "12": {
+    "minutos": 3,
+    "mensagem": "Nitrato e nitrito eram vistos como produtos finais. Em 1994 o estômago aparece como fábrica de NO, em 1995 a língua e suas bactérias, em 1998 vem o Nobel do NO. Só em 2007 o gás chega ao exercício, com 5,4% a menos de O₂, e em 2009 Exeter troca o sal pela beterraba.",
+    "pergunta": "Por que os próprios autores chamaram o achado de 2007 de “altamente surpreendente”?",
+    "transicao": "Com a história no bolso, o mapa: por onde esse íon vai viajar nas próximas horas."
+  },
+  "13": {
+    "minutos": 2,
+    "mensagem": "O íon viaja pelo corpo no Ato II, vai à pista e ao sprint nos Atos III e IV, ao contra-interrogatório no V e sai com um veredito prático no VI. A pergunta da aula não é “funciona?”, é para quem e quando. O prêmio realista: efeito médio pequeno, perto de zero em elite de endurance.",
+    "pergunta": "Que dado mudaria a opinião de vocês sobre o suco de beterraba?",
+    "transicao": "Ato II, a viagem do íon: o nitrato entra pela boca e começa a mudar."
+  }
+}

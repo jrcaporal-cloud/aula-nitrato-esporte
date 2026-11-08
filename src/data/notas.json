@@ -1,0 +1,320 @@
+{
+  "0": {
+    "minutos": 1,
+    "mensagem": "Abertura: a aula segue um ânion da beterraba até o músculo e depois pergunta, com os ensaios na mão, para quem e quando isso faz diferença.",
+    "pergunta": "Quem aqui já recomendou suco de beterraba antes de uma prova?",
+    "transicao": "Começamos com uma votação."
+  },
+  "10": {
+    "minutos": 4,
+    "mensagem": "Seis frases que ouvimos em aula, em blog e em consultório. Peço o voto da sala antes de virar cada resposta; o número que decide cada uma vem de um ensaio, e todas falham de algum jeito. O voto fica guardado no navegador e volta no slide 87.",
+    "pergunta": "Qual destas frases vocês já repetiram a um paciente ou a um atleta?",
+    "transicao": "Se as frases falham, o que muda de pessoa para pessoa? Vamos conhecer quatro atletas."
+  },
+  "11": {
+    "minutos": 3,
+    "mensagem": "Quatro casos fictícios, Lia, Tomás, Bruno e Helena, com esforços de 4 minutos a 2 horas. Eles voltam no Ato VI, onde cada um recebe o que a evidência permite dizer. Por ora, guardem o dilema de cada um.",
+    "pergunta": "Se só um deles pudesse tomar o suco, quem vocês escolheriam, e por quê?",
+    "transicao": "Antes de julgar o suco, vale ver como o nitrato chegou à fisiologia do exercício."
+  },
+  "12": {
+    "minutos": 3,
+    "mensagem": "Nitrato e nitrito eram vistos como produtos finais. Em 1994 o estômago aparece como fábrica de NO, em 1995 a língua e suas bactérias, em 1998 vem o Nobel do NO. Só em 2007 o gás chega ao exercício, com 5,4% a menos de O₂, e em 2009 Exeter troca o sal pela beterraba.",
+    "pergunta": "Por que os próprios autores chamaram o achado de 2007 de “altamente surpreendente”?",
+    "transicao": "Com a história no bolso, o mapa: por onde esse íon vai viajar nas próximas horas."
+  },
+  "13": {
+    "minutos": 2,
+    "mensagem": "O íon viaja pelo corpo no Ato II, vai à pista e ao sprint nos Atos III e IV, ao contra-interrogatório no V e sai com um veredito prático no VI. A pergunta da aula não é “funciona?”, é para quem e quando. O prêmio realista: efeito médio pequeno, perto de zero em elite de endurance.",
+    "pergunta": "Que dado mudaria a opinião de vocês sobre o suco de beterraba?",
+    "transicao": "Ato II, a viagem do íon: o nitrato entra pela boca e começa a mudar."
+  },
+  "20": {
+    "minutos": 4,
+    "mensagem": "Há duas fábricas de NO. A clássica, com L-arginina e NOS, precisa de oxigênio. A alternativa, com nitrato e nitrito, rende mais onde falta oxigênio e sobra ácido. Não são redundantes: cobrem faixas diferentes de O₂, e a segunda é favorecida, não exclusiva, de hipóxia e acidose.",
+    "pergunta": "Em que momento do exercício o músculo perde o O₂ que a NOS precisa?",
+    "transicao": "Para a via alternativa funcionar, o nitrato do prato precisa chegar ao sangue. Quanto tempo isso leva?"
+  },
+  "21": {
+    "minutos": 3,
+    "mensagem": "O nitrato pica no plasma em 1–2 h, o nitrito em 2–3 h e o nitrato muscular em 3 h; a meia-vida é de ~5 h e o plasma volta ao basal em ~24 h. É daí que vem a janela de 2–4 h. Nas doses de Wylie 2013, 4,2 mmol não fez nada e 16,8 não rendeu mais que 8,4. A forma das curvas é ilustrativa; os picos são dado.",
+    "pergunta": "Quem aqui já orientou tomar o shot 15 minutos antes da prova?",
+    "transicao": "O nitrito pica depois do nitrato. Quem o fabrica? Vamos à boca."
+  },
+  "22": {
+    "minutos": 4,
+    "mensagem": "Cerca de 25% do nitrato do plasma é puxado pela sialina para a saliva, que chega a 5× e depois a 11× o plasma. As bactérias da língua reduzem o nitrato a nitrito; o estômago ácido gera NO. O mamífero não tem a enzima: sem a boca, a via não fecha.",
+    "pergunta": "Que hábito de higiene bucal dos seus pacientes poderia interferir nessa etapa?",
+    "transicao": "Se a boca é o interruptor, dá para desligá-lo. É o que o enxaguante faz."
+  },
+  "23": {
+    "minutos": 3,
+    "mensagem": "Cuspir a saliva por 3 h abole o nitrito e a queda de pressão; clorexidina por 7 dias derruba o nitrito oral em 90%, o plasmático em 25% e sobe a PA em 2 a 3,5 mmHg. O mecanismo é sólido. A cadeia até o desempenho atlético, não: nenhum ensaio a fechou.",
+    "pergunta": "Quantos dos seus pacientes usam enxaguante antisséptico todos os dias?",
+    "transicao": "Com o nitrito na circulação, falta saber quem o converte em NO, e onde. A resposta: onde falta oxigênio."
+  },
+  "24": {
+    "minutos": 3,
+    "mensagem": "A hemoglobina reduz o nitrito com taxa máxima a 40–60% de saturação; a mioglobina é ~36× mais rápida; a XOR só liga em hipóxia; e em pH 6,6 a EC₅₀ do nitrito cai de 200 para 40 µM. É um sistema que liga onde o tecido pede. Os dados são de bancada e de animais; os limiares do gráfico são ilustrativos.",
+    "pergunta": "Por que um sensor com pico no meio da faixa de saturação serve melhor que um que só liga na anoxia?",
+    "transicao": "O nitrito chega onde falta O₂. Mas há um reservatório que ignoramos por décadas: o próprio músculo."
+  },
+  "25": {
+    "minutos": 3,
+    "mensagem": "O músculo guarda ~4× o nitrato e ~29× o nitrito do plasma, tem sialina e XOR, e o exercício intenso gasta ~39% do estoque quando ele está cheio. No rato que corre, o nitrato cai e o nitrito sobe: um candidato ao vasodilatador procurado há mais de 100 anos.",
+    "pergunta": "Se o compartimento é o músculo, o que o nitrito plasmático realmente mede?",
+    "transicao": "O nitrato chegou à fibra e virou sinal. O que muda lá dentro? O custo de O₂ cai."
+  },
+  "26": {
+    "minutos": 3,
+    "mensagem": "Até 2007, o custo de O₂ de uma carga submáxima era tratado como constante. Larsen deu nitrato de sódio a 9 homens treinados por 3 dias: o VO₂ caiu de 2,98 para 2,82 L/min (−5,4%) e a eficiência bruta subiu de 19,7 para 21,1%, sem lactato maior. Bailey 2009 mostrou que o componente lento do exercício intenso também encolhe.",
+    "pergunta": "Se o lactato não subiu, de onde veio a energia que sobrou?",
+    "transicao": "Como a mesma carga custa menos oxigênio? A primeira resposta, a mitocôndria, não sobreviveu à replicação."
+  },
+  "27": {
+    "minutos": 3,
+    "mensagem": "Em 2011 o mecanismo parecia resolvido: P/O maior, menos ANT, menos vazamento de prótons. Em 2016, com 7 dias de suco, o VO₂ do corpo caiu ~3% do mesmo jeito, mas nenhum índice mitocondrial mudou; só o H₂O₂ subiu. O fenótipo replicou, o mecanismo não, e por isso nenhum valor de P/O aparece na tela.",
+    "pergunta": "O que concluir quando o efeito sobrevive e a explicação cai?",
+    "transicao": "Se não foi a mitocôndria, o custo caiu na própria contração. Vamos olhar dentro do músculo."
+  },
+  "28": {
+    "minutos": 4,
+    "mensagem": "Com espectroscopia de ³¹P, na mesma carga, a PCr caiu 5,2 mM com nitrato contra 8,1 mM com placebo; o turnover de ATP foi de 296 para 192 µM/s e o pH não mudou. Na carga intensa, o componente lento do VO₂ foi de 209 para 100 mL/min e o tempo até a exaustão, de 586 para 734 s. A contração ficou mais barata; não chegou mais oxigênio.",
+    "pergunta": "Por que o pH inalterado fecha a porta para a explicação da glicólise compensatória?",
+    "transicao": "Mais barata em qual fibra? Há um fio condutor: a fibra rápida."
+  },
+  "29": {
+    "minutos": 4,
+    "mensagem": "O fio é a fibra tipo II. No camundongo, Ca²⁺ e força só na fibra rápida; em 28 músculos de rato, o ganho de fluxo acompanha a % de fibra rápida (r = 0,74); a PO₂ do capilar sobe 43% só no gastrocnêmio. Em humanos, a 115 rpm o tempo limite subiu 22% e a 35 rpm nada, e os dois tríceps desviam para lados opostos.",
+    "pergunta": "O que isso sugere para quem tem músculo de fibra lenta, como o fundista?",
+    "transicao": "Boa parte disso veio de roedor. O que replica em gente?"
+  },
+  "30": {
+    "minutos": 3,
+    "mensagem": "A mesma pergunta em duas espécies. O fenótipo replicou em humanos: twitch de 164,0 contra 136,5 N, força maior a baixa frequência, e Haider viu o mesmo em 19 homens. Mas SERCA, DHPR, RyR, calsequestrina e GSH:GSSG não mudaram: sabemos o quê, não sabemos por quê.",
+    "pergunta": "Vale mais um mecanismo emprestado do camundongo ou admitir que não sabemos?",
+    "transicao": "Mesmo com o efeito real, ele chega pequeno. Vamos seguir o sinal degrau por degrau."
+  },
+  "31": {
+    "minutos": 3,
+    "mensagem": "Em idosos, o nitrato plasmático sobe 1051%, o nitrito 138%, o NO exalado 111% e a potência máxima só 4,4%. Cada degrau é um gargalo, por isso mais nitrato não vira mais desempenho em linha reta. No atleta de elite o primeiro degrau já entra menor (r = 0,86 com a aptidão) e o último vira zero: 26,4 contra 26,3 km.",
+    "pergunta": "Quanto espaço de melhora existe neste indivíduo?",
+    "transicao": "O primeiro degrau depende da boca, e a boca de cada um é diferente."
+  },
+  "32": {
+    "minutos": 3,
+    "mensagem": "Dez dias de nitrato mudaram a boca: Neisseria +351%, Rothia +127%, Prevotella −60%. Em jovens saudáveis, mais bactéria não deu resposta exagerada de nitrito plasmático: há um limiar funcional. Nas mulheres, só a direção: mais nitrito basal e maior resposta. E fica a pergunta: sete dias de washout bastam num cruzado?",
+    "pergunta": "Se a boca muda em dez dias, de onde parte o segundo braço do cruzado?",
+    "transicao": "Uma última comparação: e se o doador de NO for a arginina, em vez do nitrato?"
+  },
+  "33": {
+    "minutos": 2,
+    "mensagem": "Cerca de 0,43 g/dia de nitrato por 3 dias reduziram o VO₂ em 5,4%. L-arginina a 20,5 g/dia, quase 50 vezes mais massa, não mudou nada, nem o nitrato plasmático. A arginina alimenta a via que depende de O₂; o nitrato, a que funciona melhor quando falta oxigênio.",
+    "pergunta": "Por que o músculo em exercício intenso favorece a via do nitrato e não a da arginina?",
+    "transicao": "A viagem do íon termina aqui. Agora a pista: o que os ensaios de endurance mostram quando o atleta corre contra o relógio?"
+  },
+  "40": {
+    "minutos": 4,
+    "mensagem": "Em dois anos o campo trocou o sal pelo alimento, a groselha pelo placebo sem nitrato e a exaustão pelo contrarrelógio. O +16% de tempo até a exaustão de 2009 convive com um ganho de 2,7% em contrarrelógio de ciclistas de clube em 2011: não é que o efeito encolheu, é que a régua ficou honesta. É uma autocorreção metodológica que dá para datar.",
+    "pergunta": "Se o placebo ainda fosse a groselha-preta, o que a Exeter de 2009 não poderia afirmar?",
+    "transicao": "Resta a pergunta de qualquer régua: por que o tempo até a exaustão dá números tão maiores que a prova?"
+  },
+  "41": {
+    "minutos": 4,
+    "mensagem": "O tempo até a exaustão devolve cerca de 15 vezes mais por cento que o contrarrelógio, e essa taxa varia ~28% entre atletas. O ruído cresce junto (CV 26,6% contra 3,35%), então o TTE detecta tão bem quanto o contrarrelógio: o erro é comunicar o por cento, não medir com ele.",
+    "pergunta": "Um estudo mostra +14% de TTE. Que faixa de ganho na prova você diria ao atleta?",
+    "transicao": "Se o ganho de prova é pequeno, a dose importa: quanto basta e quanto é desperdício?"
+  },
+  "42": {
+    "minutos": 4,
+    "mensagem": "Wylie 2013: 4,2 mmol não fez nada, 8,4 mmol deu +14% de tolerância e 16,8 mmol deu +12%. O custo de O₂ continuou caindo, o desempenho não: dose-resposta bioquímica não é dose-resposta de desempenho. Consensos: 5–9 mmol (IOC) e 8–16 mmol agudo (Delphi); 1 mmol = 62 mg.",
+    "pergunta": "Por que dobrar a dose não dobra o efeito, se o nitrito no sangue continua subindo?",
+    "transicao": "Dose resolvida, falta o relógio: quando tomar e por quantos dias?"
+  },
+  "43": {
+    "minutos": 3,
+    "mensagem": "O nitrito pica em 2–3 h e o nitrato do músculo em 3 h; a janela do agrupado é 2–3,5 h. O uso crônico não gera tolerância no custo de O₂ e na pressão, mas o ganho de desempenho agrupado é incerto, e somado a três semanas ou mais de treino não acrescenta (SMD 0,18, n.s.).",
+    "pergunta": "Um atleta toma o shot no aquecimento. Em que ponto da curva ele está quando a prova começa?",
+    "transicao": "Com dose e hora definidas, o que dizem as meta-análises sobre o efeito médio?"
+  },
+  "44": {
+    "minutos": 4,
+    "mensagem": "As meta-análises concordam no padrão: tempo até a exaustão grande (d ~0,32), contrarrelógio pequeno (d 0,09; −2 s, n.s.) e atletas perto de zero (0,04 contra 0,25 nos não atletas). Cuidado: SMD de desfechos diferentes não se compara, e a certeza é baixa.",
+    "pergunta": "O que muda numa meta-análise quando ela decide quem entra e qual desfecho agrupa?",
+    "transicao": "Se quem entra decide o resultado, vamos olhar para quem é o treinado: o teto."
+  },
+  "45": {
+    "minutos": 4,
+    "mensagem": "O efeito cai de forma contínua com o VO₂max: ~3% perto de 40, ~1,5% perto de 50 e ~0 acima de 65 (d 0,02). Não é interruptor: o corte de 60 é de consenso e o de 65 vem das faixas da meta-análise. A farmacocinética também responde menos no mais apto, e há quatro hipóteses fisiológicas para o teto.",
+    "pergunta": "Onde você colocaria a Lia, o Tomás e a Helena nessa curva?",
+    "transicao": "No fim da curva está o atleta de elite. O que a literatura tem para ele?"
+  },
+  "46": {
+    "minutos": 3,
+    "mensagem": "Peacock, Christensen, Boorsma e os demais: todos cruzam o zero, com n de 8 a 24, e a maioria não tinha poder para ~1% (Hopkins: 16–65 atletas). Dois corredores de Boorsma ganharam 5–7 s, mas o teste varia ~8 s: nulo na média não é nulo em todo mundo, e respondedor ainda não está medido.",
+    "pergunta": "Um estudo com n = 8 e p = 0,6 prova que o nitrato não funciona em atleta de elite?",
+    "transicao": "Menos oxigênio disponível muda esse quadro? Vamos à altitude."
+  },
+  "47": {
+    "minutos": 3,
+    "mensagem": "A hipóxia é onde a hipótese é mais forte: Vanhatalo 2011 devolveu a tolerância do nível do mar e Shannon 2016 melhorou 12 de 12 corredores. Mas Arnold e MacLeod, em atletas de VO₂ ≥60–66, não acharam nada, a FiO₂ não moderou o efeito e a meta-análise não viu efeito em SpO₂ nem em VO₂max.",
+    "pergunta": "Plausibilidade fisiológica forte basta para recomendar? O que falta?",
+    "transicao": "Da câmara de hipóxia para a estrada: o que aconteceu em Londres?"
+  },
+  "48": {
+    "minutos": 3,
+    "mensagem": "Lane 2014 simulou o contrarrelógio olímpico de Londres: cafeína +3–4%, beterraba −0,4%. O comunicado de Exeter de 2012 relata atletas usando o suco, mas é relato do próprio grupo de pesquisa, não ensaio. Uso por atleta de elite não é prova de eficácia.",
+    "pergunta": "O que o comunicado de 2012 prova, e o que ele não consegue provar?",
+    "transicao": "Fechamos a resistência. E o sprint, a força, o jogo?"
+  },
+  "50": {
+    "minutos": 4,
+    "mensagem": "Em esporte coletivo o sinal mais repetido é o Yo-Yo: +4,2% em Wylie 2013, +3,4% em 32 futebolistas e −2,3% no sprint de 5 m com 36 jogadores. Somados, o efeito é pequeno, SMD 0,17, e o desvio-padrão entre jogadores é dez vezes o ganho. Para o Bruno, caso fictício, isso é um ganho modesto no teste; o jogo em si não foi medido.",
+    "pergunta": "Um ganho de 3 a 4% no Yo-Yo muda o que você diria ao Bruno antes do jogo?",
+    "transicao": "Mas esforço repetido não é uma categoria só: o desenho do sprint e da pausa decide o resultado."
+  },
+  "51": {
+    "minutos": 4,
+    "mensagem": "Com a mesma suplementação, só o protocolo de 24 sprints de 6 s com 24 s de pausa subiu a potência média (+5%); 7 × 30 s e 6 × 60 s ficaram em zero. No calor úmido e no sprint até a exaustão também não houve ganho. Só três combinações foram testadas, então não dá para separar o peso da duração e o da pausa.",
+    "pergunta": "Qual dos três protocolos mais se parece com o jogo do Bruno, e o que isso muda na expectativa?",
+    "transicao": "Se o sprint curto responde, vale perguntar o que exatamente o nitrato mexe no músculo."
+  },
+  "52": {
+    "minutos": 4,
+    "mensagem": "A força máxima e o torque isocinético não mudam (ES −0,01); a velocidade máxima sobe de 13,1 para 14,5 rad/s e a potência de 7,44 para 7,90 W/kg. Na meta-análise de dados individuais o efeito é de cerca de 5% (g 0,45), com resposta individual de −9,6% a +26,8%. As curvas são ilustrativas; as âncoras são medidas.",
+    "pergunta": "Se a força máxima não muda, em que modalidade esse ganho de velocidade faria diferença?",
+    "transicao": "A média de uns 5% vale para o amador; e para quem já é de elite na potência?"
+  },
+  "53": {
+    "minutos": 3,
+    "mensagem": "Em Jonvik 2018 todos os níveis, do recreacional ao olímpico, chegaram ao pico de potência cerca de 2,8% mais cedo, com o pico igual. Em 45 ECRs com 659 atletas não há efeito agrupado no pico (g 0,13), e a certeza em sprint é baixa a muito baixa. O sinal que sobra é chegar antes, não chegar mais alto.",
+    "pergunta": "Chegar ao pico 2,8% mais cedo vale alguma coisa numa prova de pista de poucos segundos?",
+    "transicao": "Sai a potência, entra um esporte de combate: um dia inteiro de lutas."
+  },
+  "54": {
+    "minutos": 3,
+    "mensagem": "Em 35 judocas e 5 lutas no dia, a cafeína ajudou nas lutas 1 a 3 e não na 5; o suco de beterraba ajudou justamente na 5. É um estudo único e recente, sem réplica, e o resumo não traz dose nem valores numéricos. Tratem como hipótese a testar, não como regra.",
+    "pergunta": "Que outros esportes têm um dia de várias provas em que esse raciocínio de começo e fim faria sentido?",
+    "transicao": "Do tatame, vamos para o outro extremo: pacientes, onde um piloto positivo é só o começo."
+  },
+  "55": {
+    "minutos": 3,
+    "mensagem": "Um piloto de 17 pacientes com ICFEp deu VO₂pico 12,6 contra 11,6; o ensaio de 105 pacientes, com nitrito inalado, deu 13,5 contra 13,7, e o de 84 com nitrato oral por 6 semanas, 10,23 contra 10,17. Na DPOC o ganho de 30 m veio junto com a reabilitação, e o agrupado clínico é nulo, embora 46% dos estudos individuais pareçam positivos. Piloto positivo não é terapia.",
+    "pergunta": "Que sinais num estudo pequeno e positivo deveriam fazer a gente desconfiar antes de recomendar?",
+    "transicao": "Daí a pergunta do próximo ato: como ler e criticar esses ensaios."
+  },
+  "60": {
+    "minutos": 4,
+    "mensagem": "O nitrato é o suplemento com o melhor placebo da nutrição esportiva: suco passado por resina que troca o ânion, igual em cor, sabor, açúcar e RMN, com 0,002 mmol por 250 mL. O desenho de três braços mostra que o suco sem nitrato se comporta como não tomar nada. O campo corrigiu o próprio placebo em poucos anos.",
+    "pergunta": "Quando alguém diz que não dá para cegar suco de beterraba, o que o Purolite A520e responde? E por que suco e sal ainda não são equivalentes?",
+    "transicao": "Placebo bom resolve metade do problema. A outra metade é saber se o participante percebeu o que tomou: dá para cegar?"
+  },
+  "61": {
+    "minutos": 3,
+    "mensagem": "O cego é mensurável: o índice de Bang vai de −1 a 1 e deu 0,16 e 0,08 em 12 velocistas; em 10 escaladores só 3 acertaram o suco, o que é compatível com o acaso. A urina vermelha aparece nos dois braços, porque a resina tira o ânion e deixa o pigmento. O problema é que quase ninguém reporta o número.",
+    "pergunta": "Nos ensaios que você lê, o número do cego é reportado? O que muda quando o estudo diz que mediu e não mostra?",
+    "transicao": "Com placebo e cego sob controle, o desenho cruzado entra em cena, e traz armadilhas próprias."
+  },
+  "62": {
+    "minutos": 3,
+    "mensagem": "No cruzado cada pessoa é o próprio controle, mas a segunda visita ganha 1,2% de graça sem familiarização, e a ordem fixa fabrica efeito. Sorteando a ordem, o bônus se anula. No nitrato há ainda um efeito de ordem biológico: dez dias de suplemento mudam o microbioma salivar que ativa o segundo braço.",
+    "pergunta": "Sete dias de washout bastam para o microbioma voltar ao basal? A literatura não responde.",
+    "transicao": "Depois do desenho, o instrumento: o teste que mede o desempenho pode inflar o efeito e o ruído ao mesmo tempo."
+  },
+  "63": {
+    "minutos": 3,
+    "mensagem": "O tempo até a exaustão tem CV de 13 a 27%; o contrarrelógio, de 2 a 3,4%. Ele amplifica o efeito e o ruído na mesma proporção, por isso a sensibilidade é semelhante: o erro é usar o percentual do TTE como se fosse percentual de prova. Para enxergar 1% no contrarrelógio faltam centenas de atletas (cálculo nosso).",
+    "pergunta": "Que efeito você aceitaria como relevante para o seu atleta, e quantos atletas seriam necessários para vê-lo?",
+    "transicao": "Se o teste é ruidoso e o efeito pequeno, o tamanho da amostra decide tudo. E a amostra típica é de dez."
+  },
+  "64": {
+    "minutos": 3,
+    "mensagem": "O n mediano é 10 por grupo, só 15% calculam a amostra e só 14% declaram desfecho primário, com 30 testes por artigo. Com 10 atletas, o poder para um efeito real de 1% no contrarrelógio é de cerca de 9% (cálculo ilustrativo). O que passa por p < 0,05 vem exagerado, e a inferência por magnitude não conserta isso.",
+    "pergunta": "Um estudo nulo com 10 atletas prova que o nitrato não funciona? E um estudo positivo, prova que funciona?",
+    "transicao": "Com poder baixo e erro de medida alto, qualquer gráfico de barras individuais parece mostrar respondedores. Será que existem?"
+  },
+  "65": {
+    "minutos": 4,
+    "mensagem": "Com a mesma resposta verdadeira em todos, o erro de medida sozinho gera uma dispersão como a da literatura, com respondedores e não respondedores que não existem. O teste correto compara o desvio-padrão das mudanças entre o braço ativo e o placebo; medir duas vezes por condição encolhe a ilusão. Respondedor ainda não é uma entidade medida.",
+    "pergunta": "Dos seus pacientes que melhoraram com o suplemento, quantos você mediu mais de uma vez por condição?",
+    "transicao": "Se o erro de medida fabrica efeito, o que mais pode estar fabricando? O que não foi publicado."
+  },
+  "66": {
+    "minutos": 4,
+    "mensagem": "Na meta-análise mais rigorosa em atletas, o funil de potência de pico é assimétrico: Egger z 3,03, p 0,01. O trim-and-fill imputa 5 estudos e o efeito agrupado cai para praticamente zero. Só 1 dos 45 ECRs tem baixo risco de viés e a certeza GRADE é baixa a muito baixa. Os pontos do funil na tela são ilustrativos; os agregados são do artigo.",
+    "pergunta": "O que você faz com um efeito pequeno cuja existência depende de estudos que talvez estejam numa gaveta?",
+    "transicao": "Com tudo isso, por que as meta-análises discordam? Os dados são os mesmos."
+  },
+  "67": {
+    "minutos": 3,
+    "mensagem": "Cinco meta-análises, uma literatura. O diamante muda conforme o desfecho (TTE ou contrarrelógio) e a população (saudáveis ou atletas), sem que nenhum estudo seja adicionado ou removido da tela. Gao 2021 concluiu que beneficia, com o contrarrelógio em −1,98 s não significativo; Xie 2026 não achou nada em atletas.",
+    "pergunta": "Antes de citar uma meta-análise: qual desfecho foi agrupado e quem entrou?",
+    "transicao": "Falta um recorte que quase nunca aparece nas meta-análises: elas, as mulheres."
+  },
+  "68": {
+    "minutos": 3,
+    "mensagem": "Foram 1.179 homens e 156 mulheres em 80 estudos, com 79% dos conjuntos só de homens e 6 só de mulheres. O nulo em mulheres (d 0,116, p 0,347) é provavelmente espúrio, por falta de dado. O ensaio desenhado para testar sexo não achou diferença; com o ciclo menstrual controlado, os ensaios foram nulos. Ausência de dado não é ausência de efeito. Helena é um caso fictício.",
+    "pergunta": "Quantas das 156 mulheres se pareciam com a Helena? O que você diria a ela com a evidência que existe?",
+    "transicao": "Chegamos ao fim do contra-interrogatório. Agora, o veredito prático: dose, hora, alimentos e o que dizer a cada paciente."
+  },
+  "80": {
+    "minutos": 4,
+    "mensagem": "A beterraba dá nome ao suco, mas por quilo a rúcula tem cerca de 4 vezes mais nitrato (4.800 contra 1.100 mg/kg, medianas europeias). Um shot equivale a uns 83 g de rúcula ou 360 g de beterraba, e a mesma alface varia de 565 a 3.093 mg/kg conforme o cultivo. O atleta de elite come só ~1,7 mmol por dia.",
+    "pergunta": "Quanto nitrato tinha a salada que o seu atleta comeu hoje?",
+    "transicao": "Se a comida varia tanto, e o produto de prateleira? O rótulo confere?"
+  },
+  "81": {
+    "minutos": 3,
+    "mensagem": "Em 24 produtos de 21 empresas, só 5 deram 5 mmol ou mais por porção, de forma consistente, e do menor ao maior a diferença foi de ~50×. O shot de 70 mL conferiu (6,41 mmol), um produto de 8,06 mmol no rótulo mediu 2,39, e o pó típico entrega cerca de 1 mmol. A posição dos frascos na gôndola é ilustrativa: o estudo não publica o valor de cada um.",
+    "pergunta": "Que laudo você pediria antes de indicar um produto?",
+    "transicao": "Com a dose na mão, falta o quando: o protocolo do dia."
+  },
+  "82": {
+    "minutos": 4,
+    "mensagem": "Em mmol: o Delphi diz 8–16 agudo ou 4–16 por dia, com a última dose 2–4 h antes; o IOC fala em 5–9; acima de ~8 mmol o efeito não cresceu. No dia, evitar enxaguante antisséptico, esperar urina avermelhada e testar tudo no treino. Nitrito plasmático não é exame para pedir. Os horários e esquemas dos quatro são exemplos de cálculo.",
+    "pergunta": "Se o atleta toma o shot no aquecimento, onde estará o nitrito na hora da largada?",
+    "transicao": "Agora aplicamos tudo aos quatro personagens da aula."
+  },
+  "83": {
+    "minutos": 4,
+    "mensagem": "Para cada caso dá para dizer chance, magnitude e certeza, sem prometer efeito: Lia tem um possível ganho pequeno; Tomás, média perto de zero; Bruno depende do protocolo; Helena tem poucos dados em mulheres e em prova longa. A certeza GRADE é baixa a moderada em todos.",
+    "pergunta": "Qual dos quatro você aconselharia a testar primeiro, e como mediria o resultado?",
+    "transicao": "O esporte permite tudo isso? Vamos às regras."
+  },
+  "84": {
+    "minutos": 3,
+    "mensagem": "O nitrato não consta na Lista WADA 2026 (0 ocorrências em 26 páginas). O AIS o põe no Grupo A, o IOC reconhece boa evidência e a ISSN, em 2018, evidência limitada ou mista. No Brasil, o texto original da IN 28/2018 não lista sal de nitrato e o enquadramento do pó de beterraba não foi conferido. A Lista 2027 também precisa ser reconferida antes da aula.",
+    "pergunta": "Por que três instituições chegam a três graus de evidência?",
+    "transicao": "Fora da pista, o mesmo mecanismo tem outro desfecho: a pressão arterial."
+  },
+  "85": {
+    "minutos": 3,
+    "mensagem": "Como contexto: PAS −4,4 mmHg na meta-análise, −7,7 mmHg em hipertensos com ~6,4 mmol por dia durante 4 semanas e −4,5 mmHg na diastólica com a dieta japonesa. É o mesmo mecanismo da pista, e o enxaguante com clorexidina faz o caminho oposto: +2 a +3,5 mmHg.",
+    "pergunta": "O que o enxaguante nos ensina sobre o papel da boca?",
+    "transicao": "Antes de fechar, cinco mitos que ainda circulam no consultório."
+  },
+  "86": {
+    "minutos": 3,
+    "mensagem": "Cinco mitos viram do avesso: depletar não esvazia o músculo; o nitrito plasmático não mede o efeito; a força voluntária máxima não muda; o VO₂max não sobe (3,72 para 3,62 L/min); e o pó de beterraba não é dose (cerca de 1 mmol em 5 g).",
+    "pergunta": "Qual desses mitos você já ouviu de um paciente ou de um colega?",
+    "transicao": "Voltamos às seis frases do começo da aula."
+  },
+  "87": {
+    "minutos": 3,
+    "mensagem": "Lemos os votos registrados neste navegador e viramos as seis frases. Todas são falsas como ditas: o 16% é de outro teste, o efeito encolhe com o preparo, mais dose não é melhor, não são os pigmentos, arginina não é nitrato e o pico chega horas depois. Sem votos registrados, a tela mostra só as respostas.",
+    "pergunta": "Alguém mudou de ideia ao longo da aula?",
+    "transicao": "Seis mensagens para levar."
+  },
+  "88": {
+    "minutos": 3,
+    "mensagem": "Seis mensagens: 16% é tempo até a exaustão; o efeito encolhe com o preparo; 8–16 mmol agudo, 2–4 h antes; dose é mmol e o rótulo erra; respondedor ainda não é uma entidade medida; mulheres e elite de endurance são lacunas.",
+    "pergunta": "Qual mensagem muda uma conduta sua na segunda-feira?",
+    "transicao": "E a frase final."
+  },
+  "99": {
+    "minutos": 1,
+    "mensagem": "Fecho: o efeito é pequeno e depende de quem, em que prova e com que dose; o método é o que a aula deixa de grande.",
+    "pergunta": "Perguntas?",
+    "transicao": "Obrigado."
+  }
+}

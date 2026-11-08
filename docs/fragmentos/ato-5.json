@@ -1,0 +1,92 @@
+[
+  {
+    "id": 60,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "O Melhor Placebo da Nutrição Esportiva",
+    "subtitle": "O suco depletado de nitrato prova que o efeito é do ânion, não da beterraba",
+    "content": "[[COMP:PlaceboSim]]<h4>Fontes</h4><ul><li>Gilchrist M, Winyard PG, Fulford J, et al. Dietary nitrate supplementation improves reaction time in type 2 diabetes: development and application of a novel nitrate-depleted beetroot juice placebo. Nitric Oxide 2014;40:67-74. — resina Purolite A520e, 7,5 × 0,002 mmol por 250 mL e a validação do placebo (estudo em diabéticos tipo 2: serve só para o placebo).</li><li>Lansley KE, Winyard PG, Fulford J, et al. Dietary nitrate supplementation reduces the O2 cost of walking and running: a placebo-controlled study. J Appl Physiol 2011;110(3):591-600. — desenho de três braços (controle, depletado, beterraba): o efeito é do nitrato.</li><li>Bailey SJ, Winyard P, Vanhatalo A, et al. Dietary nitrate supplementation reduces the O2 cost of low-intensity exercise and enhances tolerance to high-intensity exercise in humans. J Appl Physiol 2009;107(4):1144-1155. — placebo de groselha-preta e TTE 675 ± 203 s × 583 ± 145 s.</li><li>Christensen PM, Nyberg M, Bangsbo J. Influence of nitrate supplementation on VO₂ kinetics and endurance of elite cyclists. Scand J Med Sci Sports 2013;23(1):e21-e31. — também usou groselha-preta como placebo.</li><li>Flueck JL, Bogdanova A, Mettler S, Perret C. Is beetroot juice more effective than sodium nitrate? The effects of equimolar nitrate dosages of nitrate-rich beetroot juice and sodium nitrate on oxygen consumption during exercise. Appl Physiol Nutr Metab 2016;41(4):421-429. — VO₂ ~4% menor com suco que com sal, com o mesmo nitrito plasmático.</li><li>Flueck JL, Gallo A, Moelijker N, et al. Influence of Equimolar Doses of Beetroot Juice and Sodium Nitrate on Time Trial Performance in Handcycling. Nutrients 2019;11(7):1642. — contrarrelógio de 10 km sem diferença, com água como placebo.</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 61,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "Dá para Cegar?",
+    "subtitle": "A cor e o sabor da beterraba quebram o cego? Dá para medir, e deu quase perfeito",
+    "content": "[[COMP:BlindingSim]]<h4>Fontes</h4><ul><li>Bang H, Ni L, Davis CE. Assessment of blinding in clinical trials. Control Clin Trials 2004;25(2):143-156. — índice de cegamento de −1 a 1.</li><li>López-Samanes Á, Moreno-Pérez D, Aguilar-Navarro M, et al. Acute beetroot juice ingestion fails to improve sprint performance and neuromuscular function in trained male sprinters: a randomized, double-blind, placebo-controlled study. J Int Soc Sports Nutr 2026;23(1):2674220. — índice de Bang 0,16 (placebo) e 0,08 (beterraba).</li><li>Berlanga LA, Lopez-Samanes A, Martin-Lopez J, et al. Dietary Nitrate Ingestion Does Not Improve Neuromuscular Performance in Male Sport Climbers. J Hum Kinet 2023;87:47-57. — 3 de 10 participantes acertaram o suco tomado.</li><li>Watts AR, Lennard MS, Mason SL, et al. Beeturia and the biological fate of beetroot pigments. Pharmacogenetics 1993;3(6):302-311. — 4 de 100 com urina visivelmente vermelha após 60 mg de extrato (os “10–14%” são citação secundária).</li><li>Eastwood MA, Nyhlin H. Beeturia and colonic oxalic acid. QJM 1995;88(10):711-717. — a beterrúria depende de absorção colônica, não do nitrato.</li><li>Brennan SN, Foster JM, Gerardo RT, et al. Dietary nitrate supplementation does not improve resistance exercise performance in resistance-trained women. Eur J Appl Physiol 2026;126(7):3677-3689. — avaliou o cego sem reportar o resultado; mulheres na fase folicular precoce, sem efeito.</li><li>Xie Y, Han Y, Du Q, Xu K. Dietary Nitrate Supplementation and Exercise Performance in Athletes: A Systematic Review and Meta-Analysis of Randomised Controlled Trials. Sports (Basel) 2026;14(10):466. — 13 de 45 ECRs com reservas sobre placebo, checagem do cego ou enxaguante.</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 62,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "O Cruzado e seus Efeitos",
+    "subtitle": "Cada pessoa é o próprio controle, até a ordem dos braços entrar na conta",
+    "content": "[[COMP:CrossoverSim]]<h4>Fontes</h4><ul><li>Hopkins WG, Schabort EJ, Hawley JA. Reliability of power in physical performance tests. Sports Med 2001;31(3):211-234. — +1,2% entre as duas primeiras tentativas e +0,2% nas seguintes.</li><li>Vanhatalo A, Blackwell JR, L'Heureux JE, et al. Nitrate-responsive oral microbiome modulates nitric oxide homeostasis and blood pressure in humans. Free Radic Biol Med 2018;124:21-30. — 10 dias de ~12 mmol/dia: Neisseria +351%, Rothia +127%, Prevotella −60%, Veillonella −65%.</li><li>Bescos R, Ashworth A, Clarke C, et al. Effects of Chlorhexidine mouthwash on the oral microbiome. Sci Rep 2020;10(1):5254. — exemplo de cruzado com ordem fixa, não randomizado.</li><li>Nyakayiru J, Jonvik KL, Trommelen J, et al. Beetroot Juice Supplementation Improves High-Intensity Intermittent Type Exercise Performance in Trained Soccer Players. Nutrients 2017;9(3):314. — cruzado com 32 jogadores, washout de pelo menos 8 dias e desfecho primário: +3,4%.</li><li>Xie Y, Han Y, Du Q, Xu K. Dietary Nitrate Supplementation and Exercise Performance in Athletes: A Systematic Review and Meta-Analysis of Randomised Controlled Trials. Sports (Basel) 2026;14(10):466. — washout mediano de 7 dias (4 a 14) nos ECRs com atletas.</li><li>Senefeld JW, Wiggins CC, Regimbal RJ, et al. Ergogenic Effect of Nitrate Supplementation: A Systematic Review and Meta-analysis. Med Sci Sports Exerc 2020;52(10):2250-2261. — todos os 80 estudos com familiarização, 95% com sessão-controle.</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 63,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "O Ruído do Teste",
+    "subtitle": "O tempo até a exaustão amplifica o efeito e o ruído na mesma proporção",
+    "content": "[[COMP:TestNoiseSim]]<h4>Fontes</h4><ul><li>Jeukendrup A, Saris WH, Brouns F, Kester AD. A new validated endurance performance test. Med Sci Sports Exerc 1996;28(2):266-270. — CV de 26,6% (TTE) × 3,35% (contrarrelógio).</li><li>Laursen PB, Francis GT, Abbiss CR, Newton MJ, Nosaka K. Reliability of time-to-exhaustion versus time-trial running tests in runners. Med Sci Sports Exerc 2007;39(8):1374-1379. — CV do TTE de 13,2–15,1% × contrarrelógio de 2,0–3,3%.</li><li>Currell K, Jeukendrup AE. Validity, reliability and sensitivity of measures of sporting performance. Sports Med 2008;38(4):297-316. — diferença entre 1º e 2º lugar menor que 1%.</li><li>Amann M, Hopkins WG, Marcora SM. Similar sensitivity of time to exhaustion and time-trial time to changes in endurance. Med Sci Sports Exerc 2008;40(3):574-578. — TTE −45 ± 13% × contrarrelógio +5,7 ± 1,6% (e +123 ± 37% × −4,1 ± 1,4%).</li><li>Hinckson EA, Hopkins WG. Reliability of time to exhaustion analyzed with critical-power and log-log modeling. Med Sci Sports Exerc 2005;37(4):696-701. — conversão TTE → contrarrelógio da ordem de 1:10 (usada de forma ilustrativa).</li><li>Lansley KE, Winyard PG, Bailey SJ, et al. Acute dietary nitrate supplementation improves cycling time trial performance. Med Sci Sports Exerc 2011;43(6):1125-1131. — contrarrelógios de 4 km e 16,1 km: −2,8% e −2,7%.</li><li>Hopkins WG, Hawley JA, Burke LM. Design and analysis of research on sport performance enhancement. Med Sci Sports Exerc 1999;31(3):472-485. — dobrar o CV do teste quadruplica a amostra.</li><li>Lohse KR, Sainani KL, Taylor JA, et al. Systematic review of the use of “magnitude-based inference” in sports science and medicine. PLoS One 2020;15(6):e0235318. — n típico de 10 por grupo (marcador da escala de atletas).</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 64,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "Dez Atletas e uma Esperança",
+    "subtitle": "Com dez atletas por grupo, o estudo típico quase não enxerga um efeito de 1%",
+    "content": "[[COMP:StatPowerSim]]<h4>Fontes</h4><ul><li>Lohse KR, Sainani KL, Taylor JA, et al. Systematic review of the use of “magnitude-based inference” in sports science and medicine. PLoS One 2020;15(6):e0235318. — n mediano 10 por grupo, 15% com cálculo de amostra, 30 testes por artigo, 14% com desfecho primário, erro tipo I de 12–22% e 22–45%.</li><li>Sainani KL. The Problem with “Magnitude-based Inference”. Med Sci Sports Exerc 2018;50(10):2166-2176. — a MBI não tem taxas de erro superiores ao teste de hipótese.</li><li>Jeukendrup A, Saris WH, Brouns F, Kester AD. A new validated endurance performance test. Med Sci Sports Exerc 1996;28(2):266-270. — CV de 3,35% do contrarrelógio usado no cálculo de poder (cálculo e simulação nossos, ilustrativos).</li><li>Hopkins WG, Hawley JA, Burke LM. Design and analysis of research on sport performance enhancement. Med Sci Sports Exerc 1999;31(3):472-485. — dobrar o CV do teste quadruplica a amostra.</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 65,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "Respondedor Verdadeiro × Falso",
+    "subtitle": "Se o erro de medida gera respondedores, como saber quem responde de verdade?",
+    "content": "[[COMP:ResponderSim]]<h4>Fontes</h4><ul><li>Coggan AR, Broadstreet SR, Mikhalkova D, et al. Dietary nitrate-induced increases in human muscle power: high versus low responders. Physiol Rep 2018;6(2):e13575. — potência máxima +4,4 ± 8,1%, de −9,6% a +26,8%.</li><li>Atkinson G, Batterham AM. True and false interindividual differences in the physiological response to an intervention. Exp Physiol 2015;100(6):577-588. — diferença individual verdadeira = comparar o DP das mudanças entre os braços.</li><li>Hecksteden A, Pitsch W, Rosenberger F, Meyer T. Repeated testing for the assessment of individual response to exercise training. J Appl Physiol 2018;124(6):1567-1579. — testes repetidos; 11 de 20 classificados de forma consistente entre métodos.</li><li>Miller G, Collins S. Long-Term Efficacy and Variability of Converting Nitrate in Beetroot Juice to Plasma Nitrite. Curr Dev Nutr 2020;4(Suppl 2):439 (resumo de congresso). — variação semanal do nitrito de −7,4% a +1.324% na mesma pessoa (n = 6 no braço ativo).</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 66,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "O Funil que Zera o Efeito",
+    "subtitle": "O único sinal positivo em atletas some quando se imputa o que não foi publicado",
+    "content": "[[COMP:FunnelSim]]<h4>Fontes</h4><ul><li>Xie Y, Han Y, Du Q, Xu K. Dietary Nitrate Supplementation and Exercise Performance in Athletes: A Systematic Review and Meta-Analysis of Randomised Controlled Trials. Sports (Basel) 2026;14(10):466. — g agrupado 0,13 (−0,07 a 0,32), Egger z 3,03 (p = 0,01), 5 estudos imputados, RoB 2 e GRADE; os 12 pontos do funil são ilustrativos.</li><li>Senefeld JW, Wiggins CC, Regimbal RJ, et al. Ergogenic Effect of Nitrate Supplementation: A Systematic Review and Meta-analysis. Med Sci Sports Exerc 2020;52(10):2250-2261. — Egger p = 0,07.</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 67,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "Mesmos Dados, Vereditos Opostos",
+    "subtitle": "Cinco meta-análises, uma literatura: quem entra e qual desfecho decidem o diamante",
+    "content": "[[COMP:MetaDisagreeSim]]<h4>Fontes</h4><ul><li>Hoon MW, Johnson NA, Chapman PG, Burke LM. The effect of nitrate supplementation on exercise performance in healthy individuals: a systematic review and meta-analysis. Int J Sport Nutr Exerc Metab 2013;23(5):522-532. — TTE 0,79 (0,23–1,35) × contrarrelógio 0,11 (−0,16–0,37).</li><li>McMahon NF, Leveritt MD, Pavey TG. The Effect of Dietary Nitrate Supplementation on Endurance Exercise Performance in Healthy Adults: A Systematic Review and Meta-Analysis. Sports Med 2017;47(4):735-756. — agrupado −0,10 (−0,27 a 0,06) e TTE 0,33 (0,15–0,50).</li><li>Senefeld JW, Wiggins CC, Regimbal RJ, et al. Ergogenic Effect of Nitrate Supplementation: A Systematic Review and Meta-analysis. Med Sci Sports Exerc 2020;52(10):2250-2261. — TTE 0,324 × contrarrelógio 0,086; agrupado 0,174; atletas ≥ 65 mL·kg⁻¹·min⁻¹ 0,021.</li><li>Gao C, Gupta S, Adli T, et al. The effects of dietary nitrate supplementation on endurance exercise performance and cardiorespiratory measures in healthy adults: a systematic review and meta-analysis. J Int Soc Sports Nutr 2021;18(1):55. — TTE +25,3 s; contrarrelógio −1,98 s (−4,37 a 0,41), n.s.; nenhum desfecho acima de certeza baixa.</li><li>Xie Y, Han Y, Du Q, Xu K. Dietary Nitrate Supplementation and Exercise Performance in Athletes: A Systematic Review and Meta-Analysis of Randomised Controlled Trials. Sports (Basel) 2026;14(10):466. — potência de pico em atletas 0,13 (−0,07 a 0,32).</li></ul>",
+    "cards": []
+  },
+  {
+    "id": 68,
+    "sectionName": "Ato V · O Contra-Interrogatório",
+    "number": "",
+    "layout": "prose",
+    "title": "Elas Faltam",
+    "subtitle": "1.179 homens contra 156 mulheres: ausência de dado não é ausência de efeito",
+    "content": "[[COMP:SexGapSim]]<h4>Fontes</h4><ul><li>Senefeld JW, Wiggins CC, Regimbal RJ, et al. Ergogenic Effect of Nitrate Supplementation: A Systematic Review and Meta-analysis. Med Sci Sports Exerc 2020;52(10):2250-2261. — 1.179 homens × 156 mulheres em 80 estudos; 79% dos conjuntos só de homens, 6 só de mulheres; d 0,116 (p = 0,347), “provavelmente espúria”.</li><li>He Y, Ge X, Tang C, et al. Dietary nitrate supplementation reduces performance decline during repeated sprint exercise independent of sex. Biol Sport 2026;43:1235-1242. — 19 homens e 17 mulheres, sem interação sexo × suplemento.</li><li>Fry MJ, Zoughaib WS, Hoffman RL, Coggan AR. Dietary nitrate and muscle contractile function in women: effect of menstrual cycle phase. J Appl Physiol 2026;140(1):66-75. — 12 mulheres, sem efeito em nenhuma fase do ciclo.</li><li>Brennan SN, Foster JM, Gerardo RT, et al. Dietary nitrate supplementation does not improve resistance exercise performance in resistance-trained women. Eur J Appl Physiol 2026;126(7):3677-3689. — 18 mulheres na fase folicular precoce, sem efeito.</li><li>Porcelli S, Ramaglia M, Bellistri G, et al. Aerobic Fitness Affects the Exercise Performance Responses to Nitrate Supplementation. Med Sci Sports Exerc 2015;47(8):1643-1651. — efeito maior em quem tem aptidão baixa (os 3%/1,5%/0,2% por faixa vêm de Senefeld 2020: dado secundário). Helena é caso fictício.</li></ul>",
+    "cards": []
+  }
+]

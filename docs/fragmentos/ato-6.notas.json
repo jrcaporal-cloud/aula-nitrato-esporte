@@ -1,0 +1,62 @@
+{
+  "80": {
+    "minutos": 4,
+    "mensagem": "A beterraba dá nome ao suco, mas por quilo a rúcula tem cerca de 4 vezes mais nitrato (4.800 contra 1.100 mg/kg, medianas europeias). Um shot equivale a uns 83 g de rúcula ou 360 g de beterraba, e a mesma alface varia de 565 a 3.093 mg/kg conforme o cultivo. O atleta de elite come só ~1,7 mmol por dia.",
+    "pergunta": "Quanto nitrato tinha a salada que o seu atleta comeu hoje?",
+    "transicao": "Se a comida varia tanto, e o produto de prateleira? O rótulo confere?"
+  },
+  "81": {
+    "minutos": 3,
+    "mensagem": "Em 24 produtos de 21 empresas, só 5 deram 5 mmol ou mais por porção, de forma consistente, e do menor ao maior a diferença foi de ~50×. O shot de 70 mL conferiu (6,41 mmol), um produto de 8,06 mmol no rótulo mediu 2,39, e o pó típico entrega cerca de 1 mmol. A posição dos frascos na gôndola é ilustrativa: o estudo não publica o valor de cada um.",
+    "pergunta": "Que laudo você pediria antes de indicar um produto?",
+    "transicao": "Com a dose na mão, falta o quando: o protocolo do dia."
+  },
+  "82": {
+    "minutos": 4,
+    "mensagem": "Em mmol: o Delphi diz 8–16 agudo ou 4–16 por dia, com a última dose 2–4 h antes; o IOC fala em 5–9; acima de ~8 mmol o efeito não cresceu. No dia, evitar enxaguante antisséptico, esperar urina avermelhada e testar tudo no treino. Nitrito plasmático não é exame para pedir. Os horários e esquemas dos quatro são exemplos de cálculo.",
+    "pergunta": "Se o atleta toma o shot no aquecimento, onde estará o nitrito na hora da largada?",
+    "transicao": "Agora aplicamos tudo aos quatro personagens da aula."
+  },
+  "83": {
+    "minutos": 4,
+    "mensagem": "Para cada caso dá para dizer chance, magnitude e certeza, sem prometer efeito: Lia tem um possível ganho pequeno; Tomás, média perto de zero; Bruno depende do protocolo; Helena tem poucos dados em mulheres e em prova longa. A certeza GRADE é baixa a moderada em todos.",
+    "pergunta": "Qual dos quatro você aconselharia a testar primeiro, e como mediria o resultado?",
+    "transicao": "O esporte permite tudo isso? Vamos às regras."
+  },
+  "84": {
+    "minutos": 3,
+    "mensagem": "O nitrato não consta na Lista WADA 2026 (0 ocorrências em 26 páginas). O AIS o põe no Grupo A, o IOC reconhece boa evidência e a ISSN, em 2018, evidência limitada ou mista. No Brasil, o texto original da IN 28/2018 não lista sal de nitrato e o enquadramento do pó de beterraba não foi conferido. A Lista 2027 também precisa ser reconferida antes da aula.",
+    "pergunta": "Por que três instituições chegam a três graus de evidência?",
+    "transicao": "Fora da pista, o mesmo mecanismo tem outro desfecho: a pressão arterial."
+  },
+  "85": {
+    "minutos": 3,
+    "mensagem": "Como contexto: PAS −4,4 mmHg na meta-análise, −7,7 mmHg em hipertensos com ~6,4 mmol por dia durante 4 semanas e −4,5 mmHg na diastólica com a dieta japonesa. É o mesmo mecanismo da pista, e o enxaguante com clorexidina faz o caminho oposto: +2 a +3,5 mmHg.",
+    "pergunta": "O que o enxaguante nos ensina sobre o papel da boca?",
+    "transicao": "Antes de fechar, cinco mitos que ainda circulam no consultório."
+  },
+  "86": {
+    "minutos": 3,
+    "mensagem": "Cinco mitos viram do avesso: depletar não esvazia o músculo; o nitrito plasmático não mede o efeito; a força voluntária máxima não muda; o VO₂max não sobe (3,72 para 3,62 L/min); e o pó de beterraba não é dose (cerca de 1 mmol em 5 g).",
+    "pergunta": "Qual desses mitos você já ouviu de um paciente ou de um colega?",
+    "transicao": "Voltamos às seis frases do começo da aula."
+  },
+  "87": {
+    "minutos": 3,
+    "mensagem": "Lemos os votos registrados neste navegador e viramos as seis frases. Todas são falsas como ditas: o 16% é de outro teste, o efeito encolhe com o preparo, mais dose não é melhor, não são os pigmentos, arginina não é nitrato e o pico chega horas depois. Sem votos registrados, a tela mostra só as respostas.",
+    "pergunta": "Alguém mudou de ideia ao longo da aula?",
+    "transicao": "Seis mensagens para levar."
+  },
+  "88": {
+    "minutos": 3,
+    "mensagem": "Seis mensagens: 16% é tempo até a exaustão; o efeito encolhe com o preparo; 8–16 mmol agudo, 2–4 h antes; dose é mmol e o rótulo erra; respondedor ainda não é uma entidade medida; mulheres e elite de endurance são lacunas.",
+    "pergunta": "Qual mensagem muda uma conduta sua na segunda-feira?",
+    "transicao": "E a frase final."
+  },
+  "99": {
+    "minutos": 1,
+    "mensagem": "Fecho: o efeito é pequeno e depende de quem, em que prova e com que dose; o método é o que a aula deixa de grande.",
+    "pergunta": "Perguntas?",
+    "transicao": "Obrigado."
+  }
+}

@@ -1,0 +1,50 @@
+{
+ "26": {
+  "minutos": 3,
+  "mensagem": "Até 2007, o custo de O₂ de uma carga submáxima era tratado como constante. Larsen deu nitrato de sódio a 9 homens treinados por 3 dias: o VO₂ caiu de 2,98 para 2,82 L/min (−5,4%) e a eficiência bruta subiu de 19,7 para 21,1%, sem lactato maior. Bailey 2009 mostrou que o componente lento do exercício intenso também encolhe.",
+  "pergunta": "Se o lactato não subiu, de onde veio a energia que sobrou?",
+  "transicao": "Como a mesma carga custa menos oxigênio? A primeira resposta, a mitocôndria, não sobreviveu à replicação."
+ },
+ "27": {
+  "minutos": 3,
+  "mensagem": "Em 2011 o mecanismo parecia resolvido: P/O maior, menos ANT, menos vazamento de prótons. Em 2016, com 7 dias de suco, o VO₂ do corpo caiu ~3% do mesmo jeito, mas nenhum índice mitocondrial mudou; só o H₂O₂ subiu. O fenótipo replicou, o mecanismo não, e por isso nenhum valor de P/O aparece na tela.",
+  "pergunta": "O que concluir quando o efeito sobrevive e a explicação cai?",
+  "transicao": "Se não foi a mitocôndria, o custo caiu na própria contração. Vamos olhar dentro do músculo."
+ },
+ "28": {
+  "minutos": 4,
+  "mensagem": "Com espectroscopia de ³¹P, na mesma carga, a PCr caiu 5,2 mM com nitrato contra 8,1 mM com placebo; o turnover de ATP foi de 296 para 192 µM/s e o pH não mudou. Na carga intensa, o componente lento do VO₂ foi de 209 para 100 mL/min e o tempo até a exaustão, de 586 para 734 s. A contração ficou mais barata; não chegou mais oxigênio.",
+  "pergunta": "Por que o pH inalterado fecha a porta para a explicação da glicólise compensatória?",
+  "transicao": "Mais barata em qual fibra? Há um fio condutor: a fibra rápida."
+ },
+ "29": {
+  "minutos": 4,
+  "mensagem": "O fio é a fibra tipo II. No camundongo, Ca²⁺ e força só na fibra rápida; em 28 músculos de rato, o ganho de fluxo acompanha a % de fibra rápida (r = 0,74); a PO₂ do capilar sobe 43% só no gastrocnêmio. Em humanos, a 115 rpm o tempo limite subiu 22% e a 35 rpm nada, e os dois tríceps desviam para lados opostos.",
+  "pergunta": "O que isso sugere para quem tem músculo de fibra lenta, como o fundista?",
+  "transicao": "Boa parte disso veio de roedor. O que replica em gente?"
+ },
+ "30": {
+  "minutos": 3,
+  "mensagem": "A mesma pergunta em duas espécies. O fenótipo replicou em humanos: twitch de 164,0 contra 136,5 N, força maior a baixa frequência, e Haider viu o mesmo em 19 homens. Mas SERCA, DHPR, RyR, calsequestrina e GSH:GSSG não mudaram: sabemos o quê, não sabemos por quê.",
+  "pergunta": "Vale mais um mecanismo emprestado do camundongo ou admitir que não sabemos?",
+  "transicao": "Mesmo com o efeito real, ele chega pequeno. Vamos seguir o sinal degrau por degrau."
+ },
+ "31": {
+  "minutos": 3,
+  "mensagem": "Em idosos, o nitrato plasmático sobe 1051%, o nitrito 138%, o NO exalado 111% e a potência máxima só 4,4%. Cada degrau é um gargalo, por isso mais nitrato não vira mais desempenho em linha reta. No atleta de elite o primeiro degrau já entra menor (r = 0,86 com a aptidão) e o último vira zero: 26,4 contra 26,3 km.",
+  "pergunta": "Quanto espaço de melhora existe neste indivíduo?",
+  "transicao": "O primeiro degrau depende da boca, e a boca de cada um é diferente."
+ },
+ "32": {
+  "minutos": 3,
+  "mensagem": "Dez dias de nitrato mudaram a boca: Neisseria +351%, Rothia +127%, Prevotella −60%. Em jovens saudáveis, mais bactéria não deu resposta exagerada de nitrito plasmático: há um limiar funcional. Nas mulheres, só a direção: mais nitrito basal e maior resposta. E fica a pergunta: sete dias de washout bastam num cruzado?",
+  "pergunta": "Se a boca muda em dez dias, de onde parte o segundo braço do cruzado?",
+  "transicao": "Uma última comparação: e se o doador de NO for a arginina, em vez do nitrato?"
+ },
+ "33": {
+  "minutos": 2,
+  "mensagem": "Cerca de 0,43 g/dia de nitrato por 3 dias reduziram o VO₂ em 5,4%. L-arginina a 20,5 g/dia, quase 50 vezes mais massa, não mudou nada, nem o nitrato plasmático. A arginina alimenta a via que depende de O₂; o nitrato, a que funciona melhor quando falta oxigênio.",
+  "pergunta": "Por que o músculo em exercício intenso favorece a via do nitrato e não a da arginina?",
+  "transicao": "A viagem do íon termina aqui. Agora a pista: o que os ensaios de endurance mostram quando o atleta corre contra o relógio?"
+ }
+}

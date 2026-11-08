@@ -1,0 +1,56 @@
+{
+  "60": {
+    "minutos": 4,
+    "mensagem": "O nitrato é o suplemento com o melhor placebo da nutrição esportiva: suco passado por resina que troca o ânion, igual em cor, sabor, açúcar e RMN, com 0,002 mmol por 250 mL. O desenho de três braços mostra que o suco sem nitrato se comporta como não tomar nada. O campo corrigiu o próprio placebo em poucos anos.",
+    "pergunta": "Quando alguém diz que não dá para cegar suco de beterraba, o que o Purolite A520e responde? E por que suco e sal ainda não são equivalentes?",
+    "transicao": "Placebo bom resolve metade do problema. A outra metade é saber se o participante percebeu o que tomou: dá para cegar?"
+  },
+  "61": {
+    "minutos": 3,
+    "mensagem": "O cego é mensurável: o índice de Bang vai de −1 a 1 e deu 0,16 e 0,08 em 12 velocistas; em 10 escaladores só 3 acertaram o suco, o que é compatível com o acaso. A urina vermelha aparece nos dois braços, porque a resina tira o ânion e deixa o pigmento. O problema é que quase ninguém reporta o número.",
+    "pergunta": "Nos ensaios que você lê, o número do cego é reportado? O que muda quando o estudo diz que mediu e não mostra?",
+    "transicao": "Com placebo e cego sob controle, o desenho cruzado entra em cena, e traz armadilhas próprias."
+  },
+  "62": {
+    "minutos": 3,
+    "mensagem": "No cruzado cada pessoa é o próprio controle, mas a segunda visita ganha 1,2% de graça sem familiarização, e a ordem fixa fabrica efeito. Sorteando a ordem, o bônus se anula. No nitrato há ainda um efeito de ordem biológico: dez dias de suplemento mudam o microbioma salivar que ativa o segundo braço.",
+    "pergunta": "Sete dias de washout bastam para o microbioma voltar ao basal? A literatura não responde.",
+    "transicao": "Depois do desenho, o instrumento: o teste que mede o desempenho pode inflar o efeito e o ruído ao mesmo tempo."
+  },
+  "63": {
+    "minutos": 3,
+    "mensagem": "O tempo até a exaustão tem CV de 13 a 27%; o contrarrelógio, de 2 a 3,4%. Ele amplifica o efeito e o ruído na mesma proporção, por isso a sensibilidade é semelhante: o erro é usar o percentual do TTE como se fosse percentual de prova. Para enxergar 1% no contrarrelógio faltam centenas de atletas (cálculo nosso).",
+    "pergunta": "Que efeito você aceitaria como relevante para o seu atleta, e quantos atletas seriam necessários para vê-lo?",
+    "transicao": "Se o teste é ruidoso e o efeito pequeno, o tamanho da amostra decide tudo. E a amostra típica é de dez."
+  },
+  "64": {
+    "minutos": 3,
+    "mensagem": "O n mediano é 10 por grupo, só 15% calculam a amostra e só 14% declaram desfecho primário, com 30 testes por artigo. Com 10 atletas, o poder para um efeito real de 1% no contrarrelógio é de cerca de 9% (cálculo ilustrativo). O que passa por p < 0,05 vem exagerado, e a inferência por magnitude não conserta isso.",
+    "pergunta": "Um estudo nulo com 10 atletas prova que o nitrato não funciona? E um estudo positivo, prova que funciona?",
+    "transicao": "Com poder baixo e erro de medida alto, qualquer gráfico de barras individuais parece mostrar respondedores. Será que existem?"
+  },
+  "65": {
+    "minutos": 4,
+    "mensagem": "Com a mesma resposta verdadeira em todos, o erro de medida sozinho gera uma dispersão como a da literatura, com respondedores e não respondedores que não existem. O teste correto compara o desvio-padrão das mudanças entre o braço ativo e o placebo; medir duas vezes por condição encolhe a ilusão. Respondedor ainda não é uma entidade medida.",
+    "pergunta": "Dos seus pacientes que melhoraram com o suplemento, quantos você mediu mais de uma vez por condição?",
+    "transicao": "Se o erro de medida fabrica efeito, o que mais pode estar fabricando? O que não foi publicado."
+  },
+  "66": {
+    "minutos": 4,
+    "mensagem": "Na meta-análise mais rigorosa em atletas, o funil de potência de pico é assimétrico: Egger z 3,03, p 0,01. O trim-and-fill imputa 5 estudos e o efeito agrupado cai para praticamente zero. Só 1 dos 45 ECRs tem baixo risco de viés e a certeza GRADE é baixa a muito baixa. Os pontos do funil na tela são ilustrativos; os agregados são do artigo.",
+    "pergunta": "O que você faz com um efeito pequeno cuja existência depende de estudos que talvez estejam numa gaveta?",
+    "transicao": "Com tudo isso, por que as meta-análises discordam? Os dados são os mesmos."
+  },
+  "67": {
+    "minutos": 3,
+    "mensagem": "Cinco meta-análises, uma literatura. O diamante muda conforme o desfecho (TTE ou contrarrelógio) e a população (saudáveis ou atletas), sem que nenhum estudo seja adicionado ou removido da tela. Gao 2021 concluiu que beneficia, com o contrarrelógio em −1,98 s não significativo; Xie 2026 não achou nada em atletas.",
+    "pergunta": "Antes de citar uma meta-análise: qual desfecho foi agrupado e quem entrou?",
+    "transicao": "Falta um recorte que quase nunca aparece nas meta-análises: elas, as mulheres."
+  },
+  "68": {
+    "minutos": 3,
+    "mensagem": "Foram 1.179 homens e 156 mulheres em 80 estudos, com 79% dos conjuntos só de homens e 6 só de mulheres. O nulo em mulheres (d 0,116, p 0,347) é provavelmente espúrio, por falta de dado. O ensaio desenhado para testar sexo não achou diferença; com o ciclo menstrual controlado, os ensaios foram nulos. Ausência de dado não é ausência de efeito. Helena é um caso fictício.",
+    "pergunta": "Quantas das 156 mulheres se pareciam com a Helena? O que você diria a ela com a evidência que existe?",
+    "transicao": "Chegamos ao fim do contra-interrogatório. Agora, o veredito prático: dose, hora, alimentos e o que dizer a cada paciente."
+  }
+}

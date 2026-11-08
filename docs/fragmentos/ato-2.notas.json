@@ -1,0 +1,38 @@
+{
+  "20": {
+    "minutos": 4,
+    "mensagem": "Há duas fábricas de NO. A clássica, com L-arginina e NOS, precisa de oxigênio. A alternativa, com nitrato e nitrito, rende mais onde falta oxigênio e sobra ácido. Não são redundantes: cobrem faixas diferentes de O₂, e a segunda é favorecida, não exclusiva, de hipóxia e acidose.",
+    "pergunta": "Em que momento do exercício o músculo perde o O₂ que a NOS precisa?",
+    "transicao": "Para a via alternativa funcionar, o nitrato do prato precisa chegar ao sangue. Quanto tempo isso leva?"
+  },
+  "21": {
+    "minutos": 3,
+    "mensagem": "O nitrato pica no plasma em 1–2 h, o nitrito em 2–3 h e o nitrato muscular em 3 h; a meia-vida é de ~5 h e o plasma volta ao basal em ~24 h. É daí que vem a janela de 2–4 h. Nas doses de Wylie 2013, 4,2 mmol não fez nada e 16,8 não rendeu mais que 8,4. A forma das curvas é ilustrativa; os picos são dado.",
+    "pergunta": "Quem aqui já orientou tomar o shot 15 minutos antes da prova?",
+    "transicao": "O nitrito pica depois do nitrato. Quem o fabrica? Vamos à boca."
+  },
+  "22": {
+    "minutos": 4,
+    "mensagem": "Cerca de 25% do nitrato do plasma é puxado pela sialina para a saliva, que chega a 5× e depois a 11× o plasma. As bactérias da língua reduzem o nitrato a nitrito; o estômago ácido gera NO. O mamífero não tem a enzima: sem a boca, a via não fecha.",
+    "pergunta": "Que hábito de higiene bucal dos seus pacientes poderia interferir nessa etapa?",
+    "transicao": "Se a boca é o interruptor, dá para desligá-lo. É o que o enxaguante faz."
+  },
+  "23": {
+    "minutos": 3,
+    "mensagem": "Cuspir a saliva por 3 h abole o nitrito e a queda de pressão; clorexidina por 7 dias derruba o nitrito oral em 90%, o plasmático em 25% e sobe a PA em 2 a 3,5 mmHg. O mecanismo é sólido. A cadeia até o desempenho atlético, não: nenhum ensaio a fechou.",
+    "pergunta": "Quantos dos seus pacientes usam enxaguante antisséptico todos os dias?",
+    "transicao": "Com o nitrito na circulação, falta saber quem o converte em NO, e onde. A resposta: onde falta oxigênio."
+  },
+  "24": {
+    "minutos": 3,
+    "mensagem": "A hemoglobina reduz o nitrito com taxa máxima a 40–60% de saturação; a mioglobina é ~36× mais rápida; a XOR só liga em hipóxia; e em pH 6,6 a EC₅₀ do nitrito cai de 200 para 40 µM. É um sistema que liga onde o tecido pede. Os dados são de bancada e de animais; os limiares do gráfico são ilustrativos.",
+    "pergunta": "Por que um sensor com pico no meio da faixa de saturação serve melhor que um que só liga na anoxia?",
+    "transicao": "O nitrito chega onde falta O₂. Mas há um reservatório que ignoramos por décadas: o próprio músculo."
+  },
+  "25": {
+    "minutos": 3,
+    "mensagem": "O músculo guarda ~4× o nitrato e ~29× o nitrito do plasma, tem sialina e XOR, e o exercício intenso gasta ~39% do estoque quando ele está cheio. No rato que corre, o nitrato cai e o nitrito sobe: um candidato ao vasodilatador procurado há mais de 100 anos.",
+    "pergunta": "Se o compartimento é o músculo, o que o nitrito plasmático realmente mede?",
+    "transicao": "O nitrato chegou à fibra e virou sinal. O que muda lá dentro? O custo de O₂ cai."
+  }
+}

@@ -1,0 +1,82 @@
+[
+ {
+  "id": 26,
+  "sectionName": "Ato II · A Viagem",
+  "number": "",
+  "layout": "prose",
+  "title": "O Custo de O₂ Cai",
+  "subtitle": "O oxigênio gasto na mesma carga caiu 5,4%, sem o lactato subir.",
+  "content": "[[COMP:OxygenCostSim]]<h4>Fontes</h4><ul><li>Larsen FJ, Weitzberg E, Lundberg JO, Ekblom B. Effects of dietary nitrate on oxygen cost during exercise. Acta Physiol (Oxf) 2007;191(1):59-66. — 9 homens bem treinados, NaNO₃ 0,1 mmol/kg/dia por 3 dias: VO₂ submáximo 2,98 → 2,82 L/min (−5,4%), eficiência bruta 19,7 → 21,1%, FC, lactato, ventilação, VE/VO₂ e RER sem diferença.</li><li>Bailey SJ, Winyard P, Vanhatalo A et al. Dietary nitrate supplementation reduces the O2 cost of low-intensity exercise and enhances tolerance to high-intensity exercise in humans. J Appl Physiol 2009;107(4):1144-1155. — 8 homens, 500 mL/dia de suco por 6 dias: ganho do VO₂ −19% no exercício moderado; componente lento 0,74 → 0,57 L/min e tempo até a exaustão 583 → 675 s no severo.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 27,
+  "sectionName": "Ato II · A Viagem",
+  "number": "",
+  "layout": "prose",
+  "title": "A Hipótese que Não Sobreviveu",
+  "subtitle": "O fenótipo replicou em 2016; o mecanismo mitocondrial não.",
+  "content": "[[COMP:MitoVerdictSim]]<h4>Fontes</h4><ul><li>Larsen FJ, Schiffer TA, Borniquel S et al. Dietary inorganic nitrate improves mitochondrial efficiency in humans. Cell Metab 2011;13(2):149-159. — direção dos achados (P/O ↑, estado 4 ↓, ANT ↓, correlação com o custo de O₂); o resumo não traz valores e nenhum valor de P/O é projetado.</li><li>Whitfield J, Ludzki A, Heigenhauser GJ et al. Beetroot juice supplementation reduces whole body oxygen consumption but does not improve indices of mitochondrial efficiency in human skeletal muscle. J Physiol 2016;594(2):421-435. — 10 homens ativos, ~26 mmol/dia de nitrato por 7 dias: VO₂ do corpo −3% a 70% do VO₂pico; vazamento, UCP3, ANT1/2, P/O, potencial de membrana e sensibilidade ao ADP sem mudança; só a emissão de H₂O₂ subiu.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 28,
+  "sectionName": "Ato II · A Viagem",
+  "number": "",
+  "layout": "prose",
+  "title": "Menos PCr para a Mesma Força",
+  "subtitle": "A contração ficou mais barata em ATP; o oxigênio não mudou.",
+  "content": "[[COMP:PcrCostSim]]<h4>Fontes</h4><ul><li>Bailey SJ, Fulford J, Vanhatalo A et al. Dietary nitrate supplementation enhances muscle contractile efficiency during knee-extensor exercise in humans. J Appl Physiol 2010;109(1):135-148. — 7 homens, ³¹P-MRS: ΔPCr 5,2 vs 8,1 mM, turnover de ATP 192 vs 296 µM/s (baixa) e 436 vs 607 µM/s (alta); componente lento do VO₂ 100 vs 209 mL/min, da PCr 1,6 vs 3,9 mM; tempo até a exaustão 734 vs 586 s.</li><li>Jones AM. Dietary nitrate supplementation and exercise performance. Sports Med 2014;44 Suppl 1:S35-45. — texto completo: pH muscular sem diferença entre tratamentos em nenhum momento.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 29,
+  "sectionName": "Ato II · A Viagem",
+  "number": "",
+  "layout": "prose",
+  "title": "A Fibra Rápida",
+  "subtitle": "O nitrato age onde falta oxigênio: na fibra tipo II.",
+  "content": "[[COMP:FiberTypeSim]]<h4>Fontes</h4><ul><li>Hernández A, Schiffer TA, Ivarsson N et al. Dietary nitrate increases tetanic [Ca2+]i and contractile force in mouse fast-twitch muscle. J Physiol 2012;590(15):3575-3583. — camundongo: Ca²⁺ livre e força ↑ só na fibra rápida (20–150 Hz; força até 50 Hz; ~35% mais rápida a ~100 Hz); fibra lenta sem mudança.</li><li>Ferguson SK, Hirai DM, Copp SW et al. Impact of dietary nitrate supplementation via beetroot juice on exercising muscle vascular control in rats. J Physiol 2013;591(2):547-557. — ratos, microesferas: ganho de fluxo correlacionado com % de fibras IIb + d/x em 28 músculos (r = 0,74; condutância r = 0,71); fluxo total do membro +39%.</li><li>Ferguson SK, Holdsworth CT, Wright JL et al. Microvascular oxygen pressures in muscles comprised of different fiber types: Impact of dietary nitrate supplementation. Nitric Oxide 2015;48:38-43. — ratos, fosforescência: PO₂ microvascular 14 → 19 mmHg (+43%) no gastrocnêmio (91% de fibras rápidas), sem mudança no sóleo (9%).</li><li>Bailey SJ, Varnham RL, DiMenna FJ et al. Inorganic nitrate supplementation improves muscle oxygenation, O2 uptake kinetics, and exercise tolerance at high but not low pedal rates. J Appl Physiol 2015;118(11):1396-1405. — 7 pessoas: a 115 rpm tempo limite 297 → 362 s (+22%) e τ da fase II 61 → 47 s; a 35 rpm, nenhuma diferença.</li><li>Zoughaib WS, Fry MJ, Singhal A, Hoffman RL, Coggan AR. Opposing Effects of Dietary Nitrate on Muscle Contractile Function in Fast and Slow Human Muscles. Med Sci Sports Exerc 2026;58(5):1012-1020. — 14 homens: relação torque-frequência desvia para a esquerda no tríceps braquial (p = 0,019) e para a direita no tríceps sural (p < 0,001); twitch inalterado.</li><li>Jones AM, Ferguson SK, Bailey SJ, Vanhatalo A, Poole DC. Fiber Type-Specific Effects of Dietary Nitrate. Exerc Sport Sci Rev 2016;44(2):53-60. — hipótese que une os achados: efeitos vasculares, metabólicos e contráteis na fibra tipo II.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 30,
+  "sectionName": "Ato II · A Viagem",
+  "number": "",
+  "layout": "prose",
+  "title": "Camundongo × Humano",
+  "subtitle": "Sabemos que o músculo humano responde; não sabemos por quê.",
+  "content": "[[COMP:MouseHumanSim]]<h4>Fontes</h4><ul><li>Hernández A, Schiffer TA, Ivarsson N et al. Dietary nitrate increases tetanic [Ca2+]i and contractile force in mouse fast-twitch muscle. J Physiol 2012;590(15):3575-3583. — camundongo: Ca²⁺ e força ↑ na fibra rápida, com mais CASQ1 e DHPR.</li><li>Whitfield J, Gamu D, Heigenhauser GJF et al. Beetroot Juice Increases Human Muscle Force without Changing Ca2+-Handling Proteins. Med Sci Sports Exerc 2017;49(10):2016-2024. — humanos (8 + 8 homens, ~26 mmol/dia por 7 dias): twitch 164,0 vs 136,5 N, força a 10 Hz 41,1 vs 37,6% do pico, força voluntária 602 vs 596 N; SERCA1a/2a, DHPR, RyR, calsequestrina e GSH:GSSG sem mudança.</li><li>Haider G, Folland JP. Nitrate supplementation enhances the contractile properties of human skeletal muscle. Med Sci Sports Exerc 2014;46(12):2234-2243. — 19 homens, ~9,7 mmol/dia por 7 dias: twitch 149 vs 138 N (p = 0,008); força voluntária máxima e explosiva sem mudança.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 31,
+  "sectionName": "Ato II · A Viagem",
+  "number": "",
+  "layout": "prose",
+  "title": "A Cascata com Vazamentos",
+  "subtitle": "Quatro degraus entre o copo e a potência, e cada um entrega menos.",
+  "content": "[[COMP:CascadeSim]]<h4>Fontes</h4><ul><li>Coggan AR, Hoffman RL, Gray DA et al. A Single Dose of Dietary Nitrate Increases Maximal Knee Extensor Angular Velocity and Power in Healthy Older Men and Women. J Gerontol A Biol Sci Med Sci 2020;75(6):1154-1160. — 12 idosos, 13,4 mmol: nitrato plasmático +1051%, nitrito +138%, NO exalado +111%, velocidade máxima +10,9%, potência máxima +4,4%.</li><li>Coggan AR, Leibowitz JL, Kadkhodayan A et al. Effect of acute dietary nitrate intake on maximal knee extensor speed and power in healthy men and women. Nitric Oxide 2015;48:16-21. — 12 adultos de 22 a 50 anos, 11,2 mmol: NO exalado +61%, potência de pico +4% na maior velocidade angular.</li><li>Porcelli S, Ramaglia M, Bellistri G et al. Aerobic Fitness Affects the Exercise Performance Responses to Nitrate Supplementation. Med Sci Sports Exerc 2015;47(8):1643-1651. — 21 pessoas com VO₂pico de 28 a 82: quanto mais apto, menor o aumento de nitrato plasmático (r = 0,86).</li><li>Bescós R, Rodríguez FA, Iglesias X et al. Acute administration of inorganic nitrate reduces VO2peak in endurance athletes. Med Sci Sports Exerc 2011;43(10):1979-1986. — 11 ciclistas (VO₂pico 65): nitrito plasmático basal ~2.000 nM.</li><li>Bescós R, Ferrer-Roca V, Galilea PA et al. Sodium nitrate supplementation does not enhance performance of endurance athletes. Med Sci Sports Exerc 2012;44(12):2400-2409. — 13 atletas bem treinados: 26,4 vs 26,3 km em 40 min (p = 0,61).</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 32,
+  "sectionName": "Ato II · A Viagem",
+  "number": "",
+  "layout": "prose",
+  "title": "A Boca de Cada Um",
+  "subtitle": "Mais bactéria não é mais NO: a boca de cada um responde de um jeito.",
+  "content": "[[COMP:OralMicrobiomeSim]]<h4>Fontes</h4><ul><li>Vanhatalo A, Blackwell JR, L'Heureux JE et al. Nitrate-responsive oral microbiome modulates nitric oxide homeostasis and blood pressure in humans. Free Radic Biol Med 2018;124:21-30. — n = 18, 12 mmol/dia por 10 dias: Neisseria +351%, Rothia +127%, Prevotella −60%, Veillonella −65%; Proteobacteria +225%, Bacteroidetes −46%; PA caiu nos idosos, não nos jovens.</li><li>Burleigh MC, Liddle L, Monaghan C et al. Salivary nitrite production is elevated in individuals with a higher abundance of oral nitrate-reducing bacteria. Free Radic Biol Med 2018;120:80-88. — 25 adultos saudáveis: maior abundância de redutoras ↑ nitrito salivar, mas não ↑ exagerado do nitrito plasmático (limiar funcional).</li><li>Kapil V, Rathod KS, Khambata RS et al. Sex differences in the nitrate-nitrite-NO• pathway: Role of oral nitrate-reducing bacteria. Free Radic Biol Med 2018;126:113-121. — só a direção dos achados (o resumo não traz n nem valores): mais nitrito basal e maior aumento do nitrito plasmático nas mulheres, sem diferença de composição do microbioma.</li></ul>",
+  "cards": []
+ },
+ {
+  "id": 33,
+  "sectionName": "Ato II · A Viagem",
+  "number": "",
+  "layout": "prose",
+  "title": "A Arginina não Resolve",
+  "subtitle": "A arginina alimenta a via que precisa de O₂; o nitrato, a que sobrevive sem ele.",
+  "content": "[[COMP:ArginineSim]]<h4>Fontes</h4><ul><li>Larsen FJ, Weitzberg E, Lundberg JO, Ekblom B. Effects of dietary nitrate on oxygen cost during exercise. Acta Physiol (Oxf) 2007;191(1):59-66. — ~7 mmol/dia de nitrato (≈ 0,43 g) por 3 dias → VO₂ −5,4%.</li><li>Bescós R, Gonzalez-Haro C, Pujol P et al. Effects of dietary L-arginine intake on cardiorespiratory and metabolic adaptation in athletes. Int J Sport Nutr Exerc Metab 2009;19(4):355-365. — 9 atletas, L-arginina 20,5 g/dia por 3 dias: nenhuma diferença cardiorrespiratória, nem no nitrato plasmático; lactato aos 5 min 3,0 vs 2,5 mM (p = 0,03), sem manter nas intensidades maiores.</li><li>Bescós R, Sureda A, Tur JA, Pons A. The effect of nitric-oxide-related supplements on human performance. Sports Med 2012;42(2):99-117. — revisão: vias NOS-dependente (arginina, citrulina) e NOS-independente (nitrato, nitrito).</li><li>Lundberg JO, Weitzberg E, Gladwin MT. The nitrate-nitrite-nitric oxide pathway in physiology and therapeutics. Nat Rev Drug Discov 2008;7(2):156-167. — revisão: via nitrato-nitrito-NO favorecida em estados hipóxicos.</li></ul>",
+  "cards": []
+ }
+]
