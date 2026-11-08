@@ -3,7 +3,8 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { C } from '../../sims/kit/palette';
 import { DRIP, DUCT_P, DUCT_S, GLAND_P, GLAND_S, SIALIN_POS, type V3 } from './anatomy';
-import { SPHERE_LO, TISSUE, put, rimMaterial, setEmissive } from './materials';
+import { damp, flowOf, flowify, matOf } from './fx';
+import { SPHERE_MID, setEmissive } from './materials';
 import { srand } from './rand';
 import { useStructure } from './selection';
 import type { VnStateRef } from './state';
@@ -13,50 +14,96 @@ import type { Organ } from './tubes';
 
 interface GlandProps { pos: V3; r: V3; seed: number }
 
-const ACINI = 30;
+const ACINI = 110;
+const ACINUS_BASE = new THREE.Color('#9A7284');
+const ACINUS_HOT = new THREE.Color(C.nitrate);
+const COL = new THREE.Color();
 
-const Gland = ({ pos, r, seed }: GlandProps) => {
+/** Glândula: cápsula translúcida e ácinos (cachos de bolinhas) que acendem em magenta quando secretam o nitrato. */
+const Gland = ({ pos, r, seed, stateRef }: GlandProps & { stateRef: VnStateRef }) => {
     const { bind, lit } = useStructure('glandulas');
-    const body = useRef<THREE.Mesh>(null);
+    const litRef = useRef(lit);
+    useEffect(() => { litRef.current = lit; }, [lit]);
+    const dim = useRef(0.5);
     const lobes = useRef<THREE.InstancedMesh>(null);
-    const mat = useMemo(() => new THREE.MeshStandardMaterial({ color: TISSUE.gland, emissive: '#8C6F80', emissiveIntensity: 0.14, roughness: 0.7, transparent: true, opacity: 0.92 }), []);
-    const lobeMat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#8A6F7E', emissive: '#8C6F80', emissiveIntensity: 0.2, roughness: 0.6 }), []);
-    const geo = useMemo(() => new THREE.SphereGeometry(1, 32, 20), []);
+    const bodyRef = useRef<THREE.Mesh>(null);
+    const lastK = useRef(-1);
+    const parts = useMemo(() => {
+        const rnd = srand(seed);
+        const seeds = Array.from({ length: ACINI }, () => {
+            const th = rnd() * Math.PI * 2;
+            const ph = Math.acos(1 - 2 * rnd());
+            const depth = 0.55 + 0.4 * rnd();
+            return { p: new THREE.Vector3(Math.sin(ph) * Math.cos(th) * r[0], Math.sin(ph) * Math.sin(th) * r[1], Math.cos(ph) * r[2]).multiplyScalar(depth), s: 0.09 + rnd() * 0.08, ph: rnd() * 6.28 };
+        });
+        return {
+            seeds,
+            geo: new THREE.SphereGeometry(1, 32, 20),
+            body: new THREE.MeshPhysicalMaterial({ color: '#6C4C5C', emissive: '#8C6F80', emissiveIntensity: 0.14, roughness: 0.4, clearcoat: 0.7, transparent: true, opacity: 0.42, depthWrite: false }),
+            lobe: new THREE.MeshStandardMaterial({ color: '#FFFFFF', emissive: '#7A5468', emissiveIntensity: 0.4, roughness: 0.32 }),
+        };
+    }, [seed, r]);
+    useEffect(() => () => { parts.geo.dispose(); parts.body.dispose(); parts.lobe.dispose(); }, [parts]);
 
-    // lóbulos sorteados sobre a superfície do elipsoide
     useEffect(() => {
         const m = lobes.current;
         if (!m) return;
-        const rnd = srand(seed);
-        const p = new THREE.Vector3();
-        for (let i = 0; i < ACINI; i++) {
-            const th = rnd() * Math.PI * 2;
-            const ph = Math.acos(1 - 2 * rnd());
-            p.set(Math.sin(ph) * Math.cos(th) * r[0], Math.sin(ph) * Math.sin(th) * r[1], Math.cos(ph) * r[2]).multiplyScalar(0.98);
-            put(m, i, p, 0.1 + rnd() * 0.07);
-        }
+        const mx = new THREE.Matrix4();
+        const q = new THREE.Quaternion();
+        const sc = new THREE.Vector3();
+        parts.seeds.forEach((sd, i) => m.setMatrixAt(i, mx.compose(sd.p, q, sc.setScalar(sd.s))));
         m.instanceMatrix.needsUpdate = true;
-    }, [seed, r]);
+    }, [parts]);
 
-    useEffect(() => () => { mat.dispose(); lobeMat.dispose(); geo.dispose(); }, [mat, lobeMat, geo]);
-    useFrame(() => setEmissive(body.current?.material, lit ? 0.5 : 0.14));
+    useFrame(({ clock }, delta) => {
+        const f = stateRef.current.f;
+        dim.current = damp(dim.current, f.focus.glandulas, 5, Math.min(delta, 0.1));
+        const k = litRef.current ? 1 : dim.current;
+        const m = lobes.current;
+        const t = clock.elapsedTime;
+        const bm = matOf<THREE.MeshPhysicalMaterial>(bodyRef);
+        if (bm) bm.emissiveIntensity = litRef.current ? 0.5 : 0.08 + 0.12 * k;
+        if (!m) return;
+        (m.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.12 + 0.4 * k;
+        const act = f.w.sialin * f.nitrate;
+        // cores por instância só quando há secreção ou o destaque mudou (o resto do tempo ficam paradas)
+        if (act < 0.01 && Math.abs(k - lastK.current) < 0.01) return;
+        lastK.current = k;
+        parts.seeds.forEach((sd, i) => {
+            const flash = Math.max(Math.sin(t * 2.1 + sd.ph), 0) ** 6 * Math.min(act * 1.4, 1);
+            m.setColorAt(i, COL.copy(ACINUS_BASE).multiplyScalar(0.55 + 0.45 * k).lerp(ACINUS_HOT, flash));
+        });
+        if (m.instanceColor) m.instanceColor.needsUpdate = true;
+    });
 
     return (
         <group position={[pos[0], pos[1], pos[2]]}>
-            <mesh ref={body} geometry={geo} material={mat} scale={[r[0], r[1], r[2]]} {...bind} />
-            <instancedMesh ref={lobes} args={[SPHERE_LO, lobeMat, ACINI]} frustumCulled={false} />
+            <mesh ref={bodyRef} geometry={parts.geo} material={parts.body} scale={[r[0], r[1], r[2]]} renderOrder={2} {...bind} />
+            <instancedMesh ref={lobes} args={[SPHERE_MID, parts.lobe, ACINI]} frustumCulled={false} {...bind} />
         </group>
     );
 };
 
-const Duct = ({ organ }: { organ: Organ }) => {
+/** Ducto até a boca, com pulso de saliva (no sentido da glândula para a boca). */
+const Duct = ({ organ, stateRef }: { organ: Organ; stateRef: VnStateRef }) => {
     const { bind, lit } = useStructure('glandulas');
-    const geo = useMemo(() => new THREE.TubeGeometry(organ.curve, 48, organ.radius(0) * 0.8, 8, false), [organ]);
-    const mat = useMemo(() => rimMaterial(C.placebo, 0.45), []);
+    const litRef = useRef(lit);
+    useEffect(() => { litRef.current = lit; }, [lit]);
+    const parts = useMemo(() => {
+        const mat = new THREE.MeshStandardMaterial({ color: '#B58A98', emissive: '#C9A0AC', emissiveIntensity: 0.35, roughness: 0.4 });
+        flowify(mat, { color: C.nitrate, freq: 3, speed: 0.7 });
+        return { geo: new THREE.TubeGeometry(organ.curve, 48, organ.radius(0) * 0.85, 10, false), mat };
+    }, [organ]);
     const mesh = useRef<THREE.Mesh>(null);
-    useEffect(() => () => { geo.dispose(); mat.dispose(); }, [geo, mat]);
-    useFrame(() => setEmissive(mesh.current?.material, lit ? 2 : 0.45));
-    return <mesh ref={mesh} geometry={geo} material={mat} {...bind} />;
+    useEffect(() => () => { parts.geo.dispose(); parts.mat.dispose(); }, [parts]);
+    useFrame(() => {
+        const f = stateRef.current.f;
+        const dm = matOf<THREE.MeshStandardMaterial>(mesh);
+        const fh = flowOf(dm);
+        if (dm) dm.emissiveIntensity = litRef.current ? 0.9 : 0.15 + 0.3 * f.focus.glandulas;
+        if (fh) fh.amount.value = (0.2 + 0.8 * f.w.salivaP) * (0.3 + 0.7 * f.focus.glandulas) * 1.3;
+    });
+    return <mesh ref={mesh} geometry={parts.geo} material={parts.mat} {...bind} />;
 };
 
 const TEETH = 6;
@@ -100,11 +147,11 @@ export const Sialin = ({ stateRef }: { stateRef: VnStateRef }) => {
 
 export const Glands = ({ stateRef }: { stateRef: VnStateRef }) => (
     <group>
-        <Gland pos={GLAND_P.pos} r={GLAND_P.r} seed={21} />
-        <Gland pos={GLAND_S.pos} r={GLAND_S.r} seed={33} />
-        <Duct organ={DUCT_P} />
-        <Duct organ={DRIP} />
-        <Duct organ={DUCT_S} />
+        <Gland pos={GLAND_P.pos} r={GLAND_P.r} seed={21} stateRef={stateRef} />
+        <Gland pos={GLAND_S.pos} r={GLAND_S.r} seed={33} stateRef={stateRef} />
+        <Duct organ={DUCT_P} stateRef={stateRef} />
+        <Duct organ={DRIP} stateRef={stateRef} />
+        <Duct organ={DUCT_S} stateRef={stateRef} />
         <Sialin stateRef={stateRef} />
     </group>
 );

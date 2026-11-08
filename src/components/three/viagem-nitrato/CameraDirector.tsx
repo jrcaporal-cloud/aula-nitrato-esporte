@@ -13,7 +13,8 @@ import { STRUCTURES, type StructureId } from './structures';
  * Quem manda na câmera, em ordem de prioridade:
  *  1. voo (fixar uma estrutura ou recentrar), a partir de onde a câmera está;
  *  2. transição de etapa: segue a trilha das poses no mesmo T que anima a cena;
- *  3. varredura lenta depois de ~7 s sem toque (vai e volta ±17°: o corte só faz sentido de frente).
+ *  3. em repouso: deriva sutil (paralaxe de ±1,4°) sempre; uma aproximação lenta (~4,5%) logo depois de
+ *     chegar; e, depois de ~7 s sem toque, a varredura lenta (vai e volta ±17°: o corte só faz sentido de frente).
  * O toque do usuário desliga 1 e 2; a inatividade recomeça a contar quando ele solta.
  */
 
@@ -21,15 +22,24 @@ const IDLE_MS = 7000;
 const SWEEP_AMP = 0.3;
 const SWEEP_PERIOD = 36;
 const SWEEP_RAMP = 2.5;
+const DRIFT_YAW = 0.024;
+const DRIFT_PITCH = 0.011;
+const DRIFT_PERIOD = 11;
+const PUSH_IN = 0.045;
+const PUSH_S = 7;
+const easeOut3 = (x: number) => 1 - (1 - x) ** 3;
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 const TP = new THREE.Vector3();
 const TT = new THREE.Vector3();
+const RIGHT = new THREE.Vector3();
 
 interface Rig {
     tween: { active: boolean; u: number; offP: THREE.Vector3; offT: THREE.Vector3 };
     flight: { active: boolean; u: number; path: CameraPath | null; anim: gsap.core.Tween | null };
     idleAt: number;
     sweepT: number;
+    driftT: number;
+    pushT: number;
     down: boolean;
 }
 
@@ -38,8 +48,29 @@ const makeRig = (): Rig => ({
     flight: { active: false, u: 0, path: null, anim: null },
     idleAt: performance.now(),
     sweepT: 0,
+    driftT: 0,
+    pushT: 0,
     down: false,
 });
+
+/** Movimento de repouso: deriva (deslocamentos que se desfazem) e aproximação lenta logo depois da chegada. */
+const rest = (r: Rig, camera: THREE.Camera, controls: OrbitControlsImpl, dt: number): void => {
+    const w = (Math.PI * 2) / DRIFT_PERIOD;
+    r.driftT += dt;
+    const yaw = DRIFT_YAW * w * Math.cos(w * r.driftT) * dt;
+    const pitch = DRIFT_PITCH * w * Math.cos(w * 0.83 * r.driftT + 1) * dt;
+    camera.position.sub(controls.target);
+    camera.position.applyAxisAngle(Y_AXIS, yaw);
+    camera.position.applyAxisAngle(RIGHT.set(1, 0, 0).applyQuaternion(camera.quaternion), pitch);
+    if (r.pushT < PUSH_S) {
+        const a = easeOut3(r.pushT / PUSH_S);
+        r.pushT = Math.min(r.pushT + dt, PUSH_S);
+        const b = easeOut3(r.pushT / PUSH_S);
+        camera.position.multiplyScalar(1 - PUSH_IN * (b - a));
+    }
+    camera.position.add(controls.target);
+    controls.update();
+};
 
 export interface CameraDirectorProps {
     step: number;
@@ -67,7 +98,7 @@ export const CameraDirector = ({ step, reduced, pin, recenterKey, onSettled, tim
     useEffect(() => {
         const el = gl.domElement;
         const r = getRig();
-        const touch = () => { r.idleAt = performance.now(); r.sweepT = 0; };
+        const touch = () => { r.idleAt = performance.now(); r.sweepT = 0; r.pushT = PUSH_S; };
         const onDown = () => { r.down = true; r.flight.active = false; r.tween.active = false; touch(); };
         const onUp = () => { r.down = false; touch(); };
         el.addEventListener('pointerdown', onDown);
@@ -103,7 +134,7 @@ export const CameraDirector = ({ step, reduced, pin, recenterKey, onSettled, tim
             duration,
             ease: 'power1.inOut',
             onUpdate: () => { tw.u = anim.progress(); },
-            onComplete: () => { tw.active = false; onSettled(step); },
+            onComplete: () => { tw.active = false; r.pushT = 0; onSettled(step); },
         });
         return () => { anim.kill(); };
     }, [step, controls, camera, path, reduced, onSettled, timeRef]);
@@ -130,7 +161,7 @@ export const CameraDirector = ({ step, reduced, pin, recenterKey, onSettled, tim
             u: 1,
             duration: reduced ? 0.3 : 1.15,
             ease: 'power2.inOut',
-            onComplete: () => { f.active = false; r.idleAt = performance.now(); },
+            onComplete: () => { f.active = false; r.pushT = 0; r.idleAt = performance.now(); },
         });
         return () => { f.anim?.kill(); f.active = false; };
     }, [pin, recenterKey, controls, camera, reduced]);
@@ -157,11 +188,12 @@ export const CameraDirector = ({ step, reduced, pin, recenterKey, onSettled, tim
             r.idleAt = now;
             return;
         }
+        const dt = Math.min(delta, 0.05);
+        if (!reduced && !r.down) rest(r, camera, controls, dt);
         if (reduced || r.down || now - r.idleAt < IDLE_MS) {
             r.sweepT = 0;
             return;
         }
-        const dt = Math.min(delta, 0.05);
         r.sweepT += dt;
         const w = (Math.PI * 2) / SWEEP_PERIOD;
         const ramp = smooth(Math.min(r.sweepT / SWEEP_RAMP, 1));

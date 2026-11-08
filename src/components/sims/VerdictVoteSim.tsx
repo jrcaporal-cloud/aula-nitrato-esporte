@@ -5,6 +5,7 @@ import { useSlideSteps } from '../../store/useSlideSteps';
 import { C } from './kit/palette';
 import { CLAIMS, type Vote } from './ato1/claims';
 import { ClaimRail } from './ato1/ClaimRail';
+import { Scoreboard } from './ato1/Scoreboard';
 import { VerdictStage } from './ato1/VerdictStage';
 import { VoteCard } from './ato1/VoteCard';
 import { readVotes, withVote, writeVotes, type Votes } from './ato1/votesStorage';
@@ -60,14 +61,15 @@ const VerdictVoteSim = () => {
     const counted = CLAIMS.filter(c => votes[c.id]).length;
 
     return (
-        <div className="not-prose flex w-full select-none flex-col gap-3 font-body text-white" style={{ height: 516 }}>
+        <div className="not-prose flex w-full select-none flex-col gap-3 font-body text-white" style={{ height: 500 }}>
             <div className="flex h-10 items-center justify-between gap-3">
                 <motion.div key={step === 0 ? 'vote' : step === LAST_STEP ? 'end' : 'reveal'}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: reduce ? 0 : 0.3 }}>
                     <Headline step={step} votes={votes} />
                 </motion.div>
                 <div className="flex shrink-0 items-center gap-3 font-mono text-[16px] text-gray-400">
-                    <span>votos registrados {counted}/{CLAIMS.length}</span>
+                    <Scoreboard revealed={step} votes={votes} />
+                    <span title="votos registrados">{counted}/{CLAIMS.length}</span>
                     {counted > 0 && (
                         <button type="button" onClick={clearVotes} title="Zerar a votação"
                             className="flex cursor-pointer items-center gap-1.5 rounded-md border border-white/15 px-2 py-0.5 text-gray-300 transition-colors hover:border-white/40">

@@ -15,6 +15,7 @@ import { Timeline } from '../vaso-hipoxia/Timeline';
 import { playPreset, SWEEP_STAGE } from '../vaso-hipoxia/tween';
 import { useVasoKeys } from '../vaso-hipoxia/useVasoKeys';
 import { VasoScene } from '../vaso-hipoxia/VasoScene';
+import { Vignette } from '../vaso-hipoxia/Vignette';
 
 /*
  * Modelo 3D "vaso-hipoxia" (slides 20 e 24): corte de capilar com eritrócitos e, ao lado, uma fibra
@@ -121,6 +122,7 @@ const VasoHipoxiaModal = ({ onClose }: Modal3DProps) => {
                         />
                     </Suspense>
                 </Canvas>
+                <Vignette ctlRef={ctlRef} />
                 <button
                     type="button"
                     onClick={recenter}

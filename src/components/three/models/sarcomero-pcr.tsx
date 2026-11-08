@@ -129,6 +129,8 @@ const SarcomeroPcrModal = ({ onClose }: Modal3DProps) => {
                                 onSettled={onSettled} onReady={onReady} clockRef={clockRef} />
                         </Suspense>
                     </Canvas>
+                    <div aria-hidden className="absolute inset-0 pointer-events-none z-[5]"
+                        style={{ background: 'radial-gradient(ellipse 75% 70% at 50% 46%, transparent 55%, rgba(7,5,11,0.55) 85%, rgba(7,5,11,0.85) 100%)' }} />
                     <header className="absolute z-[45] top-0 left-0 right-0 flex items-center gap-4 px-5 pt-3.5 pb-6 pointer-events-none bg-gradient-to-b from-[#07050B]/85 to-transparent">
                         <div className="shrink-0">
                             <p className="text-[14px] font-mono uppercase tracking-[0.2em] leading-none" style={{ color: COL.nitrateSoft }}>Modelo 3D</p>

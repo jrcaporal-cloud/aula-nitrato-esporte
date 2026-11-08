@@ -58,8 +58,8 @@ export const ViewSwitch = ({ view, single, onChange }: { view: View; single: boo
 };
 
 const LEGENDS: readonly (readonly [string, string][])[] = [
-    [[COL.placebo, 'Placebo'], [COL.nitrate, 'Nitrato'], [COL.ca, 'Ca²⁺'], [COL.atp, 'ATP gasto (faíscas)']],
-    [[COL.placebo, 'Placebo'], [COL.nitrate, 'Nitrato'], [COL.ca, 'Ca²⁺'], [COL.atp, 'ATP gasto (faíscas)']],
+    [[COL.placebo, 'Placebo'], [COL.nitrate, 'Nitrato'], [COL.ca, 'Ca²⁺'], [COL.atp, 'ATP gasto (faíscas)'], [COL.pcr, 'PCr'], [COL.cr, 'Creatina livre'], [COL.pi, 'Pi'], [COL.adp, 'ADP']],
+    [[COL.placebo, 'Placebo'], [COL.nitrate, 'Nitrato'], [COL.ca, 'Ca²⁺'], [COL.atp, 'ATP gasto (faíscas)'], [COL.pcr, 'PCr'], [COL.cr, 'Creatina livre'], [COL.pi, 'Pi'], [COL.adp, 'ADP']],
     [[COL.fiberII, 'Fibra tipo II'], [COL.fiberI, 'Fibra tipo I'], [COL.ca, 'Ca²⁺'], [COL.nitrate, 'CASQ1 / DHPR ↑']],
     [[COL.fiberII, 'Fibra tipo II'], [COL.fiberI, 'Fibra tipo I'], [C.no, 'Ganho de fluxo (NO)'], [C.o2Soft, 'Glóbulos']],
     [[COL.fiberII, 'Fibra tipo II'], [COL.fiberI, 'Fibra tipo I'], [COL.placebo, 'Contorno: placebo'], [COL.nitrate, 'Contorno: nitrato']],

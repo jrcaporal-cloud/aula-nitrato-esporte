@@ -23,8 +23,14 @@ export const COL = {
     fiberII: '#F8FAFC',
     fiberI: '#4B5A70',
     pcr: '#2DD4BF',
+    /** Creatina livre: o "resto" da PCr depois de doar o fosfato. */
+    cr: '#557A80',
     pi: '#A5B4FC',
     atp: '#F3F4F6',
+    adp: '#8B93A7',
+    titin: '#D8CBB0',
+    mito: '#B9A99B',
+    crista: '#F3EBE2',
     bg: '#07050B',
     muted: '#9CA3AF',
 } as const;

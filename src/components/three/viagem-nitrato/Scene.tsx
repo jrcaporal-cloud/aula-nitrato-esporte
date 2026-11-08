@@ -1,12 +1,14 @@
 import { memo, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { Environment, Lightformer, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { Label3D, type TimeRef } from '../shared/Label3D';
 import { Bacteria } from './Bacteria';
 import { BodyShell, Glass, MouthParts } from './Body';
 import { buildCameraPath } from './camera';
 import { CameraDirector } from './CameraDirector';
+import { Dust } from './Dust';
+import { FX_TIME } from './fx';
 import { STEPS } from './content';
 import { Glands } from './Glands';
 import { Ions } from './Ions';
@@ -15,6 +17,7 @@ import { Muscle } from './Muscle';
 import { Organs } from './Organs';
 import { PickLayer } from './PickLayer';
 import { Sparks } from './Sparks';
+import { Spotlight } from './Spotlight';
 import { writeFrame, type VnStateRef } from './state';
 import type { StructureId } from './structures';
 import { Tongue } from './Tongue';
@@ -25,7 +28,10 @@ import { Tongue } from './Tongue';
  */
 
 const SceneClock = ({ stateRef, timeRef }: { stateRef: VnStateRef; timeRef: TimeRef }) => {
-    useFrame((_, delta) => writeFrame(stateRef.current, timeRef.current.t, Math.min(delta, 0.1)));
+    useFrame(({ clock }, delta) => {
+        FX_TIME.value = clock.elapsedTime;
+        writeFrame(stateRef.current, timeRef.current.t, Math.min(delta, 0.1));
+    });
     return null;
 };
 
@@ -76,12 +82,19 @@ const SceneImpl = ({ step, settled, reduced, pin, recenterKey, onSettled, onRead
         <>
             <SceneClock stateRef={stateRef} timeRef={timeRef} />
             <Backdrop />
+            <Spotlight path={path} timeRef={timeRef} />
+            <Dust />
             <fog attach="fog" args={['#07050B', 55, 140]} />
-            <ambientLight intensity={0.55} color="#d8d0e0" />
-            <hemisphereLight args={['#f5e6ff', '#120a18', 0.5]} />
-            <directionalLight position={[6, 14, 20]} intensity={2.0} color="#fff7fb" />
-            <directionalLight position={[-14, 2, 10]} intensity={0.7} color="#f9a8d4" />
-            <directionalLight position={[10, -10, 14]} intensity={0.5} color="#a5b4fc" />
+            <Environment resolution={128} frames={1} environmentIntensity={0.6}>
+                <Lightformer form="rect" intensity={2.4} color="#ffd9ec" position={[-7, 6, 8]} scale={[10, 8, 1]} />
+                <Lightformer form="rect" intensity={1.6} color="#b9b2ff" position={[9, 2, 6]} rotation-y={-Math.PI / 3} scale={[8, 10, 1]} />
+                <Lightformer form="ring" intensity={1.2} color="#f0437e" position={[0, -4, -9]} scale={14} />
+                <Lightformer form="rect" intensity={1.0} color="#ffffff" position={[0, 12, 2]} rotation-x={Math.PI / 2} scale={[14, 6, 1]} />
+            </Environment>
+            <ambientLight intensity={0.32} color="#d8d0e0" />
+            <hemisphereLight args={['#f5e6ff', '#120a18', 0.4]} />
+            <directionalLight position={[6, 14, 20]} intensity={1.7} color="#fff7fb" />
+            <directionalLight position={[-10, 8, -14]} intensity={1.1} color="#a5b4fc" />
 
             <OrbitControls makeDefault enablePan={false} enableDamping dampingFactor={0.08} minDistance={3.5} maxDistance={70} />
             <CameraDirector step={step} reduced={reduced} pin={pin} recenterKey={recenterKey} onSettled={onSettled} timeRef={timeRef} path={path} />
@@ -91,7 +104,7 @@ const SceneImpl = ({ step, settled, reduced, pin, recenterKey, onSettled, onRead
             <BodyShell />
             <MouthParts />
             <Glass stateRef={stateRef} />
-            <Tongue />
+            <Tongue stateRef={stateRef} />
             <Bacteria stateRef={stateRef} />
             <Glands stateRef={stateRef} />
             <Organs stateRef={stateRef} />

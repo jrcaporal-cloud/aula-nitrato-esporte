@@ -2,6 +2,7 @@ import { memo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { Label3D } from '../shared/Label3D';
+import { Atmosphere } from './Atmosphere';
 import { CameraDirector } from './CameraDirector';
 import type { StructureId } from './content';
 import { STEP_LABELS } from './director';
@@ -10,12 +11,16 @@ import { Particles } from './Particles';
 import { PickLayer } from './PickLayer';
 import { SlowSystem } from './SlowSystem';
 import { stepSim } from './sim';
+import { driveUniforms } from './uniforms';
 import type { CtlRef, SimRef } from './types';
 import { Vessel } from './Vessel';
 
 /** Avança a simulação uma vez por quadro. Primeiro filho: os `useFrame` rodam na ordem de montagem. */
 const SimClock = ({ simRef, ctlRef }: { simRef: SimRef; ctlRef: CtlRef }) => {
-    useFrame((_, dt) => stepSim(simRef.current, ctlRef.current, dt));
+    useFrame((_, dt) => {
+        stepSim(simRef.current, ctlRef.current, dt);
+        driveUniforms(simRef.current, ctlRef.current);
+    });
     return null;
 };
 
@@ -49,8 +54,7 @@ const VasoSceneImpl = ({ step, settled, pin, recenterKey, reduced, onSettled, on
             <SimClock simRef={simRef} ctlRef={ctlRef} />
             <color attach="background" args={['#07050B']} />
             <fog attach="fog" args={['#07050B', 38, 80]} />
-            <ambientLight intensity={0.55} color="#e9d5ff" />
-            <hemisphereLight args={['#fde7f3', '#0b0710', 0.6]} />
+            <Atmosphere />
             <directionalLight position={[4, 14, 16]} intensity={2.1} color="#ffffff" />
             <directionalLight position={[-12, 2, 8]} intensity={0.7} color="#c4b5fd" />
             <pointLight position={[0, 1.5, 4]} intensity={7} distance={12} color="#fde2e4" />

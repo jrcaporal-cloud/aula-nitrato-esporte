@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import type { Clock } from './clock';
 import { COL, condColor } from './colors';
-import type { UnitSpec } from './layout';
+import { STATION_X, type UnitSpec } from './layout';
 
 /* Aparência por quadro de um sarcômero: esmaecimento do par fora de foco, fadiga e tom da fibra lenta. */
 
@@ -27,3 +27,7 @@ export const baseColor = (hex: string): THREE.Color => new THREE.Color(hex);
 /** Escritas de material por quadro (funções de módulo: o lint de imutabilidade não vê objetos de `useMemo` mutados em callbacks). */
 export const setOpacity = (m: THREE.Material, v: number): void => { m.opacity = v; };
 export const setGlow = (m: THREE.MeshStandardMaterial, v: number): void => { m.emissiveIntensity = v; };
+
+/** Sarcômero fora de cena (coluna das fibras recolhida ou câmera em outra estação): pula o trabalho do quadro. */
+export const unitIdle = (c: Clock, spec: UnitSpec, camX: number): boolean =>
+    (spec.col === 1 && c.mix < 0.02) || Math.abs(camX - STATION_X.a) > 24;

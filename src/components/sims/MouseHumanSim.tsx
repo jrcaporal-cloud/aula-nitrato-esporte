@@ -1,41 +1,39 @@
 import { useReducedMotion } from 'framer-motion';
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { C } from './kit/palette';
-import { BigStat, GH, GW, GraphicPanel, IllustrativeChip, SidePanel, SimFrame } from './ato2b/ui';
-import { MouseHumanScene } from './ato2b/MouseHumanScene';
+import { IllustrativeChip } from './ato2b/ui';
+import { MouseHumanArt } from './ato2b/art/MouseArt';
+import { Stat, WideFrame } from './ato2b/art/WideFrame';
+import { MOUSE_SHORT } from './ato2b/art/copy';
 import { MOUSE_STEPS } from './ato2b/mouse.content';
 
 /**
- * Slide 30 · "Camundongo × Humano". A mesma pergunta em duas espécies: o fenótipo replicou (twitch 164,0 × 136,5 N)
- * mas as proteínas de Ca²⁺ não mudaram (Whitfield 2017; Hernández 2012; Haider 2014). Sabemos o quê, não sabemos por quê.
+ * Slide 30 · "Camundongo × Humano". A mesma pergunta em duas espécies, com os achados como interruptores entre os dois
+ * organismos: o fenótipo replicou (twitch 164,0 × 136,5 N), mas as proteínas de Ca²⁺ não mudaram
+ * (Whitfield 2017; Hernández 2012; Haider 2014). Sabemos o quê, não sabemos por quê.
  */
 
 const MouseHumanSim = () => {
     const { step, setStep } = useSlideSteps(MOUSE_STEPS.length);
     const reduce = useReducedMotion() ?? false;
     const plan = MOUSE_STEPS[step];
+    const stat = step === 1 ? <Stat value="~35%" label="mais rápida a ~100 Hz, só na fibra rápida" color={C.noSoft} />
+        : step === 2 ? <Stat value="164 × 136,5 N" label="twitch de pico, nitrato × placebo" color={C.noSoft} size={26} />
+        : step === 3 ? <Stat value="nenhuma" label="das proteínas de Ca²⁺ mudou" color={C.hypoxia} size={26} />
+        : step === 4 ? (
+            <>
+                <Stat value="o quê ✓" label="replicado em humanos" color={C.noSoft} size={24} />
+                <Stat value="por quê ?" label="desconhecido" color={C.hypoxia} size={24} />
+            </>
+        ) : undefined;
 
     return (
-        <SimFrame tabs={MOUSE_STEPS.map(s => s.tab)} step={step} setStep={setStep} layoutId="ato2b-mouse-tab"
-            chips={<IllustrativeChip text="↑ subiu · = sem mudança · — sem dado" />}>
-            <GraphicPanel>
-                <svg viewBox={`0 0 ${GW} ${GH}`} width="100%" height="100%" className="block" role="img" aria-label={plan.headline}>
-                    <MouseHumanScene step={step} reduce={reduce} />
-                </svg>
-            </GraphicPanel>
-            <SidePanel stepKey={step} headline={plan.headline} text={plan.text} source={plan.source} facts={plan.facts}
-                color={step === 4 ? C.nitrateSoft : C.noSoft}>
-                {step === 1 && <BigStat value="~35%" label="mais rápida a ~100 Hz, só na fibra rápida" color={C.noSoft} />}
-                {step === 2 && <BigStat value="164 × 136,5 N" label="twitch de pico, nitrato × placebo" color={C.noSoft} size={28} />}
-                {step === 3 && <BigStat value="nenhuma" label="das proteínas de Ca²⁺ mudou" color={C.hypoxia} size={28} />}
-                {step === 4 && (
-                    <>
-                        <BigStat value="o quê ✓" label="replicado em humanos" color={C.noSoft} size={28} />
-                        <BigStat value="por quê ?" label="desconhecido" color={C.hypoxia} size={28} />
-                    </>
-                )}
-            </SidePanel>
-        </SimFrame>
+        <WideFrame tabs={MOUSE_STEPS.map(s => s.tab)} step={step} setStep={setStep} layoutId="ato2b-mouse-tab"
+            chips={<IllustrativeChip text="ligado ↑ subiu · no meio = sem mudança · tracejado — sem dado" />} label={plan.headline}
+            glow={step === 4 ? C.nitrate : undefined}
+            scene={<MouseHumanArt step={step} reduce={reduce} />}
+            headline={plan.headline} text={MOUSE_SHORT[step]} color={step === 4 ? C.nitrateSoft : C.noSoft}
+            stat={stat} facts={plan.facts} source={plan.source} />
     );
 };
 

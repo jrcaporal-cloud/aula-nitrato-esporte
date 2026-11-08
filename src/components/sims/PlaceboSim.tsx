@@ -1,7 +1,9 @@
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { C } from './kit/palette';
 import { PLACEBO_STEPS } from './ato5/placeboContent';
-import { JuiceVsSalt, PlaceboTimeline, SameJuice, ThreeArms } from './ato5/PlaceboVisuals';
+import { SameJuice, ThreeArms } from './ato5/PlaceboVisuals';
+import { PlaceboTimeline } from './ato5/PlaceboHistory';
+import { JuiceVsSalt } from './ato5/PlaceboJuiceSalt';
 import { ResinColumn } from './ato5/ResinColumn';
 import { StoryLayout, SimFrame, Tag, BigStat } from './ato5/ui';
 

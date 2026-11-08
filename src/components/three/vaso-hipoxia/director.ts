@@ -11,11 +11,11 @@ import { CAP_Y, FIB_Y, MB_SITES, MITOCHONDRIA, NOS_SITES, SLOW_FIB_Y, XOR_SITES,
 export interface Pose { pos: Vec3; tgt: Vec3 }
 
 export const STEP_POSES: readonly Pose[] = [
-    { pos: [-0.5, 6.6, 21], tgt: [-1.2, 0.9, 0] },
-    { pos: [0.4, 5.8, 18], tgt: [0.4, 1.6, 0] },
-    { pos: [1.0, 5.0, 14.8], tgt: [1.0, 1.9, 0] },
-    { pos: [1.0, 5.0, 17], tgt: [1.0, 1.5, 0] },
-    { pos: [0.8, 3.8, 18], tgt: [0.8, 0.5, 0] },
+    { pos: [-0.6, 6.2, 21.5], tgt: [-1.0, 0.9, 0] },
+    { pos: [0.4, 5.6, 18], tgt: [0.4, 1.6, 0] },
+    { pos: [-0.6, 5.0, 13.6], tgt: [-0.4, 2.85, 0] },
+    { pos: [1.0, 5.0, 16.5], tgt: [1.0, 1.6, 0] },
+    { pos: [0.8, 2.6, 15.5], tgt: [0.6, -0.2, 0] },
     { pos: [-3.2, 7.5, 32], tgt: [-3.2, -2.0, 0] },
 ];
 
@@ -46,7 +46,8 @@ export const STEP_LABELS: readonly (readonly LabelSpec[])[] = [
     [
         lab('hb', 'Desoxi-Hb acesa', 'redutase do nitrito', C.no, [-1.4, CAP_Y + 0.05, 0.3], -40, -66),
         lab('band', 'Taxa máxima', '40–60% de saturação', C.nitrite, [2.6, CAP_Y - 0.1, 0.3], 20, -66),
-        lab('no', 'NO', 'sai do eritrócito', C.noSoft, [-3.0, CAP_Y - 0.9, 0.4], 30, 60),
+        // Para a direita: em 1280×720 o gráfico do canto inferior esquerdo cobria o rótulo.
+        lab('no', 'NO', 'sai do eritrócito', C.noSoft, [-3.0, CAP_Y - 0.9, 0.4], 170, 40),
     ],
     [
         lab('ec', 'EC₅₀ do nitrito', '200 → 40 µM (pH 7,4 → 6,6)', C.nitrite, [-2.6, CAP_Y + 0.8, 0], 20, -56),

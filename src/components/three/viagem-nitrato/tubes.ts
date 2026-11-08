@@ -38,13 +38,17 @@ const frameAt = (c: THREE.Curve<THREE.Vector3>, u: number, n: THREE.Vector3, b: 
     b.crossVectors(tT, n).normalize();
 };
 
+/** Espessura da parede de um órgão de raio r (a fatia do corte e a casca de fora usam a mesma). */
+export const wallOf = (r: number): number => 0.03 + 0.11 * r;
+
 /**
  * Tubo de raio variável. `arc` limita o ângulo: [π, 2π] é a metade de trás (o corte), [0, 2π] o tubo
- * inteiro.
+ * inteiro. `outer` soma a espessura da parede (casca de fora). UV: u ao longo do eixo, v em volta.
  */
-export const tubeGeometry = (o: Organ, tubular: number, radial: number, arc: readonly [number, number] = [0, Math.PI * 2]): THREE.BufferGeometry => {
+export const tubeGeometry = (o: Organ, tubular: number, radial: number, arc: readonly [number, number] = [0, Math.PI * 2], outer = false): THREE.BufferGeometry => {
     const pos: number[] = [];
     const nor: number[] = [];
+    const uvs: number[] = [];
     const idx: number[] = [];
     const pt = new THREE.Vector3();
     const n = new THREE.Vector3();
@@ -53,7 +57,8 @@ export const tubeGeometry = (o: Organ, tubular: number, radial: number, arc: rea
         const u = i / tubular;
         o.curve.getPointAt(u, pt);
         frameAt(o.curve, u, n, b);
-        const r = o.radius(u);
+        const r0 = o.radius(u);
+        const r = outer ? r0 + wallOf(r0) : r0;
         for (let j = 0; j <= radial; j++) {
             const th = arc[0] + ((arc[1] - arc[0]) * j) / radial;
             const cx = Math.cos(th);
@@ -63,6 +68,7 @@ export const tubeGeometry = (o: Organ, tubular: number, radial: number, arc: rea
             const dz = n.z * cx + b.z * sy;
             pos.push(pt.x + dx * r, pt.y + dy * r, pt.z + dz * r);
             nor.push(dx, dy, dz);
+            uvs.push(u, j / radial);
         }
     }
     for (let i = 0; i < tubular; i++) {
@@ -75,23 +81,49 @@ export const tubeGeometry = (o: Organ, tubular: number, radial: number, arc: rea
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     g.setIndex(idx);
     return g;
 };
 
-/** Linha da borda do corte (θ fixo) como tubo fino: destaca a seção. */
-export const rimGeometry = (o: Organ, theta: number, thick: number, samples = 80): THREE.TubeGeometry => {
-    const pts: THREE.Vector3[] = [];
+/**
+ * Fatia do corte: duas fitas planas (θ = π e θ = 0) entre a parede de dentro e a de fora, que mostram a
+ * espessura da parede como numa lâmina anatômica. UV: u ao longo do eixo, v de dentro (0) para fora (1).
+ */
+export const sectionGeometry = (o: Organ, tubular: number): THREE.BufferGeometry => {
+    const pos: number[] = [];
+    const nor: number[] = [];
+    const uvs: number[] = [];
+    const idx: number[] = [];
+    const pt = new THREE.Vector3();
     const n = new THREE.Vector3();
     const b = new THREE.Vector3();
-    for (let i = 0; i <= samples; i++) {
-        const u = i / samples;
-        const p = o.curve.getPointAt(u, new THREE.Vector3());
-        frameAt(o.curve, u, n, b);
-        const r = o.radius(u);
-        pts.push(p.addScaledVector(n, Math.cos(theta) * r).addScaledVector(b, Math.sin(theta) * r));
+    let base = 0;
+    for (const sign of [-1, 1]) {
+        for (let i = 0; i <= tubular; i++) {
+            const u = i / tubular;
+            o.curve.getPointAt(u, pt);
+            frameAt(o.curve, u, n, b);
+            const r = o.radius(u);
+            for (const k of [0, 1]) {
+                const rr = r + k * wallOf(r);
+                pos.push(pt.x + n.x * sign * rr, pt.y + n.y * sign * rr, pt.z + n.z * sign * rr);
+                nor.push(b.x, b.y, b.z);
+                uvs.push(u, k);
+            }
+        }
+        for (let i = 0; i < tubular; i++) {
+            const a = base + i * 2;
+            idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2);
+        }
+        base += (tubular + 1) * 2;
     }
-    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), samples, thick, 5, false);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3));
+    g.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+    g.setIndex(idx);
+    return g;
 };
 
 /* ── Tabela de pontos: ponto, normal, binormal e raio por amostra, para colocar partículas dentro do tubo ── */

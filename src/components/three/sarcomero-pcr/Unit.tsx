@@ -6,9 +6,14 @@ import { getGlowTexture } from '../shared/glow';
 import type { ClockRef } from './clock';
 import { COL, condColor } from './colors';
 import { CalciumCloud, SparkCloud } from './Clouds';
+import { Bands } from './Bands';
+import { Energy } from './Energy';
 import { Filaments } from './Filaments';
 import { Membranes } from './Membranes';
-import { SARC, unitOrigin, type UnitSpec } from './layout';
+import { Mito } from './Mito';
+import { Tank } from './Tank';
+import { ThinHalf } from './ThinHalf';
+import { unitOrigin, type UnitSpec } from './layout';
 import { setOpacity } from './look';
 import { noRaycast } from './points';
 
@@ -45,19 +50,21 @@ export const Unit = ({ spec, clockRef }: Props) => {
     const accent = condColor(spec.cond);
     return (
         <group ref={group}>
+            <Mito spec={spec} clockRef={clockRef} />
             <Filaments spec={spec} clockRef={clockRef} />
+            <ThinHalf spec={spec} clockRef={clockRef} side={1} />
+            <ThinHalf spec={spec} clockRef={clockRef} side={-1} />
             <Membranes spec={spec} clockRef={clockRef} />
+            <Bands spec={spec} clockRef={clockRef} />
+            <Energy spec={spec} clockRef={clockRef} />
+            <Tank spec={spec} clockRef={clockRef} />
             <CalciumCloud spec={spec} clockRef={clockRef} />
             <SparkCloud spec={spec} clockRef={clockRef} />
             <mesh ref={halo} material={haloM} position={[0, 0, -0.9]} scale={[4.6, 2.0, 1]} raycast={noRaycast}>
                 <planeGeometry args={[1, 1]} />
             </mesh>
-            <mesh position={[0, -(SARC.srR + 0.1), 0]} raycast={noRaycast}>
-                <boxGeometry args={[3.5, 0.03, 0.03]} />
-                <meshBasicMaterial color={accent} />
-            </mesh>
             {spec.col === 0 && (
-                <Html position={[-1.95, 0, 0]} zIndexRange={[30, 10]} style={{ pointerEvents: 'none' }}>
+                <Html position={[-1.95, spec.cond === 'placebo' ? 0.1 : -0.2, 0]} zIndexRange={[30, 10]} style={{ pointerEvents: 'none' }}>
                     <div
                         className="font-mono text-[14px] font-bold tracking-wider px-3 py-1 rounded-md whitespace-nowrap"
                         style={{ transform: 'translate(-100%, -50%)', color: spec.cond === 'nitrate' ? '#fff' : '#E5E7EB', background: 'rgba(10,6,14,0.82)', border: `1px solid ${accent}`, boxShadow: `0 0 14px ${accent}55` }}

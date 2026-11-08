@@ -28,6 +28,11 @@ export const stroke = (ctx: CanvasRenderingContext2D, pts: readonly (readonly [n
     ctx.setLineDash(dash);
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
+    // linhas de dado (largas e cheias) ganham um brilho suave da própria cor
+    if (width >= 2.2 && dash.length === 0) {
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 10;
+    }
     ctx.beginPath();
     ctx.moveTo(pts[0][0], pts[0][1]);
     for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);

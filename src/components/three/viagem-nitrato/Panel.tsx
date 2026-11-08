@@ -7,7 +7,7 @@ import { CHX_EFFECTS, CHX_NOTE } from './content';
 interface ChxProps { on: boolean; onChange: (v: boolean) => void }
 
 export const ChxSwitch = ({ on, onChange }: ChxProps) => (
-    <section className="mt-4 pt-3 border-t border-white/10">
+    <section className="mt-3 pt-3 border-t border-white/10">
         <div className="flex items-center gap-3">
             <div className="flex-1 min-w-0">
                 <h4 className="text-[15px] font-semibold text-white leading-tight">Bochechar com clorexidina</h4>
@@ -24,16 +24,16 @@ export const ChxSwitch = ({ on, onChange }: ChxProps) => (
             </button>
         </div>
         {on && (
-            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="mt-3">
+            <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="mt-2">
                 <ul className="space-y-1">
                     {CHX_EFFECTS.map(e => (
-                        <li key={e.label} className="flex items-baseline justify-between gap-3 rounded-lg px-3 py-1 bg-white/[0.04] border border-white/10">
+                        <li key={e.label} className="flex items-baseline justify-between gap-3 rounded-lg px-3 py-0.5 bg-white/[0.04] border border-white/10">
                             <span className="text-[14px] text-gray-300">{e.label}</span>
                             <span className="font-mono text-[17px] font-semibold whitespace-nowrap" style={{ color: e.color === 'risk' ? C.risk : C.nitrite }}>{e.value}</span>
                         </li>
                     ))}
                 </ul>
-                <p className="mt-2 text-[14px] text-gray-400 leading-snug">{CHX_NOTE}</p>
+                <p className="mt-1.5 text-[14px] text-gray-400 leading-snug">{CHX_NOTE}</p>
                 <p className="mt-1 text-[14px] font-mono text-gray-400">KAPIL2013 · 19 voluntários · 7 dias</p>
             </motion.div>
         )}

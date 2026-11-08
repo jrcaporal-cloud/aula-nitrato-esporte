@@ -10,9 +10,13 @@ export interface Pose { pos: Vec3; tgt: Vec3 }
 /** Proporção do quadro 3D (largura/altura) para a qual as poses foram desenhadas (1280×720 com o HUD). */
 const REF_ASPECT = 1.83;
 
-/** Quadros mais estreitos recuam a câmera, para o que cabe em largura continuar cabendo. */
-export const fitPose = (pose: Pose, aspect: number): Pose => {
-    const k = Math.max(1, REF_ASPECT / Math.max(aspect, 0.5));
+/**
+ * Quadros mais estreitos recuam a câmera, para o que cabe em largura continuar cabendo. Quadros altos (telas
+ * grandes) aproximam um pouco: os rótulos têm tamanho fixo em pixels e sobra espaço para eles.
+ */
+export const fitPose = (pose: Pose, aspect: number, heightPx = 468): Pose => {
+    const tall = Math.min(Math.max((heightPx - 468) / 360, 0), 1);
+    const k = Math.max(1, REF_ASPECT / Math.max(aspect, 0.5)) * (1 - 0.16 * tall);
     const [px, py, pz] = pose.pos;
     const [tx, ty, tz] = pose.tgt;
     return { pos: [tx + (px - tx) * k, ty + (py - ty) * k, tz + (pz - tz) * k], tgt: pose.tgt };
@@ -51,7 +55,10 @@ export const halfLen = (act: number): number => lerp(SARC.halfRelaxed, SARC.half
 /** Cada estação da cena fica num ponto do eixo x; a câmera voa de uma à outra. */
 export const STATION_X: Readonly<Record<StationId, number>> = { a: 0, c: 38, d: 76 };
 
-export const ROW_Y: Readonly<Record<Cond, number>> = { placebo: 0.84, nitrate: -0.84 };
+export const ROW_Y: Readonly<Record<Cond, number>> = { placebo: 0.95, nitrate: -0.95 };
+
+/** Posição (no sarcômero) dos tubos de estoque de PCr e de Cr. */
+export const TANK_X = { pcr: 2.3, cr: 2.62 } as const;
 export const COL_X = [-2.05, 2.05] as const;
 
 /** Origem do sarcômero; `mix` 0 = coluna única, 1 = duas colunas (etapa das fibras). */

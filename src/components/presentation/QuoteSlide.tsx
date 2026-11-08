@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
 import type { ComponentType } from 'react';
 import type { SlideSchema } from './TitleSlide';
+import { renderSlideContent } from './slideContent';
+
+const COMP_TOKEN = /\[\[COMP:\w+\]\]/;
 
 /** Ilustração própria de algumas citações (por id do JSON); as demais usam o traço de cor. */
 const QUOTE_ILLUSTRATIONS: Record<number, ComponentType> = {};
@@ -11,6 +14,14 @@ const QUOTE_ILLUSTRATIONS: Record<number, ComponentType> = {};
  */
 export const QuoteSlide = ({ slide }: { slide: SlideSchema }) => {
     const Illustration = QUOTE_ILLUSTRATIONS[slide.id];
+    // Fecho com arte própria ([[COMP:…]]): o simulador ocupa o palco inteiro, sem o traço de cor.
+    if (COMP_TOKEN.test(slide.content)) {
+        return (
+            <div className="w-full min-h-[560px] flex items-center justify-center relative z-10">
+                {renderSlideContent(slide.content)}
+            </div>
+        );
+    }
     return (
     <div className="quote-slide w-full min-h-[560px] flex flex-col items-center justify-center text-center px-16 relative z-10">
         {Illustration ? (

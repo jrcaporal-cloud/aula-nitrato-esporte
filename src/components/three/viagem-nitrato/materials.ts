@@ -1,24 +1,11 @@
 import * as THREE from 'three';
-import { C } from '../../sims/kit/palette';
 import { getGlowTexture } from '../shared/glow';
 
 /*
- * Materiais e utilitários de instância. Os tecidos ficam em tons neutros (ardósia, malva
- * dessaturado) para que a cor saturada seja só dos íons: magenta = nitrato, âmbar = nitrito,
+ * Materiais e utilitários de instância. Os tecidos ficam em tons de malva fosco para que a cor
+ * saturada seja só dos íons: magenta = nitrato, âmbar = nitrito,
  * verde = NO, violeta = bactérias, laranja = hipóxia/acidez.
  */
-
-export const TISSUE = {
-    wall: '#2B2D38',
-    rim: C.placebo,
-    gland: '#6A5866',
-    tongue: '#7E5260',
-    muscle: '#6E4040',
-    kidney: '#54404E',
-    bladder: '#4A4258',
-} as const;
-
-export const dark = (hex: string, k: number): THREE.Color => new THREE.Color(hex).multiplyScalar(k);
 
 /** Casca translúcida de "vidro": brilha na silhueta (fresnel) e quase some de frente. */
 export const fresnelMaterial = (hex: string, strength: number): THREE.ShaderMaterial => new THREE.ShaderMaterial({
@@ -31,21 +18,6 @@ export const fresnelMaterial = (hex: string, strength: number): THREE.ShaderMate
     fragmentShader: `uniform vec3 uColor; uniform float uK; varying vec3 vN; varying vec3 vV;
         void main(){ float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.4); gl_FragColor = vec4(uColor, f * uK); }`,
 });
-
-/** Parede interna do corte (metade de trás do tubo). */
-export const wallMaterial = (base: string, emissive: string, emissiveIntensity: number): THREE.MeshStandardMaterial =>
-    new THREE.MeshStandardMaterial({
-        color: new THREE.Color(base),
-        emissive: new THREE.Color(emissive),
-        emissiveIntensity,
-        roughness: 0.72,
-        metalness: 0.04,
-        side: THREE.DoubleSide,
-    });
-
-/** Borda brilhante do corte. */
-export const rimMaterial = (hex: string, intensity = 1.2): THREE.MeshStandardMaterial =>
-    new THREE.MeshStandardMaterial({ color: new THREE.Color(hex), emissive: new THREE.Color(hex), emissiveIntensity: intensity, roughness: 0.4 });
 
 /** Átomo de um íon: esfera com brilho próprio (N mais escuro, O mais claro). */
 export const atomMaterial = (hex: string, k = 1): THREE.MeshStandardMaterial =>

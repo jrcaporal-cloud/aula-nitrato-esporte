@@ -1,7 +1,9 @@
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { C } from './kit/palette';
 import { SEX_STEPS } from './ato5/sexContent';
-import { DatasetSquares, DesignedTrial, HelenaCard, ParticipantPictogram, WomenInterval } from './ato5/SexVisuals';
+import { DatasetSquares, ParticipantPictogram } from './ato5/SexVisuals';
+import { DesignedTrial, WomenInterval } from './ato5/SexStats';
+import { HelenaCard } from './ato5/SexHelena';
 import { SimFrame, StoryLayout, Tag } from './ato5/ui';
 
 /**

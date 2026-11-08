@@ -4,8 +4,9 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { C } from '../../sims/kit/palette';
 import { HYPOXIA_POS, MUSCLE } from './anatomy';
-import { CutOrgan } from './CutOrgan';
-import { HALO_PLANE, TISSUE, haloMaterial, rimMaterial, setEmissive } from './materials';
+import { CutOrgan, type BumpSpec, type Tint } from './CutOrgan';
+import { flowOf, flowify, matOf } from './fx';
+import { HALO_PLANE, haloMaterial } from './materials';
 import { useStructure } from './selection';
 import type { VnStateRef } from './state';
 import { buildLut, lutPoint } from './tubes';
@@ -15,27 +16,40 @@ import { buildLut, lutPoint } from './tubes';
  * (o único "aceno" desta cena para o modelo vaso-hipoxia).
  */
 
-const MUSCLE_RIM = '#C48E86';
-const STRANDS = 8;
-const STRAND_SAMPLES = 16;
+const MUSCLE_RIM = '#D49A92';
+const STRANDS = 14;
+const STRAND_SAMPLES = 18;
+const BUMP: BumpSpec = { kind: 'muscle', repeat: [3, 1.5], scale: 2.2 };
+const MUSCLE_TINT: Tint = { color: C.hypoxia, amount: f => f.w.hypoxia * 0.5 };
 
-/** Feixes de fibras ao longo do fuso, só na metade de trás (a da frente fica livre para os íons). */
-const Fibers = () => {
+/** Feixes de fibras ao longo do fuso, só na metade de trás (a da frente fica livre para os íons). Contraem (pulsam) no esforço. */
+const Fibers = ({ stateRef }: { stateRef: VnStateRef }) => {
     const { bind, lit } = useStructure('musculo');
-    const mesh = useRef<THREE.Mesh>(null);
+    const litRef = useRef(lit);
+    useEffect(() => { litRef.current = lit; }, [lit]);
     const parts = useMemo(() => {
         const lut = buildLut(MUSCLE, 100);
         const out = new THREE.Vector3();
         const tubes = Array.from({ length: STRANDS }, (_, k) => {
             const phi = Math.PI + ((k + 0.5) / STRANDS) * Math.PI;
+            const rad = 0.55 + 0.3 * ((k * 7) % 5) / 4;
             const pts = Array.from({ length: STRAND_SAMPLES }, (_, i) =>
-                lutPoint(lut, 0.04 + (0.92 * i) / (STRAND_SAMPLES - 1), Math.cos(phi) * 0.8, Math.sin(phi) * 0.8, out).clone());
-            return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 40, 0.034, 5, false);
+                lutPoint(lut, 0.04 + (0.92 * i) / (STRAND_SAMPLES - 1), Math.cos(phi) * rad, Math.sin(phi) * rad, out).clone());
+            return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 48, 0.03, 6, false);
         });
-        return { geo: mergeGeometries(tubes, false), mat: rimMaterial(MUSCLE_RIM, 0.55) };
+        const mat = new THREE.MeshStandardMaterial({ color: '#8A5A58', emissive: MUSCLE_RIM, emissiveIntensity: 0.5, roughness: 0.45 });
+        flowify(mat, { color: C.hypoxia, freq: 7, speed: 0.8 });
+        return { geo: mergeGeometries(tubes, false) ?? new THREE.BufferGeometry(), mat };
     }, []);
-    useEffect(() => () => { parts.geo?.dispose(); parts.mat.dispose(); }, [parts]);
-    useFrame(() => setEmissive(mesh.current?.material, lit ? 1.6 : 0.55));
+    const mesh = useRef<THREE.Mesh>(null);
+    useEffect(() => () => { parts.geo.dispose(); parts.mat.dispose(); }, [parts]);
+    useFrame(() => {
+        const f = stateRef.current.f;
+        const fm = matOf<THREE.MeshStandardMaterial>(mesh);
+        const fh = flowOf(fm);
+        if (fm) fm.emissiveIntensity = litRef.current ? 1.1 : 0.12 + 0.3 * f.focus.musculo;
+        if (fh) fh.amount.value = f.w.hypoxia * 0.55;
+    });
     return <mesh ref={mesh} geometry={parts.geo} material={parts.mat} {...bind} />;
 };
 
@@ -58,8 +72,8 @@ const HypoxiaGlow = ({ stateRef }: { stateRef: VnStateRef }) => {
 
 export const Muscle = ({ stateRef }: { stateRef: VnStateRef }) => (
     <group>
-        <CutOrgan id="musculo" organ={MUSCLE} base={TISSUE.muscle} emissive={MUSCLE_RIM} rim={MUSCLE_RIM} tubular={80} radial={32} shell={0.55} rimThick={0.04} />
-        <Fibers />
+        <CutOrgan id="musculo" organ={MUSCLE} base="#7A4A4A" emissive={MUSCLE_RIM} rim={MUSCLE_RIM} cut="#E8B0A6" tubular={80} radial={32} shell={0.55} stateRef={stateRef} bump={BUMP} tint={MUSCLE_TINT} glow={0.2} />
+        <Fibers stateRef={stateRef} />
         <HypoxiaGlow stateRef={stateRef} />
     </group>
 );

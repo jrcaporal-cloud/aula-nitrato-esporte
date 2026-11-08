@@ -1,7 +1,10 @@
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { C } from './kit/palette';
 import { BLINDING_STEPS } from './ato5/blindingContent';
-import { BangScale, BeeturiaGrids, ReportTable, UrnVsChance } from './ato5/BlindingVisuals';
+import { BangScale } from './ato5/BlindingVisuals';
+import { UrnVsChance } from './ato5/BlindingChance';
+import { BeeturiaGrids } from './ato5/BlindingBeeturia';
+import { ReportSeals } from './ato5/BlindingReport';
 import { SimFrame, StoryLayout, Tag } from './ato5/ui';
 
 /**
@@ -9,7 +12,7 @@ import { SimFrame, StoryLayout, Tag } from './ato5/ui';
  * que aparece nos dois braços e a diferença entre medir o cego e reportá-lo.
  */
 
-const VISUALS = [BangScale, UrnVsChance, BeeturiaGrids, ReportTable];
+const VISUALS = [BangScale, UrnVsChance, BeeturiaGrids, ReportSeals];
 const TONES = [C.no, C.no, C.nitrate, C.nitrite];
 
 const BlindingSim = () => {

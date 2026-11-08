@@ -28,6 +28,8 @@ export interface StreamDef {
     /** Sem desvanecer nas pontas (íons que ficam parados, como na bexiga). */
     resident?: boolean;
     place: (sd: IonSeed, s: number, t: number, out: THREE.Vector3) => void;
+    /** Comprimento da rota no mundo (o rastro do íon tem tamanho fixo em unidades, não em fração). */
+    span: number;
     level: (f: VnFrame) => number;
     species: (f: VnFrame, sd: IonSeed, s: number) => Species;
     /** Posição s da rota em que o nitrato vira nitrito (dá um pulso de tamanho). */
@@ -43,6 +45,9 @@ const plasmaSpecies = (f: VnFrame, sd: IonSeed): Species => (sd.r < f.nitrite * 
 /** Posição dentro do tubo da rota, com um balanço leve. */
 const along = (r: Route, spread: number) => (sd: IonSeed, s: number, t: number, out: THREE.Vector3) =>
     routePoint(r, s, sd.a * spread + 0.1 * Math.sin(t * 2.1 + sd.ph * 6.3), sd.b * spread + 0.1 * Math.cos(t * 1.7 + sd.ph * 6.3), out);
+
+const spanOf = (r: Route): number => r.legs.reduce((a, l) => a + l.len, 0);
+const pl = (r: Route, spread: number) => ({ place: along(r, spread), span: spanOf(r) });
 
 const GUT_LUT = buildLut(GUT, 220);
 const PORTAL = route(leg(TRUNK, 0, 0.2));
@@ -96,16 +101,16 @@ const convP = routeAt(salivaP, 3, 0.4);
 const convS = routeAt(salivaS, 3, 0.55);
 
 export const STREAMS: readonly StreamDef[] = [
-    { weight: 'swallow', count: 30, period: 24, place: along(swallowRoute, 0.55), level: () => 1, species: nitrateOnly },
-    { weight: 'absorb', count: 26, period: 7, place: absorbPlace, level: f => Math.max(0.35, 1 - f.nitrate * 0.3), species: nitrateOnly },
-    { weight: 'plasmaP', count: 16, period: 16, place: along(route(leg(TRUNK)), 0.6), level: plasmaLevel, species: plasmaSpecies },
-    { weight: 'plasmaS', count: 12, period: 16, place: along(route(leg(TRUNK, 0, TRUNK_AT_BRANCH), leg(BRANCH_S)), 0.6), level: plasmaLevel, species: plasmaSpecies },
-    { weight: 'plasmaK', count: 12, period: 11, place: along(route(leg(TRUNK, 0, TRUNK_AT_RENAL), leg(RENAL)), 0.6), level: plasmaLevel, species: plasmaSpecies },
-    ...legRoutes.map<StreamDef>(r => ({ weight: 'plasmaL', count: 7, period: 15, place: along(r, 0.6), level: plasmaLevel, species: plasmaSpecies })),
-    { weight: 'salivaP', count: 30, period: 15, place: along(salivaP, 0.8), level: f => f.nitrate, species: salivaSpecies(convP), convertAt: convP },
-    { weight: 'salivaS', count: 22, period: 15, place: along(salivaS, 0.8), level: f => f.nitrate, species: salivaSpecies(convS), convertAt: convS },
-    { weight: 'urine', count: 22, period: 9, place: along(route(leg(KIDNEY_IN), leg(URETER)), 0.5), level: () => 1, species: nitrateOnly },
-    { weight: 'bladder', count: 36, period: 1, resident: true, place: bladderPlace, level: f => Math.min(f.excreted / URINE_48H, 1), species: nitrateOnly },
+    { weight: 'swallow', count: 30, period: 24, ...pl(swallowRoute, 0.55), level: () => 1, species: nitrateOnly },
+    { weight: 'absorb', count: 26, period: 7, place: absorbPlace, span: 9, level: f => Math.max(0.35, 1 - f.nitrate * 0.3), species: nitrateOnly },
+    { weight: 'plasmaP', count: 16, period: 16, ...pl(route(leg(TRUNK)), 0.6), level: plasmaLevel, species: plasmaSpecies },
+    { weight: 'plasmaS', count: 12, period: 16, ...pl(route(leg(TRUNK, 0, TRUNK_AT_BRANCH), leg(BRANCH_S)), 0.6), level: plasmaLevel, species: plasmaSpecies },
+    { weight: 'plasmaK', count: 12, period: 11, ...pl(route(leg(TRUNK, 0, TRUNK_AT_RENAL), leg(RENAL)), 0.6), level: plasmaLevel, species: plasmaSpecies },
+    ...legRoutes.map<StreamDef>(r => ({ weight: 'plasmaL', count: 7, period: 15, ...pl(r, 0.6), level: plasmaLevel, species: plasmaSpecies })),
+    { weight: 'salivaP', count: 30, period: 15, ...pl(salivaP, 0.8), level: f => f.nitrate, species: salivaSpecies(convP), convertAt: convP },
+    { weight: 'salivaS', count: 22, period: 15, ...pl(salivaS, 0.8), level: f => f.nitrate, species: salivaSpecies(convS), convertAt: convS },
+    { weight: 'urine', count: 22, period: 9, ...pl(route(leg(KIDNEY_IN), leg(URETER)), 0.5), level: () => 1, species: nitrateOnly },
+    { weight: 'bladder', count: 36, period: 1, resident: true, place: bladderPlace, span: 1, level: f => Math.min(f.excreted / URINE_48H, 1), species: nitrateOnly },
 ];
 
 export const TOTAL_IONS = STREAMS.reduce((n, s) => n + s.count, 0);

@@ -1,3 +1,5 @@
+import { FOCUS_KEYS, focusAt } from './focus';
+import type { StructureId } from './structures';
 import { SWEEP_S, STEP_CLOCK, excreted, muscleNitrate, plasmaNitrate, plasmaNitrite } from './pk';
 import { WEIGHTS, WEIGHT_KEYS, weightAt, type WeightKey } from './weights';
 
@@ -23,6 +25,8 @@ export interface VnFrame {
     chx: number;
     /** Presença de cada sistema (0 … 1). */
     w: Record<WeightKey, number>;
+    /** Destaque de cada estrutura na etapa (1 = foco, ~0,3 = esmaecida). */
+    focus: Record<StructureId, number>;
     nitrate: number;
     nitrite: number;
     muscle: number;
@@ -35,9 +39,12 @@ export type VnStateRef = { readonly current: VnState };
 const zeroWeights = (): Record<WeightKey, number> =>
     Object.fromEntries(WEIGHT_KEYS.map(k => [k, 0])) as Record<WeightKey, number>;
 
+const zeroFocus = (): Record<StructureId, number> =>
+    Object.fromEntries(FOCUS_KEYS.map(k => [k, 0.5])) as Record<StructureId, number>;
+
 export const makeState = (): VnState => ({
     in: { chx: false },
-    f: { T: 0, hours: 0, arrive: 0, chx: 0, w: zeroWeights(), nitrate: 0, nitrite: 0, muscle: 0, excreted: 0 },
+    f: { T: 0, hours: 0, arrive: 0, chx: 0, w: zeroWeights(), focus: zeroFocus(), nitrate: 0, nitrite: 0, muscle: 0, excreted: 0 },
 });
 
 const easeOut = (x: number) => 1 - (1 - x) * (1 - x);
@@ -46,6 +53,7 @@ export const writeFrame = (st: VnState, T: number, dt: number): void => {
     const f = st.f;
     f.T = T;
     for (const k of WEIGHT_KEYS) f.w[k] = weightAt(WEIGHTS[k], T);
+    for (const k of FOCUS_KEYS) f.focus[k] = focusAt(k, T);
     const step = Math.min(Math.max(Math.round(T), 0), STEP_CLOCK.length - 1);
     f.arrive = Math.abs(T - step) < 0.02 ? f.arrive + dt : 0;
     const [h0, h1] = STEP_CLOCK[step];

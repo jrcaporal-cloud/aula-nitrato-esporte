@@ -152,8 +152,8 @@ export const STRUCTURES: Readonly<Record<StructureId, StructureInfo>> = {
 };
 
 /** Legenda de cores (a mesma linguagem do resto da aula). */
-export const OXY_COLOR = '#F08AA0';
-export const DEOXY_COLOR = '#5E1631';
+export const OXY_COLOR = '#F2506E';
+export const DEOXY_COLOR = '#4B1030';
 
 export const LEGEND: readonly (readonly [string, string])[] = [
     [C.nitrite, 'Nitrito NO₂⁻'],

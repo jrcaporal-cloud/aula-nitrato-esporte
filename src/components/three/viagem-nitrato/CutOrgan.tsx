@@ -1,77 +1,131 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { fresnelMaterial, rimMaterial, wallMaterial } from './materials';
+import { damp, flowOf, flowify, matOf } from './fx';
+import { fresnelMaterial } from './materials';
 import { useStructure } from './selection';
 import type { VnFrame, VnStateRef } from './state';
 import type { StructureId } from './structures';
-import { rimGeometry, tubeGeometry, type Organ } from './tubes';
+import { bumpTexture, type BumpKind } from './textures';
+import { sectionGeometry, tubeGeometry, type Organ } from './tubes';
 
 /*
- * Órgão tubular em corte: metade de trás opaca (a parede vista por dentro), borda do corte brilhante
- * e casca da frente quase invisível (só a silhueta). `tint` empurra a cor do brilho da parede para
- * outra cor conforme o estado da cena (ex.: o ácido do estômago).
+ * Órgão tubular em corte anatômico: a metade de trás (a mucosa vista por dentro, com relevo), a fatia do
+ * corte (a espessura da parede, em fita clara), uma casca de vidro na frente e, se pedido, um pulso de
+ * luz que corre pelo tubo no sentido do fluxo. O foco da etapa acende o órgão em destaque e
+ * esmaece os outros. `tint` empurra o brilho da parede para outra cor conforme a cena (o ácido do estômago).
  */
 
 const BACK: readonly [number, number] = [Math.PI, Math.PI * 2];
 
 export interface Tint { color: string; amount: (f: VnFrame) => number }
 
+export interface BumpSpec { kind: BumpKind; repeat: readonly [number, number]; scale: number }
+
+export interface FlowSpec {
+    color: string;
+    freq: number;
+    speed: number;
+    /** Intensidade do pulso (padrão 0,9); `level` a multiplica por quadro (0 … 1). */
+    amount?: number;
+    level?: (f: VnFrame) => number;
+    /** Troca a cor do pulso por quadro (ex.: nitrato → nitrito no plasma). */
+    tint?: (f: VnFrame, out: THREE.Color) => void;
+}
+
 export interface CutOrganProps {
     id: StructureId;
     organ: Organ;
     base: string;
     emissive: string;
+    /** Cor da casca de vidro. */
     rim: string;
+    /** Cor da fatia do corte. */
+    cut?: string;
     tubular: number;
     radial: number;
     /** Força da casca da frente (0 = sem casca, para vasos finos). */
     shell?: number;
-    rimThick?: number;
-    stateRef?: VnStateRef;
+    stateRef: VnStateRef;
     tint?: Tint;
+    bump?: BumpSpec;
+    flow?: FlowSpec;
+    /** Brilho de repouso da parede (padrão 0,16). */
+    glow?: number;
 }
 
-export const CutOrgan = ({ id, organ, base, emissive, rim, tubular, radial, shell = 0.5, rimThick = 0.045, stateRef, tint }: CutOrganProps) => {
+export const CutOrgan = ({ id, organ, base, emissive, rim, cut = '#D8B9BF', tubular, radial, shell = 0.5, stateRef, tint, bump, flow, glow = 0.16 }: CutOrganProps) => {
     const geo = useMemo(() => ({
         wall: tubeGeometry(organ, tubular, radial, BACK),
-        shell: shell > 0 ? tubeGeometry(organ, tubular, radial) : null,
-        rimA: rimGeometry(organ, Math.PI, rimThick),
-        rimB: rimGeometry(organ, 0, rimThick),
-    }), [organ, tubular, radial, shell, rimThick]);
-    const mats = useMemo(() => ({
-        wall: wallMaterial(base, emissive, 0.12),
-        shell: shell > 0 ? fresnelMaterial(rim, shell) : null,
-        rim: rimMaterial(rim, 0.9),
-    }), [base, emissive, rim, shell]);
+        shell: shell > 0 ? tubeGeometry(organ, tubular, radial, [0, Math.PI * 2], true) : null,
+        cut: sectionGeometry(organ, tubular),
+    }), [organ, tubular, radial, shell]);
+
+    const res = useMemo(() => {
+        const tex = bump ? bumpTexture(bump.kind).clone() : null;
+        if (tex && bump) {
+            tex.repeat.set(bump.repeat[0], bump.repeat[1]);
+            tex.needsUpdate = true;
+        }
+        const wall = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(base), emissive: new THREE.Color(emissive), emissiveIntensity: glow,
+            roughness: 0.38, metalness: 0.02, side: THREE.DoubleSide,
+        });
+        if (tex && bump) {
+            wall.bumpMap = tex;
+            wall.bumpScale = bump.scale;
+        }
+        if (flow) flowify(wall, { color: flow.color, freq: flow.freq, speed: flow.speed });
+        return {
+            tex, wall,
+            shell: shell > 0 ? fresnelMaterial(rim, shell) : null,
+            cut: new THREE.MeshStandardMaterial({ color: new THREE.Color(cut), emissive: new THREE.Color(cut), emissiveIntensity: 0.3, roughness: 0.6, side: THREE.DoubleSide }),
+        };
+    }, [base, emissive, glow, bump, flow, shell, rim, cut]);
+
     const { bind, lit } = useStructure(id);
+    const litRef = useRef(lit);
+    useEffect(() => { litRef.current = lit; }, [lit]);
+    const cols = useMemo(() => ({ base: new THREE.Color(base), emi: new THREE.Color(emissive), tint: tint ? new THREE.Color(tint.color) : null, cut: new THREE.Color(cut) }), [base, emissive, tint, cut]);
+    const dim = useRef(0.5);
     const wallRef = useRef<THREE.Mesh>(null);
-    const rimRef = useRef<THREE.Mesh>(null);
-    const tintColor = useMemo(() => (tint ? new THREE.Color(tint.color) : null), [tint]);
-    const baseEmissive = useMemo(() => new THREE.Color(emissive), [emissive]);
+    const cutRef = useRef<THREE.Mesh>(null);
+    const shellRef = useRef<THREE.Mesh>(null);
 
     useEffect(() => () => {
         Object.values(geo).forEach(g => g?.dispose());
-        Object.values(mats).forEach(m => m?.dispose());
-    }, [geo, mats]);
+        res.wall.dispose(); res.shell?.dispose(); res.cut.dispose(); res.tex?.dispose();
+    }, [geo, res]);
 
-    // materiais mexidos pela malha (ref), não pelo valor memorizado
-    useFrame(() => {
-        const wall = wallRef.current?.material as THREE.MeshStandardMaterial | undefined;
-        const rimM = rimRef.current?.material as THREE.MeshStandardMaterial | undefined;
-        if (!wall || !rimM) return;
-        const k = tint && tintColor && stateRef ? tint.amount(stateRef.current.f) : 0;
-        if (tintColor) wall.emissive.copy(baseEmissive).lerp(tintColor, Math.min(k, 1));
-        wall.emissiveIntensity = (lit ? 0.45 : 0.12) + k * 0.16;
-        rimM.emissiveIntensity = lit ? 2.2 : 0.9;
+    useFrame((_, delta) => {
+        const f = stateRef.current.f;
+        dim.current = damp(dim.current, f.focus[id], 5, Math.min(delta, 0.1));
+        const k = litRef.current ? 1 : dim.current;
+        const shade = 0.5 + 0.5 * k;
+        const t = tint ? tint.amount(f) : 0;
+        const w = matOf<THREE.MeshStandardMaterial>(wallRef);
+        const c = matOf<THREE.MeshStandardMaterial>(cutRef);
+        const sh = matOf<THREE.ShaderMaterial>(shellRef);
+        if (!w || !c) return;
+        w.color.copy(cols.base).multiplyScalar(shade);
+        w.emissive.copy(cols.emi);
+        if (cols.tint) w.emissive.lerp(cols.tint, Math.min(t, 1));
+        w.emissiveIntensity = (litRef.current ? 0.5 : glow * (0.45 + 0.9 * k)) + t * 0.2;
+        c.emissiveIntensity = 0.06 + 0.3 * k + (litRef.current ? 0.4 : 0);
+        c.color.copy(cols.cut).multiplyScalar(0.3 + 0.6 * k);
+        if (sh) sh.uniforms.uK.value = shell * (0.55 + 0.8 * k);
+        const fh = flowOf(w);
+        if (fh && flow) {
+            fh.amount.value = (flow.amount ?? 0.9) * (flow.level ? flow.level(f) : 1) * (0.15 + 0.85 * k);
+            if (flow.tint) flow.tint(f, fh.color.value);
+        }
     });
 
     return (
         <group>
-            <mesh ref={wallRef} geometry={geo.wall} material={mats.wall} {...bind} />
-            {geo.shell && mats.shell && <mesh geometry={geo.shell} material={mats.shell} {...bind} />}
-            <mesh ref={rimRef} geometry={geo.rimA} material={mats.rim} />
-            <mesh geometry={geo.rimB} material={mats.rim} />
+            <mesh ref={wallRef} geometry={geo.wall} material={res.wall} {...bind} />
+            {geo.shell && res.shell && <mesh ref={shellRef} geometry={geo.shell} material={res.shell} renderOrder={2} {...bind} />}
+            <mesh ref={cutRef} geometry={geo.cut} material={res.cut} />
         </group>
     );
 };

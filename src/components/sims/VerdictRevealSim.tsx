@@ -4,13 +4,14 @@ import { C } from './kit/palette';
 import { Chip } from './kit/ui';
 import { CLAIMS, readVotes, type Votes } from './ato6/claimsBridge';
 import { REVEALED_BY_STEP, VERDICT_TABS } from './ato6/verdictContent';
-import { VerdictRow } from './ato6/VerdictRow';
-import { Shell } from './ato6/ui';
+import { ArteShell } from './ato6/arte-b/kit';
+import { EvidencePair, Urn } from './ato6/arte-b/verdict/Evidence';
+import { Scoreboard } from './ato6/arte-b/verdict/Scoreboard';
 
 /**
- * Slide 87 — O Veredito da Turma. Volta às 6 frases do slide 10 e lê os votos gravados neste navegador
- * (localStorage, chave `aula-nitrato:votos`). Passo 1: os votos; passos 2–4: o passador vira duas frases por vez
- * com a resposta e a explicação. Sem votos (ou sem storage), mostra só as respostas e avisa.
+ * Slide 87 — O Veredito da Turma. Placar da plenária: as 6 frases do slide 10 com o voto gravado neste navegador
+ * (localStorage, chave `aula-nitrato:votos`) e, a cada passo, duas frases ganham o carimbo e o número que as decide.
+ * Passo 1: os votos em pilhas. Sem votos (ou sem storage), o placar mostra só as respostas e avisa.
  */
 const VerdictRevealSim = () => {
     const { step, setStep } = useSlideSteps(VERDICT_TABS.length);
@@ -24,15 +25,17 @@ const VerdictRevealSim = () => {
         ? <Chip color={C.nitrite}>sem votos registrados neste navegador</Chip>
         : <Chip color={C.o2}>{revealed === 0 ? `${voted.length} de ${CLAIMS.length} votos registrados` : `a turma acertou ${hits} de ${seen.length}`}</Chip>;
     const chips = <>{revealed === CLAIMS.length && <Chip color={C.nitrate}>seis frases, nenhuma sobrevive inteira</Chip>}{score}</>;
+    const pair = CLAIMS.filter(c => c.id > revealed - 2 && c.id <= revealed);
 
     return (
-        <Shell tabs={VERDICT_TABS} step={step} setStep={setStep} layoutId="verdict-tabs" chips={chips}>
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
-                {CLAIMS.map(c => (
-                    <VerdictRow key={c.id} claim={c} vote={votes[c.id]} open={c.id <= revealed} current={c.id === revealed || c.id === revealed - 1} />
-                ))}
+        <ArteShell tabs={VERDICT_TABS} step={step} setStep={setStep} layoutId="verdict-tabs" chips={chips}>
+            <div className="flex min-h-0 flex-1 gap-3">
+                <Scoreboard claims={CLAIMS} votes={votes} revealed={revealed} />
+                <div className="flex w-[452px] shrink-0 flex-col" key={step}>
+                    {revealed === 0 ? <Urn votes={votes} claims={CLAIMS} /> : <EvidencePair claims={pair} votes={votes} />}
+                </div>
             </div>
-        </Shell>
+        </ArteShell>
     );
 };
 
