@@ -4,6 +4,8 @@ import { VIS_H, VIS_W } from './ui';
 import { Person } from './arte/figures';
 import { Glow, T } from './arte/text';
 import { MEN, WOMEN } from './SexVisuals';
+import { REVEAL_GAP } from '../kit/countUp';
+import { Count } from './countText';
 
 /** Passo 5 do SexGapSim: a Helena (caso fictício) diante do campo de dados, em escala (1.179 × 156). Caixa 672 × 440. */
 
@@ -63,8 +65,8 @@ export const HelenaCard = () => {
     const reduce = useReducedMotion() ?? false;
     return (
         <svg width={VIS_W} height={VIS_H} viewBox={`0 0 ${VIS_W} ${VIS_H}`} role="img" aria-label="Helena diante de um campo de dados quase só de homens">
-            <T x={FIELD_X} y={30} size={16} color={MEN} weight={700}>1.179 homens</T>
-            <T x={FIELD_X + COLS * STEP - 40} y={30} size={16} color={WOMEN} weight={700} anchor="end">156 mulheres</T>
+            <T x={FIELD_X} y={30} size={16} color={MEN} weight={700}><Count text="1.179 homens" /></T>
+            <T x={FIELD_X + COLS * STEP - 40} y={30} size={16} color={WOMEN} weight={700} anchor="end"><Count text="156 mulheres" /></T>
             <path d={MEN_PATH} stroke={MEN} strokeOpacity={0.55} strokeWidth={3.2} strokeLinecap="round" />
             <path d={WOMEN_PATH} stroke={WOMEN} strokeWidth={3.4} strokeLinecap="round" />
 
@@ -97,7 +99,9 @@ export const HelenaCard = () => {
                     </motion.g>
                 );
             })}
-            <T x={VIS_W / 2} y={VIS_H - 6} size={18} color={C.nitriteSoft} weight={700} anchor="middle" display>Quantas das 156 mulheres se pareciam com a Helena?</T>
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduce ? 0 : 0.8 + 2 * REVEAL_GAP, duration: 0.5 }}>
+                <T x={VIS_W / 2} y={VIS_H - 6} size={18} color={C.nitriteSoft} weight={700} anchor="middle" display>Quantas das 156 mulheres se pareciam com a Helena?</T>
+            </motion.g>
         </svg>
     );
 };

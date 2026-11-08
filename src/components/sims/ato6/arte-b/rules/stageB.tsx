@@ -1,5 +1,7 @@
 import { C } from '../../../kit/palette';
 import { Glass, Kick, Rise, Src } from '../kit';
+import { KeyFact } from '../../../kit/rhythm';
+import { CountText } from '../../../ato5/countText';
 
 /** Passos 3 e 4 do painel de árbitros: o texto da Anvisa e a UE; depois a balança entre a regra e o laudo. */
 
@@ -37,16 +39,16 @@ export const BrEuStage = () => (
             <Kick color={C.o2}>União Europeia</Kick>
             <Rise delay={0.1} className="flex items-center justify-between gap-2 rounded-lg border border-dashed px-3 py-2" style={{ borderColor: `${C.o2}88` }}>
                 <span className="text-[16px] leading-tight text-gray-100">alegação de saúde autorizada para nitrato</span>
-                <span className="shrink-0 font-display text-[22px] font-semibold uppercase" style={{ color: C.risk }}>nenhuma</span>
+                <span className="shrink-0 font-display text-[22px] font-semibold uppercase" style={{ color: C.risk }}><KeyFact color={C.risk} delay={0.3}>nenhuma</KeyFact></span>
             </Rise>
             <Rise delay={0.35}><p className="m-0 mb-1.5 text-[15px] text-gray-300">Em 18 produtos:</p></Rise>
             <Rise delay={0.4} className="flex flex-col gap-1">
                 <Dots total={18} lit={11} color={C.no} />
-                <p className="m-0 text-[15px] leading-tight text-gray-100"><b style={{ color: C.no }}>61,1%</b> com dose na faixa recomendada</p>
+                <p className="m-0 text-[15px] leading-tight text-gray-100"><b style={{ color: C.no }}><CountText text="61,1%" delayMs={400} /></b> com dose na faixa recomendada</p>
             </Rise>
             <Rise delay={0.55} className="flex flex-col gap-1">
                 <Dots total={18} lit={10} color={C.nitrate} />
-                <p className="m-0 text-[15px] leading-tight text-gray-100"><b style={{ color: C.nitrate }}>55,6%</b> usavam celebridades ou influenciadores</p>
+                <p className="m-0 text-[15px] leading-tight text-gray-100"><b style={{ color: C.nitrate }}><CountText text="55,6%" delayMs={550} /></b> usavam celebridades ou influenciadores</p>
             </Rise>
             <div className="mt-auto"><Src>Estevan Navarro 2026</Src></div>
         </Glass>
@@ -112,7 +114,7 @@ export const ScaleStage = () => (
                 <div className="flex flex-wrap gap-[4px]">
                     {Array.from({ length: 24 }, (_, i) => <span key={i} className="block h-[14px] w-[14px] rounded-full" style={{ background: i < 5 ? C.nitrate : 'rgba(255,255,255,0.12)', boxShadow: i < 5 ? `0 0 8px ${C.nitrate}` : 'none' }} />)}
                 </div>
-                <p className="m-0 text-[15px] leading-tight text-gray-100">Só <b style={{ color: C.nitrate }}>5 de 24</b> produtos deram ≥ 5 mmol por porção, de forma consistente. <Src>Gallardo 2019</Src></p>
+                <p className="m-0 text-[15px] leading-tight text-gray-100">Só <b style={{ color: C.nitrate }}><KeyFact color={C.nitrate} delay={1.05}><CountText text="5" delayMs={950} /> de 24</KeyFact></b> produtos deram ≥ 5 mmol por porção, de forma consistente. <Src>Gallardo 2019</Src></p>
             </Rise>
         </div>
     </Glass>

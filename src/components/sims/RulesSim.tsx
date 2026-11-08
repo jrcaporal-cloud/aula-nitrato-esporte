@@ -6,6 +6,7 @@ import { ArteShell, Glass, Kick } from './ato6/arte-b/kit';
 import { SealPanel } from './ato6/arte-b/rules/Seals';
 import { LadderStage, ListStage } from './ato6/arte-b/rules/stageA';
 import { BrEuStage, ScaleStage } from './ato6/arte-b/rules/stageB';
+import { Reveal } from './kit/rhythm';
 
 /**
  * Slide 84 — Regras do Jogo. Painel de árbitros: cinco selos com semáforo (WADA 2026, AIS, IOC 2018, ISSN 2018,
@@ -26,8 +27,10 @@ const RulesSim = () => {
                 initial={reduce ? false : { opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
                 {STAGES[step]}
                 <Glass color={color} glow={1} dashed={info.flagTone === 'unknown'} className="flex flex-col gap-2 p-4">
-                    <Kick color={color}>{info.flagTitle}</Kick>
-                    <p className="m-0 text-[17px] leading-snug text-gray-100">{info.flag}</p>
+                    <Reveal order={2} delay={0.4} className="flex flex-col gap-2">
+                        <Kick color={color}>{info.flagTitle}</Kick>
+                        <p className="m-0 text-[17px] leading-snug text-gray-100">{info.flag}</p>
+                    </Reveal>
                     <div className="mt-auto flex justify-end opacity-30">
                         {info.flagTone === 'ok' ? <CircleCheck size={64} color={color} strokeWidth={1.4} /> : <TriangleAlert size={64} color={color} strokeWidth={1.4} />}
                     </div>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { br, signed } from './kit/format';
 import { C } from './kit/palette';
+import { Reveal } from './kit/rhythm';
 import { Big, Card, Frame, Swap, Tag } from './ato3/Frame';
 import { DoseChart, DW } from './ato3/DoseChart';
 import { CONSENSUS, DOSE_FEET, DOSE_TABS, interpolate, O2_COST, TOLERANCE } from './ato3/dose.content';
@@ -21,37 +22,37 @@ const zone = (d: number): string => {
 };
 
 const SideByStep = ({ step, dose }: { step: number; dose: number }) => {
-    if (step === 0) return <Card tag="WYLIE 2013 · 10 HOMENS" color={C.nitrate} lines={['70, 140 e 280 mL de beterraba concentrada', '4,2 · 8,4 · 16,8 mmol (260 · 521 · 1.042 mg)', 'Placebo: beterraba depletada de nitrato', 'Teste de ciclismo 2,5 h após a dose']} />;
+    if (step === 0) return <Reveal order={2}><Card tag="WYLIE 2013 · 10 HOMENS" color={C.nitrate} lines={['70, 140 e 280 mL de beterraba concentrada', '4,2 · 8,4 · 16,8 mmol (260 · 521 · 1.042 mg)', 'Placebo: beterraba depletada de nitrato', 'Teste de ciclismo 2,5 h após a dose']} /></Reveal>;
     if (step === 1) {
         return (
             <Card tag="TEMPO ATÉ A FALHA" color={C.nitrate}>
-                <div className="grid grid-cols-3 gap-2">
+                <Reveal order={1} className="grid grid-cols-3 gap-2">
                     <Big value="0" label="4,2 mmol" color={C.placebo} size="2.2rem" />
-                    <Big value="+14%" label="8,4 mmol" color={C.nitrate} size="2.2rem" />
-                    <Big value="+12%" label="16,8 mmol" color={C.nitrate} size="2.2rem" />
-                </div>
-                <p className="text-[16px] leading-snug text-gray-200">Sem ganho adicional de 8,4 para 16,8 mmol (ambos p &lt; 0,05 contra o placebo).</p>
+                    <Big value="+14%" label="8,4 mmol" color={C.nitrate} size="2.2rem" count hit />
+                    <Big value="+12%" label="16,8 mmol" color={C.nitrate} size="2.2rem" count />
+                </Reveal>
+                <Reveal order={2}><p className="text-[16px] leading-snug text-gray-200">Sem ganho adicional de 8,4 para 16,8 mmol (ambos p &lt; 0,05 contra o placebo).</p></Reveal>
             </Card>
         );
     }
     if (step === 2) {
         return (
             <Card tag="CUSTO DE O₂ × TOLERÂNCIA" color={C.o2}>
-                <div className="grid grid-cols-2 gap-3">
-                    <Big value="−3,0%" label="O₂ no esforço moderado (16,8 mmol)" color={C.o2} size="2.2rem" />
-                    <Big value="+12%" label="tolerância: igual à de 8,4 mmol" color={C.nitrate} size="2.2rem" />
-                </div>
-                <p className="text-[16px] leading-snug text-gray-200">Dose-resposta bioquímica não é dose-resposta de desempenho.</p>
+                <Reveal order={1} className="grid grid-cols-2 gap-3">
+                    <Big value="−3,0%" label="O₂ no esforço moderado (16,8 mmol)" color={C.o2} size="2.2rem" count hit />
+                    <Big value="+12%" label="tolerância: igual à de 8,4 mmol" color={C.nitrate} size="2.2rem" count />
+                </Reveal>
+                <Reveal order={2}><p className="text-[16px] leading-snug text-gray-200">Dose-resposta bioquímica não é dose-resposta de desempenho.</p></Reveal>
             </Card>
         );
     }
     if (step === 3) {
         return (
             <Card tag="ONDE FICAM AS RECOMENDAÇÕES" color={C.no}>
-                <ul className="flex flex-col gap-2">
+                <Reveal order={2}><ul className="flex flex-col gap-2">
                     {CONSENSUS.map(c => <li key={c.id} className="text-[16px] leading-snug text-gray-100"><span className="font-bold text-white">{c.label}:</span> {c.note}</li>)}
                     <li className="text-[16px] leading-snug text-gray-100"><span className="font-bold text-white">Senefeld 2020:</span> sem efeito com 1,6–5,0 mmol/dia; 5,1 a 28,7 mmol/dia, efeito semelhante.</li>
-                </ul>
+                </ul></Reveal>
             </Card>
         );
     }

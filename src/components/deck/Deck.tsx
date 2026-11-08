@@ -8,6 +8,10 @@ import { FitStage } from './FitStage';
 import { SlideErrorBoundary } from './SlideErrorBoundary';
 import { preloadAllSims } from '../presentation/slideContent';
 import { DeckChrome } from './DeckChrome';
+import { ActOpening } from './motion/ActOpening';
+import { IonCharacter } from './motion/IonCharacter';
+import { KEEP_JS_ANIMATION, SECTION_VARIANTS, SlideMotionContext } from './motion/transitions';
+import { useSlideTransition } from './motion/useSlideTransition';
 import { Overview } from './Overview';
 import { DECK, MODEL_3D_BY_SLIDE, type DeckSlide, type Model3D } from './slides';
 import { useDeckNavigation } from './useDeckNavigation';
@@ -15,6 +19,9 @@ import { useSlideStepStore } from '../../store/useSlideSteps';
 import { PRESENTER_CHANNEL, openPresenterWindow, type PresenterMessage } from './presenterChannel';
 import { toggleDetails } from '../../lib/detailsEvent';
 import { MODALS_3D, preloadAll3D } from '../three/registry';
+import { Morph3D } from '../three/morph/Morph3D';
+import { accentOf } from '../three/morph/accent';
+import { useMorph3D } from '../three/morph/useMorph3D';
 
 const renderSlide = ({ slide }: DeckSlide) => {
     if (slide.id === 0) return <TitleSlide slide={slide} />;
@@ -33,13 +40,12 @@ export const Deck = () => {
     const modalOpen = useStore(s => s.modalOpen);
     const setModalOpen = useStore(s => s.setModalOpen);
     const [overview, setOverview] = useState(false);
-    const [open3D, setOpen3D] = useState<Model3D | null>(null);
     const [idle, setIdle] = useState(false);
 
     const toggleOverview = useCallback(() => setOverview(o => !o), []);
     const closeOverlays = useCallback(() => setOverview(false), []);
 
-    const { index, direction, goTo, next, prev } = useDeckNavigation({
+    const { index, goTo, next, prev } = useDeckNavigation({
         total: DECK.length,
         paused: modalOpen,
         rootRef,
@@ -50,6 +56,10 @@ export const Deck = () => {
     const current = DECK[index];
     const model3D = MODEL_3D_BY_SLIDE.get(current.slide.id) ?? null;
     const has3D = model3D !== null;
+    // Tecla 3: a arte do slide cresce e vira a cena 3D (e volta para ela ao fechar).
+    const morph = useMorph3D(rootRef, index);
+    const openMorph = morph.open;
+    const open3D: Model3D | null = morph.name;
     const show3D = open3D !== null;
     const Open3D = open3D ? MODALS_3D[open3D] : undefined;
 
@@ -103,10 +113,13 @@ export const Deck = () => {
     // Atalho "3" abre o modelo 3D do slide, quando ele tem um.
     useEffect(() => {
         if (!model3D || modalOpen) return;
-        const onKey = (e: KeyboardEvent) => { if (e.key === '3') setOpen3D(model3D); };
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key !== '3' || e.metaKey || e.ctrlKey || e.altKey || useStore.getState().modalOpen) return;
+            openMorph(model3D);
+        };
         window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
-    }, [model3D, modalOpen]);
+    }, [model3D, modalOpen, openMorph]);
 
     // Controles e cursor somem quando o mouse fica parado (projeção limpa).
     useEffect(() => {
@@ -125,32 +138,38 @@ export const Deck = () => {
         };
     }, []);
 
+    // Direção da troca e abertura de ato (camadas em ./motion).
+    const slideMotion = useSlideTransition(index);
+
     return (
         <div
             ref={rootRef}
             data-idle={idle || undefined}
             className={`deck-root absolute inset-0 z-10 overflow-hidden font-body selection:bg-brand-deep selection:text-white ${idle && !overview ? 'cursor-none' : ''}`}
         >
-            <AnimatePresence initial={false} custom={direction}>
+            {/* Troca de slide: lateral com parallax no mesmo ato; abertura de ato cobre a troca entre atos. */}
+            <AnimatePresence initial={false} custom={slideMotion.motion}>
                 <motion.section
                     key={index}
-                    custom={direction}
+                    custom={slideMotion.motion}
+                    data-deck-index={index}
                     className="absolute inset-0"
                     aria-roledescription="slide"
                     aria-label={`${index + 1} de ${DECK.length}: ${current.label}`}
-                    variants={{
-                        enter: (d: number) => ({ opacity: 0, y: d * 40 }),
-                        center: { opacity: 1, y: 0 },
-                        exit: (d: number) => ({ opacity: 0, y: d * -40 }),
-                    }}
+                    variants={SECTION_VARIANTS}
+                    onUpdate={KEEP_JS_ANIMATION}
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
                 >
-                    <FitStage><SlideErrorBoundary resetKey={index}>{renderSlide(current)}</SlideErrorBoundary></FitStage>
+                    <SlideMotionContext.Provider value={slideMotion.motion}>
+                        <FitStage><SlideErrorBoundary resetKey={index}>{renderSlide(current)}</SlideErrorBoundary></FitStage>
+                    </SlideMotionContext.Provider>
                 </motion.section>
             </AnimatePresence>
+
+            <ActOpening act={slideMotion.cardAct} cardKey={slideMotion.cardKey} onClose={slideMotion.closeCard} />
+            <IonCharacter index={index} hidden={overview || modalOpen} />
 
             <DeckChrome
                 index={index}
@@ -161,7 +180,7 @@ export const Deck = () => {
                 onPrev={prev}
                 onNext={next}
                 onOverview={toggleOverview}
-                on3D={() => setOpen3D(model3D)}
+                on3D={() => morph.open(model3D)}
                 onPresenter={() => openPresenterWindow(index)}
             />
 
@@ -176,8 +195,12 @@ export const Deck = () => {
             </AnimatePresence>
 
             <Suspense fallback={null}>
-                <AnimatePresence>
-                    {Open3D && <Open3D key={open3D} onClose={() => setOpen3D(null)} />}
+                <AnimatePresence custom={morph.from} onExitComplete={morph.onExitComplete}>
+                    {Open3D && (
+                        <Morph3D key={open3D} from={morph.from} accent={accentOf(open3D)} onClose={morph.close}>
+                            <Open3D onClose={morph.close} />
+                        </Morph3D>
+                    )}
                 </AnimatePresence>
             </Suspense>
         </div>

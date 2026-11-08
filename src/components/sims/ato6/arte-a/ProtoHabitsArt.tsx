@@ -4,6 +4,7 @@ import { C } from '../../kit/palette';
 import { HABITS } from '../protocolContent';
 import { Card } from '../ui';
 import { ShotGlass } from './veg';
+import { Reveal } from '../../kit/rhythm';
 
 /** Passo 4 do slide 46: os quatro cuidados do dia da dose, cada um com uma ilustração geométrica grande. */
 
@@ -72,8 +73,8 @@ export const ProtoHabitsArt = () => {
                             <svg viewBox="0 0 120 120" className="h-[118px] w-[118px] shrink-0" aria-hidden>{ART[h.id]}</svg>
                             <div className="flex min-w-0 flex-col gap-1.5">
                                 <h4 className="m-0 font-display text-[19px] font-semibold leading-tight text-white">{h.title}</h4>
-                                <p className="m-0 text-[16px] leading-snug text-gray-100">{SHORT[h.id]}</p>
-                                <p className="m-0 font-mono text-[14px] text-gray-400">{h.source}</p>
+                                <Reveal order={1} delay={i * 0.14}><p className="m-0 text-[16px] leading-snug text-gray-100">{SHORT[h.id]}</p></Reveal>
+                                <Reveal order={2} delay={i * 0.14}><p className="m-0 font-mono text-[14px] text-gray-400">{h.source}</p></Reveal>
                             </div>
                         </Card>
                     </motion.div>

@@ -1,13 +1,21 @@
 import { C } from '../kit/palette';
 import { br } from '../kit/format';
-import { BigStat } from './ui';
+import { REVEAL_GAP } from '../kit/countUp';
+import { KeyFact, Reveal } from '../kit/rhythm';
+import { CountText } from '../ato1/countText';
+import { StatList, type StatItem } from './ui';
 
-/** Painel de dados de cada passo do circuito entero-salivar. */
+/** Painel de dados de cada passo do circuito entero-salivar. Ritmo: barras (0) → número-chave (1) → legenda (2). */
 
-const Stats = ({ items }: { items: { value: string; label: string; color: string }[] }) => (
+const Stats = ({ items }: { items: StatItem[] }) => (
     <div className="flex h-full flex-col justify-center gap-3.5">
-        {items.map(s => <BigStat key={s.label} {...s} size={items.length > 2 ? 30 : 40} />)}
+        <StatList items={items} size={items.length > 2 ? 30 : 40} />
     </div>
+);
+
+/** Número-chave do painel: conta até o texto e pulsa uma vez. */
+const Hit = ({ text, color }: { text: string; color: string }) => (
+    <KeyFact color={color} delay={REVEAL_GAP}><CountText text={text} delayMs={REVEAL_GAP * 1000} /></KeyFact>
 );
 
 /** Largura (0–100%) de um valor em escala logarítmica entre 10 e 2.000 µmol/L. */
@@ -25,17 +33,19 @@ const Bar = ({ label, value, color }: { label: string; value: number; color: str
 
 const Gradient = () => (
     <div className="flex h-full flex-col justify-center gap-2">
-        {[{ head: 'Em jejum', ratio: '~5×', plasma: 17.9, saliva: 92.6 }, { head: 'Após 2 mmol de nitrato', ratio: '~11×', plasma: 134, saliva: 1516.7 }].map(g => (
-            <div key={g.head} className="flex flex-col gap-1">
+        {[{ head: 'Em jejum', ratio: '~5×', plasma: 17.9, saliva: 92.6 }, { head: 'Após 2 mmol de nitrato', ratio: '~11×', plasma: 134, saliva: 1516.7 }].map((g, i) => (
+            <Reveal key={g.head} delay={i * 0.08} className="flex flex-col gap-1">
                 <div className="flex items-baseline justify-between">
                     <span className="text-[16px] font-semibold text-gray-100">{g.head}</span>
-                    <span className="font-display text-[1.5rem] font-semibold leading-none" style={{ color: C.nitrate }}>{g.ratio}</span>
+                    <Reveal order={1} delay={i * 0.08} className="font-display text-[1.5rem] font-semibold leading-none" style={{ color: C.nitrate }}>
+                        {i === 1 ? <Hit text={g.ratio} color={C.nitrate} /> : g.ratio}
+                    </Reveal>
                 </div>
                 <Bar label="plasma" value={g.plasma} color={C.nitrateSoft} />
                 <Bar label="saliva" value={g.saliva} color={C.nitrate} />
-            </div>
+            </Reveal>
         ))}
-        <p className="text-[14px] text-gray-400">µmol/L · escala logarítmica</p>
+        <Reveal order={2}><p className="text-[14px] text-gray-400">µmol/L · escala logarítmica</p></Reveal>
     </div>
 );
 
@@ -48,15 +58,17 @@ const SPECIES = [
 
 const Species = () => (
     <div className="flex h-full flex-col justify-center gap-1.5">
-        <p className="text-[15px] text-gray-300">Isolados da língua com nitrato-redutase (% do total)</p>
-        {SPECIES.map(s => (
-            <div key={s.name} className="flex flex-col gap-0.5">
+        <Reveal order={2}><p className="text-[15px] text-gray-300">Isolados da língua com nitrato-redutase (% do total)</p></Reveal>
+        {SPECIES.map((s, i) => (
+            <Reveal key={s.name} delay={i * 0.06} className="flex flex-col gap-0.5">
                 <div className="flex items-baseline justify-between">
                     <span className="text-[16px] italic text-gray-100">{s.name}</span>
-                    <span className="font-mono text-[15px] font-semibold" style={{ color: C.bacteria }}>{s.pct}%</span>
+                    <span className="font-mono text-[15px] font-semibold" style={{ color: C.bacteria }}>
+                        {i === 0 ? <Hit text={`${s.pct}%`} color={C.bacteria} /> : `${s.pct}%`}
+                    </span>
                 </div>
                 <div className="h-2 rounded bg-white/6"><div className="h-full rounded" style={{ width: `${(s.pct / 34) * 100}%`, background: C.bacteria }} /></div>
-            </div>
+            </Reveal>
         ))}
     </div>
 );

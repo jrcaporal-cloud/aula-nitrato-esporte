@@ -1,6 +1,8 @@
 import { C } from '../../../kit/palette';
 import { Kick, Src } from '../kit';
+import { Reveal } from '../../../kit/rhythm';
 import { cv } from '../util';
+import { Count, SvgKeyFact } from '../../../ato5/countText';
 
 /** Mito 1 (depleção): oito tubos de ensaio. Os que caem perdem líquido; os que ficam seguem cheios. Mito 2 (nitrito): nitrito sobe e volta, o VO₂ fica −3%. */
 
@@ -16,7 +18,7 @@ const GROUPS: readonly Group[] = [
 
 const TubeView = ({ t, delay }: { t: Tube; delay: number }) => (
     <div className="flex w-[84px] flex-col items-center gap-1.5">
-        <span className="font-display text-[26px] font-semibold leading-none" style={{ color: t.down ? C.hypoxia : C.placebo }}>{t.down ? '↓' : '='}</span>
+        <Reveal order={1} delay={delay}><span className="font-display text-[26px] font-semibold leading-none" style={{ color: t.down ? C.hypoxia : C.placebo }}>{t.down ? '↓' : '='}</span></Reveal>
         <div className="relative h-[150px] w-[48px] overflow-hidden rounded-b-[22px] rounded-t-md border-2 border-white/35 bg-white/5">
             <div className="ab-a absolute inset-x-0 bottom-0" style={cv({ background: `linear-gradient(180deg, ${t.color}, ${t.color}aa)`, height: t.down ? '36%' : '82%', '--ab-from': '82%', '--ab-to': '36%', animation: t.down ? `ab-drop 1s ${delay}s ease-in-out both` : 'none' })} />
             <span className="absolute inset-x-0 h-[2px] border-t-2 border-dashed border-white/60" style={{ top: '18%' }} />
@@ -47,6 +49,11 @@ const COLS: readonly Col[] = [
     { when: '28–30 dias, sem dose aguda', high: false, word: 'volta ao basal', p: 'p < 0,05' },
 ];
 
+/** O −3% sobe junto com a barra verde do VO₂. */
+const VoText = ({ delay }: { delay: number }) => (
+    <text x="154" y="136" textAnchor="middle" fontSize="22" fontWeight="700" fill={C.no} style={{ fontFamily: 'var(--font-display)' }}><Count text="−3%" delayMs={delay * 1000} ms={700} /></text>
+);
+
 const NitriteCol = ({ c, i }: { c: Col; i: number }) => (
     <div className="flex flex-col items-center gap-1 rounded-xl border border-white/10 bg-black/25 px-2 pb-2 pt-2">
         <p className="m-0 text-center font-mono text-[14px] leading-tight text-gray-300">{c.when}</p>
@@ -59,7 +66,7 @@ const NitriteCol = ({ c, i }: { c: Col; i: number }) => (
                 style={cv({ transformOrigin: '154px 88px', animation: `ab-grow 0.7s ${0.65 + i * 0.12}s ease-out both` })} />
             <text x="66" y="168" textAnchor="middle" fontSize="15" fontWeight="600" fill={C.nitrite} style={{ fontFamily: 'var(--font-body)' }}>nitrito</text>
             <text x="154" y="168" textAnchor="middle" fontSize="15" fontWeight="600" fill={C.no} style={{ fontFamily: 'var(--font-body)' }}>VO₂</text>
-            <text x="154" y="136" textAnchor="middle" fontSize="22" fontWeight="700" fill={C.no} style={{ fontFamily: 'var(--font-display)' }}>−3%</text>
+            {c.high ? <VoText delay={0.65 + i * 0.12} /> : <SvgKeyFact color={C.no} delay={1.2}><VoText delay={0.65 + i * 0.12} /></SvgKeyFact>}
         </svg>
         <p className="m-0 text-center text-[14px] leading-tight text-gray-200"><b style={{ color: c.high ? C.nitrite : C.placebo }}>{c.word}</b> · <Src>{c.p}</Src></p>
     </div>

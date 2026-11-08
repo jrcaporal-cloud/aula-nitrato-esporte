@@ -3,6 +3,7 @@ import { C } from '../kit/palette';
 import { SvgText } from '../kit/ui';
 import { barX } from './barsMath';
 import { DeltaBrace, HBars, type BarRow } from './Bars';
+import { SvgReveal } from './beat';
 import { CORRECTIONS } from './pioneers.content';
 
 /** Cenas do slide 40 (viewBox 660 × 360, desenhado em escala 1:1). */
@@ -36,14 +37,14 @@ const caption = (text: string) => <SvgText x={4} y={98} text={text} size={17} we
 
 /** Rodapé de uma cena: pequenas pílulas com os números de apoio. */
 const Pills = ({ items, y }: { items: readonly string[]; y: number }) => (
-    <g>
+    <SvgReveal order={2}>
         {items.map((t, i) => (
             <g key={t} transform={`translate(${4 + i * 222}, ${y})`}>
                 <rect width={210} height={34} rx={8} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.14)" />
                 <SvgText x={105} y={23} text={t} size={16} anchor="middle" weight={600} color="#E5E7EB" />
             </g>
         ))}
-    </g>
+    </SvgReveal>
 );
 
 interface SceneProps { reduce: boolean }
@@ -60,7 +61,7 @@ export const SaltScene = ({ reduce }: SceneProps) => {
             {caption('Mesma carga submáxima: quanto O₂ o músculo consome')}
             <HBars rows={rows} x={4} y={120} labelW={170} barW={290} rowH={64} max={3.4} reduce={reduce} />
             <line x1={gx} x2={gx} y1={112} y2={256} stroke="#fff" strokeOpacity={0.5} strokeDasharray="4 5" />
-            <DeltaBrace x={barX(3.4, 4, 170, 290, 3.4) + 76} y1={152} y2={216} text="−5,4%" color={C.nitrate} reduce={reduce} />
+            <DeltaBrace x={barX(3.4, 4, 170, 290, 3.4) + 76} y1={152} y2={216} text="−5,4%" color={C.nitrate} reduce={reduce} hit />
             <Pills y={296} items={['eficiência 19,7 → 21,1%', 'lactato: sem diferença', 'p < 0,02']} />
         </g>
     );
@@ -78,7 +79,7 @@ export const JuiceScene = ({ reduce }: SceneProps) => {
             {caption('Exercício intenso até a exaustão (tempo até a falha)')}
             <HBars rows={rows} x={4} y={120} labelW={170} barW={290} rowH={64} max={800} reduce={reduce} />
             <line x1={gx} x2={gx} y1={112} y2={256} stroke="#fff" strokeOpacity={0.5} strokeDasharray="4 5" />
-            <DeltaBrace x={barX(800, 4, 170, 290, 800) + 76} y1={152} y2={216} text="+16%" color={C.nitrate} reduce={reduce} />
+            <DeltaBrace x={barX(800, 4, 170, 290, 800) + 76} y1={152} y2={216} text="+16%" color={C.nitrate} reduce={reduce} hit />
             <Pills y={296} items={['500 mL/dia · 5,6 mmol', '6 dias · n = 8', 'p < 0,05']} />
         </g>
     );
@@ -97,7 +98,7 @@ export const PlaceboScene = ({ reduce }: SceneProps) => {
             {caption('Corrida em intensidade severa, até a exaustão')}
             <HBars rows={rows} x={4} y={116} labelW={190} barW={280} rowH={54} max={10} reduce={reduce} />
             <line x1={gx} x2={gx} y1={110} y2={282} stroke="#fff" strokeOpacity={0.5} strokeDasharray="4 5" />
-            <DeltaBrace x={barX(10, 4, 190, 280, 10) + 60} y1={197} y2={251} text="+15%" color={C.nitrate} reduce={reduce} size={24} />
+            <DeltaBrace x={barX(10, 4, 190, 280, 10) + 60} y1={197} y2={251} text="+15%" color={C.nitrate} reduce={reduce} hit size={24} />
             <Pills y={304} items={['nitrato ~0,003 × ~6,2 mmol', 'nitrito 183 × 373 nM', 'p < 0,01']} />
         </g>
     );
@@ -121,7 +122,7 @@ export const TrialScene = ({ reduce }: SceneProps) => {
             <DeltaBrace x={barX(7.2, 4, 120, 330, 7.2) + 70} y1={167} y2={209} text="−2,8%" color={C.nitrate} reduce={reduce} size={24} />
             <SvgText x={4} y={262} text="16,1 km" size={18} weight={700} color={C.nitrateSoft} />
             <HBars rows={g16} x={4} y={268} labelW={120} barW={330} rowH={42} max={31} reduce={reduce} labelSize={16} delay={0.3} />
-            <DeltaBrace x={barX(31, 4, 120, 330, 31) + 70} y1={289} y2={331} text="−2,7%" color={C.nitrate} reduce={reduce} size={24} />
+            <DeltaBrace x={barX(31, 4, 120, 330, 31) + 70} y1={289} y2={331} text="−2,7%" color={C.nitrate} reduce={reduce} size={24} delay={0.3} hit />
         </g>
     );
 };

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { C } from '../kit/palette';
 import { SvgText } from '../kit/ui';
+import { SvgCount, SvgPulse } from './SvgKey';
 
 /** Os três redutores do nitrito (SVG 690×336, escala 1:1): desoxi-Hb, desoxi-Mb e XOR. */
 export const CARDS_W = 690;
@@ -36,11 +37,13 @@ interface FrameProps {
     note: string;
     level: number;
     lit: boolean;
+    /** Cartão sozinho em foco: o número-chave conta e ganha o destaque. */
+    solo: boolean;
     children: ReactNode;
 }
 
 /** Moldura do cartão: título, desenho, número-chave e medidor de atividade. */
-const Frame = ({ i, title, place, big, bigColor, note, level, lit, children }: FrameProps) => {
+const Frame = ({ i, title, place, big, bigColor, note, level, lit, solo, children }: FrameProps) => {
     const x = cardX(i);
     return (
         <g>
@@ -50,7 +53,12 @@ const Frame = ({ i, title, place, big, bigColor, note, level, lit, children }: F
             <SvgText x={x + CARD_W / 2} y={34} text={title} size={18} weight={700} anchor="middle" />
             <SvgText x={x + CARD_W / 2} y={56} text={place} size={16} anchor="middle" color={C.muted} />
             {children}
-            <SvgText x={x + CARD_W / 2} y={234} text={big} size={26} weight={700} anchor="middle" color={bigColor} />
+            {solo ? (
+                <g key="solo">
+                    <SvgPulse x={x + 22} y={206} w={CARD_W - 44} h={38} color={bigColor} />
+                    <SvgCount x={x + CARD_W / 2} y={234} text={big} size={26} weight={700} anchor="middle" color={bigColor} />
+                </g>
+            ) : <SvgText key="plain" x={x + CARD_W / 2} y={234} text={big} size={26} weight={700} anchor="middle" color={bigColor} />}
             <SvgText x={x + CARD_W / 2} y={258} text={note} size={16} anchor="middle" color="#D1D5DB" />
             <rect x={x + 18} y={290} width={CARD_W - 36} height={12} rx={6} fill="rgba(255,255,255,0.1)" />
             <rect x={x + 18} y={290} width={Math.max(4, (CARD_W - 36) * level)} height={12} rx={6} fill={C.hypoxia} />
@@ -59,7 +67,7 @@ const Frame = ({ i, title, place, big, bigColor, note, level, lit, children }: F
     );
 };
 
-interface CardProps { sat: number; level: number; lit: boolean; reduce: boolean }
+interface CardProps { sat: number; level: number; lit: boolean; solo: boolean; reduce: boolean }
 
 /** Cor do eritrócito: azul com O₂, roxo-escuro sem. */
 const cellColor = (sat: number) => {
@@ -68,12 +76,12 @@ const cellColor = (sat: number) => {
     return `rgb(${mix(70, 96)},${mix(50, 165)},${mix(110, 250)})`;
 };
 
-export const HbCard = ({ sat, level, lit, reduce }: CardProps) => {
+export const HbCard = ({ sat, level, lit, solo, reduce }: CardProps) => {
     const x = cardX(0);
     const cy = 138;
     return (
         <Frame i={0} title="Desoxi-hemoglobina" place="eritrócito · capilar" big="40–60%" bigColor={C.nitrite}
-            note="de saturação: taxa máxima" level={level} lit={lit}>
+            note="de saturação: taxa máxima" level={level} lit={lit} solo={solo}>
             <ellipse cx={x + 107} cy={cy} rx={52} ry={40} fill={cellColor(sat)} fillOpacity={0.85} stroke="#fff" strokeOpacity={0.4} strokeWidth={1.5} />
             <ellipse cx={x + 107} cy={cy} rx={24} ry={17} fill="#07050B" fillOpacity={0.35} />
             <SvgText x={x + 107} y={cy + 6} text="Hb" size={18} weight={700} anchor="middle" color="#fff" />
@@ -86,12 +94,12 @@ export const HbCard = ({ sat, level, lit, reduce }: CardProps) => {
     );
 };
 
-export const MbCard = ({ level, lit, reduce }: CardProps) => {
+export const MbCard = ({ level, lit, solo, reduce }: CardProps) => {
     const x = cardX(1);
     const cy = 134;
     return (
         <Frame i={1} title="Desoxi-mioglobina" place="fibra muscular" big="~36×" bigColor={C.nitrite}
-            note="mais rápida que a Hb" level={level} lit={lit}>
+            note="mais rápida que a Hb" level={level} lit={lit} solo={solo}>
             <circle cx={x + 44} cy={cy} r={18} fill="rgba(251,146,60,0.2)" stroke={C.hypoxia} strokeWidth={2} />
             <SvgText x={x + 44} y={cy + 6} text="Mb" size={16} weight={700} anchor="middle" />
             <ellipse cx={x + 150} cy={cy} rx={52} ry={32} fill="rgba(148,163,184,0.12)" stroke={C.placebo} strokeWidth={2} />
@@ -104,13 +112,13 @@ export const MbCard = ({ level, lit, reduce }: CardProps) => {
     );
 };
 
-export const XorCard = ({ level, lit, reduce }: CardProps) => {
+export const XorCard = ({ level, lit, solo, reduce }: CardProps) => {
     const x = cardX(2);
     const cy = 134;
     const open = level * 22;
     return (
         <Frame i={2} title="Xantina oxidorredutase" place="enzima com molibdênio" big="só em hipóxia" bigColor={C.hypoxia}
-            note="sem NO em normóxia" level={level} lit={lit}>
+            note="sem NO em normóxia" level={level} lit={lit} solo={solo}>
             <circle cx={x + 152} cy={cy} r={38} fill="rgba(251,146,60,0.12)" stroke={C.hypoxia} strokeWidth={2} />
             <circle cx={x + 152} cy={cy} r={15} fill="rgba(251,146,60,0.35)" stroke={C.hypoxia} strokeWidth={1.5} />
             <SvgText x={x + 152} y={cy + 6} text="Mo" size={16} weight={700} anchor="middle" />

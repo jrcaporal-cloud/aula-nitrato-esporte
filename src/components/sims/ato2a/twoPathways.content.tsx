@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { C } from '../kit/palette';
-import { Hl } from './ui';
+import { Hl, KeyNum } from './ui';
 
 export interface PathwayStep {
     tab: string;
@@ -29,13 +29,13 @@ export const PATHWAY_STEPS: readonly PathwayStep[] = [
     {
         tab: 'Falta O₂', sat: 50, ph: 7.4, focus: 'both',
         headline: 'O O₂ cai: uma apaga, a outra acende',
-        text: <>Na saturação do músculo em esforço, a <Hl c={C.o2}>NOS</Hl> perde o substrato. A hemoglobina desoxigenada reduz o nitrito com <Hl c={C.nitrite}>taxa máxima entre 40 e 60%</Hl> de saturação.</>,
+        text: <>Na saturação do músculo em esforço, a <Hl c={C.o2}>NOS</Hl> perde o substrato. A hemoglobina desoxigenada reduz o nitrito com <Hl c={C.nitrite}>taxa máxima entre <KeyNum c={C.nitrite}>40 e 60%</KeyNum></Hl> de saturação.</>,
         source: 'Huang 2005 (J Clin Invest) · forma das curvas ilustrativa',
     },
     {
         tab: 'Acidose', sat: 50, ph: 6.6, focus: 'both',
         headline: 'A acidez potencializa o nitrito',
-        text: <>Em pH 6,6 o nitrito relaxa a aorta de rato com <Hl c={C.hypoxia}>EC₅₀ de 40 µM</Hl>, contra 200 µM em pH 7,4: cerca de 5 vezes mais potente. O músculo que trabalha também acidifica.</>,
+        text: <>Em pH 6,6 o nitrito relaxa a aorta de rato com <Hl c={C.hypoxia}>EC₅₀ de <KeyNum c={C.hypoxia}>40 µM</KeyNum></Hl>, contra 200 µM em pH 7,4: cerca de 5 vezes mais potente. O músculo que trabalha também acidifica.</>,
         source: 'Modin 2001 (Acta Physiol Scand) · aorta de rato isolada',
     },
     {

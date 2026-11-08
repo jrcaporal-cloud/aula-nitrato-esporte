@@ -3,6 +3,8 @@ import { DOSE_BANDS, SHOT_MMOL } from '../../shared';
 import { Calc } from '../../ui';
 import { Kick } from '../kit';
 import { cv } from '../util';
+import { KeyFact } from '../../../kit/rhythm';
+import { CountText } from '../../../ato5/countText';
 
 /** Mito 5 (pó): uma colher de pó (1,03 mmol), cinco colheres empilhadas e um shot (6,41 mmol), todos contra a faixa de 5–9 mmol do IOC. */
 
@@ -48,10 +50,10 @@ export const PowderArt = () => (
                 <div key={b.key} className="relative z-10 flex w-[170px] flex-col items-center gap-1">
                     <Glass b={b} />
                     <p className="m-0 text-center text-[15px] font-semibold leading-tight text-white">{b.title}</p>
-                    <p className="m-0 text-center font-display text-[20px] font-semibold leading-none" style={{ color: b.key === 'um' ? C.hypoxia : C.nitrateSoft }}>{b.value}</p>
+                    <p className="m-0 text-center font-display text-[20px] font-semibold leading-none" style={{ color: b.key === 'um' ? C.hypoxia : C.nitrateSoft }}><CountText text={b.value} delayMs={b.seg[0].delay * 1000} ms={b.seg.length > 1 ? 1000 : 600} /></p>
                 </div>
             ))}
-            <p className="absolute bottom-[10px] right-0 m-0 w-[120px] text-right font-display text-[22px] font-semibold leading-tight" style={{ color: C.hypoxia }}>um quinto da dose mínima</p>
+            <p className="absolute bottom-[10px] right-0 m-0 w-[120px] text-right font-display text-[22px] font-semibold leading-tight" style={{ color: C.hypoxia }}><KeyFact color={C.hypoxia} delay={1.3}>um quinto da dose mínima</KeyFact></p>
         </div>
     </div>
 );

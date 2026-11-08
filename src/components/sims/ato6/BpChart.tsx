@@ -1,8 +1,16 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { C } from '../kit/palette';
+import { KeyFact } from '../kit/rhythm';
+import { CountText } from '../ato5/countText';
 import { BP_AXIS, BP_ROWS, type BpRow } from './bpContent';
 
-/** Gráfico divergente (mmHg) que acumula as linhas de cada passo; as de passos anteriores ficam esmaecidas. */
+/**
+ * Gráfico divergente (mmHg) que acumula as linhas de cada passo; as de passos anteriores ficam esmaecidas.
+ * Ritmo: a barra entra (arte), o valor sobe como contador (número); a linha-chave de cada passo ganha o destaque.
+ */
+
+/** Linha onde o professor bate em cada passo (1 destaque por passo). */
+const KEY_ROWS: ReadonlySet<string> = new Set(['siervo-pas', 'kapil-pas', 'sobko-pad', 'kapil13']);
 
 const span = BP_AXIS.max - BP_AXIS.min;
 const at = (v: number): string => `${((v - BP_AXIS.min) / span) * 100}%`;
@@ -29,7 +37,9 @@ const Row = ({ row, current }: { row: BpRow; current: boolean }) => {
                 )}
                 <span className="absolute top-1/2 -translate-y-1/2 whitespace-nowrap font-display text-[18px] font-semibold"
                     style={row.value < 0 || row.none ? { left: `calc(${at(Math.max(row.value, 0))} + ${row.none ? 14 : 10}px)`, color: row.color } : { right: `calc(100% - ${at(0)} + 10px)`, color: row.color }}>
-                    {row.shown}
+                    {KEY_ROWS.has(row.id)
+                        ? <KeyFact color={row.color}><CountText text={row.shown} all /></KeyFact>
+                        : <CountText text={row.shown} all />}
                 </span>
             </div>
         </motion.div>

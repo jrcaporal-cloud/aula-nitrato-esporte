@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { br } from './kit/format';
 import { C } from './kit/palette';
+import { Reveal } from './kit/rhythm';
 import { Panel } from './kit/ui';
 import { AmannBars } from './ato3/AmannBars';
 import { Big, Card, Frame, Swap, Tag } from './ato3/Frame';
@@ -54,11 +55,11 @@ const SideCard = ({ step, real }: { step: number; real: number }) => {
     if (step === 2) {
         return (
             <Card tag="SINAL ÷ RUÍDO (CÁLCULO)" color={C.no}>
-                <div className="grid grid-cols-2 gap-3">
+                <Reveal order={1} className="grid grid-cols-2 gap-3">
                     <Big value={br(real * RATE_AMANN / CV_TTE, 2)} label={`TTE: ${br(real * RATE_AMANN, 1)} ÷ ${br(CV_TTE, 1)}`} color={C.nitrite} size="2rem" />
                     <Big value={br(real / CV_TT, 2)} label={`TT: ${br(real, 1)} ÷ ${br(CV_TT, 2)}`} color={C.no} size="2rem" />
-                </div>
-                <p className="text-[15px] leading-snug text-gray-300">CV: Jeukendrup 1996 (30 treinados). Laursen 2007: 15,1% × 2,0% em 5 km.</p>
+                </Reveal>
+                <Reveal order={2}><p className="text-[15px] leading-snug text-gray-300">CV: Jeukendrup 1996 (30 treinados). Laursen 2007: 15,1% × 2,0% em 5 km.</p></Reveal>
             </Card>
         );
     }
@@ -81,30 +82,30 @@ const TteTtSim = () => {
                 <Swap k={step} className="flex flex-col justify-center gap-3">
                     {step === 3 && (
                         <Card tag="AMANN 2008 · 3 TTE + 3 TT DE 5 KM POR CICLISTA" color={C.no}>
-                            <div className="grid grid-cols-2 gap-3">
-                                <Big value="×8" label="TTE ÷ TT em hipóxia" color={C.nitrite} size="2.2rem" />
-                                <Big value="×30" label="TTE ÷ TT em hiperóxia" color={C.nitrite} size="2.2rem" />
-                            </div>
-                            <p className="text-[16px] leading-snug text-gray-200">Os mesmos 8 ciclistas, o mesmo ar. A sensibilidade (mudança ÷ erro) dos dois testes é semelhante.</p>
+                            <Reveal order={1} className="grid grid-cols-2 gap-3">
+                                <Big value="×8" label="TTE ÷ TT em hipóxia" color={C.nitrite} size="2.2rem" count hit />
+                                <Big value="×30" label="TTE ÷ TT em hiperóxia" color={C.nitrite} size="2.2rem" count />
+                            </Reveal>
+                            <Reveal order={2}><p className="text-[16px] leading-snug text-gray-200">Os mesmos 8 ciclistas, o mesmo ar. A sensibilidade (mudança ÷ erro) dos dois testes é semelhante.</p></Reveal>
                         </Card>
                     )}
                     {step === 4 && (
-                        <Panel className="p-4 flex flex-col gap-3">
+                        <Reveal order={1}><Panel className="p-4 flex flex-col gap-3">
                             <Slider label="TTE da manchete" value={knobs.headline} min={4} max={30} step={1} onChange={v => set({ headline: v })}
                                 shown={`+${PCT(knobs.headline, 0)}`} color={C.nitrite} />
                             <Big value={`≈ ${br(knobs.headline / RATE_JONES, 1)} a ${br(knobs.headline / RATE_AMANN, 1)}%`} label="no tempo de prova (taxas 1:15 e 1:7,9)" color={C.no} size="2.2rem" />
                             <p className="text-[15px] leading-snug text-gray-300">Detecta? Sim, a sensibilidade é igual. Comunica? Não: a taxa muda de estudo para estudo e de atleta para atleta.</p>
-                        </Panel>
+                        </Panel></Reveal>
                     )}
                     {step < 3 && (
                         <>
-                            <Panel className="p-4 flex flex-col gap-4">
+                            <Reveal order={1}><Panel className="p-4 flex flex-col gap-4">
                                 <Slider label="mudança real (contrarrelógio)" value={knobs.real} min={0.5} max={2} step={0.1} onChange={v => set({ real: v })}
                                     shown={`+${PCT(knobs.real)}`} color={C.no} />
                                 <Slider label="taxa de câmbio do atleta (TTE ÷ TT)" value={knobs.rate} min={RATE_AMANN} max={RATE_JONES} step={0.1} onChange={v => set({ rate: v })}
                                     shown={`1 : ${br(knobs.rate, 1)}`} color={C.nitrite} ends={['1 : 7,9 Amann', '1 : 15 Jones']} />
-                            </Panel>
-                            <SideCard step={step} real={knobs.real} />
+                            </Panel></Reveal>
+                            <Reveal order={step === 2 ? 1 : 2}><SideCard step={step} real={knobs.real} /></Reveal>
                         </>
                     )}
                 </Swap>

@@ -1,7 +1,8 @@
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { Source } from './kit/ui';
 import { MYTHS, MYTH_TABS } from './ato6/mythsContent';
-import { ArteShell, Glass, Rise } from './ato6/arte-b/kit';
+import { ArteShell, Glass } from './ato6/arte-b/kit';
+import { Reveal } from './kit/rhythm';
 import { DepletionArt, NitriteArt } from './ato6/arte-b/myths/artA';
 import { ForceArt, Vo2Art } from './ato6/arte-b/myths/artB';
 import { BRIEF } from './ato6/arte-b/myths/content';
@@ -24,10 +25,10 @@ const MythsSim = () => {
                 <Glass color={m.color} glow={1} className="flex min-w-0 flex-1 flex-col gap-2 p-4">
                     <div key={m.id} className="flex min-h-0 flex-1 flex-col gap-2">
                         <div className="flex flex-1 flex-col justify-center">{ARTS[step]}</div>
-                        <Rise delay={0.2} className="flex flex-col gap-1.5">
+                        <Reveal order={2} className="flex flex-col gap-1.5">
                             <p className="m-0 text-[16px] leading-snug text-gray-100">{BRIEF[m.id]}</p>
                             <Source>{m.source}</Source>
-                        </Rise>
+                        </Reveal>
                     </div>
                 </Glass>
             </div>

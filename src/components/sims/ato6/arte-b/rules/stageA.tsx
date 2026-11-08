@@ -1,5 +1,6 @@
 import { C } from '../../../kit/palette';
 import { Glass, Kick, Rise, Src } from '../kit';
+import { KeyFact } from '../../../kit/rhythm';
 
 /** Passos 1 e 2 do painel de árbitros: a Lista Proibida varrida página a página e a escada de evidência. */
 
@@ -34,7 +35,7 @@ export const ListStage = () => (
         </div>
         <Rise delay={0.95} className="mt-auto flex items-center justify-between gap-3 rounded-xl border px-4 py-2.5" style={{ borderColor: `${C.no}66`, background: `${C.no}12` }}>
             <p className="m-0 text-[17px] leading-snug text-gray-100">No consenso Delphi: o nitrato viola o espírito do esporte? <Src>Shannon 2022</Src></p>
-            <span className="font-display text-[30px] font-semibold uppercase leading-none" style={{ color: C.no }}>não</span>
+            <span className="font-display text-[30px] font-semibold uppercase leading-none" style={{ color: C.no }}><KeyFact color={C.no} delay={1.1}>não</KeyFact></span>
         </Rise>
     </Glass>
 );

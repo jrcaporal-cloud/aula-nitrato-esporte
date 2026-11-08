@@ -3,6 +3,7 @@ import { C } from '../../kit/palette';
 import { SvgText } from '../../kit/ui';
 import { SCORE } from '../altitude.content';
 import { Flag } from '../artKit/Figures';
+import { SvgCount, SvgReveal } from '../beat';
 
 /** Passo 5 — o placar: uma montanha só (~2.500 m), cinco bandeiras positivas de um lado e cinco nulas do outro. Altura da bandeira = n. */
 
@@ -48,10 +49,12 @@ export const ScoreArt = ({ reduce }: { reduce: boolean }) => (
         <path d={`M ${PEAK.x - 34} ${PEAK.y + 60} L ${PEAK.x} ${PEAK.y} L ${PEAK.x + 34} ${PEAK.y + 60} L ${PEAK.x + 14} ${PEAK.y + 50} L ${PEAK.x} ${PEAK.y + 66} L ${PEAK.x - 14} ${PEAK.y + 50} Z`} fill="#fff" opacity={0.22} />
         <path d={`M ${BASE_L - 40} 384 L ${PEAK.x} ${PEAK.y} L ${1100 - BASE_L + 40} 384`} fill="none" stroke="#B9A5F5" strokeOpacity={0.4} strokeWidth={2} />
         <SvgText x={PEAK.x} y={PEAK.y - 14} text="o mesmo cenário · ~2.500 m" size={17} weight={700} anchor="middle" color={C.o2Soft} />
-        <SvgText x={24} y={38} text="POSITIVOS · 5" size={30} weight={700} color={C.no} />
-        <SvgText x={1076} y={38} text="NULOS · 5" size={30} weight={700} anchor="end" color={C.hypoxia} />
+        <SvgCount x={24} y={38} text="POSITIVOS · 5" size={30} weight={700} color={C.no} count={{ delayMs: 200, ms: 700 }} />
+        <SvgCount x={1076} y={38} text="NULOS · 5" size={30} weight={700} anchor="end" color={C.hypoxia} count={{ delayMs: 800, ms: 700 }} />
         {SCORE.pos.map((s, i) => <Row key={s.who} {...s} n={N_POS[i]} i={i} side={-1} color={C.no} reduce={reduce} />)}
         {SCORE.nulls.map((s, i) => <Row key={s.who} {...s} n={N_NULL[i]} i={i} side={1} color={C.hypoxia} reduce={reduce} />)}
-        <SvgText x={550} y={372} text="altura da bandeira = n (8 a 15)" size={16} weight={500} anchor="middle" color={C.muted} />
+        <SvgReveal order={2} delay={0.9}>
+            <SvgText x={550} y={372} text="altura da bandeira = n (8 a 15)" size={16} weight={500} anchor="middle" color={C.muted} />
+        </SvgReveal>
     </g>
 );

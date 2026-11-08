@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import type { CSSProperties, ReactNode } from 'react';
 import { C, PANEL_BG } from '../kit/palette';
 import { Chip, Source, StepTabs } from '../kit/ui';
+import { Reveal } from '../kit/rhythm';
 import { SIM_H } from './shared';
 
 /** Peças comuns aos simuladores do Ato VI. Texto HTML ≥15 px de projeto (rótulos mono 14 px). */
@@ -65,16 +66,21 @@ interface StoryProps {
     children?: ReactNode;
 }
 
-/** Coluna de narrativa: rubrica, título, texto, extras e fonte no rodapé. */
+/**
+ * Coluna de narrativa, no ritmo do passo: rubrica e título com a arte (ordem 0), os números extras
+ * (`children`, ordem 1), o texto corrido e a fonte como legenda (ordem 2). Reinicia a cada `id`.
+ */
 export const Story = ({ id, kicker, color, title, text, source, width = 340, children }: StoryProps) => (
     <Card className="shrink-0 p-5" style={{ width }}>
-        <FadeSwap id={id} className="flex h-full flex-col gap-3">
-            <Kicker color={color}>{kicker}</Kicker>
-            <h3 className="m-0 font-display text-[26px] font-semibold leading-tight text-white">{title}</h3>
-            <p className="m-0 text-[17px] leading-snug text-gray-100">{text}</p>
-            {children}
-            <div className="mt-auto"><Source>{source}</Source></div>
-        </FadeSwap>
+        <div key={id} className="flex h-full flex-col gap-3">
+            <Reveal order={0} className="flex flex-col gap-3">
+                <Kicker color={color}>{kicker}</Kicker>
+                <h3 className="m-0 font-display text-[26px] font-semibold leading-tight text-white">{title}</h3>
+            </Reveal>
+            <Reveal order={2}><p className="m-0 text-[17px] leading-snug text-gray-100">{text}</p></Reveal>
+            {children && <Reveal order={1} className="flex flex-col gap-3">{children}</Reveal>}
+            <Reveal order={2} className="mt-auto"><Source>{source}</Source></Reveal>
+        </div>
     </Card>
 );
 

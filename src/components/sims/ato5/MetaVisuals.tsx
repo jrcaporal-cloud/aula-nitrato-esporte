@@ -5,6 +5,8 @@ import { ForestPlot, type ForestRow } from '../kit/ForestPlot';
 import { SvgText } from '../kit/ui';
 import { META_ROWS, type CutId, type Estimate, type MetaRow } from './metaContent';
 import { VIS_H, VIS_W } from './ui';
+import { T } from './arte/text';
+import { Count, SvgKeyFact } from './countText';
 
 /** Desenhos do MetaDisagreeSim. Caixa 672 × 440. */
 
@@ -14,6 +16,9 @@ const D_LO = -0.4;
 const D_HI = 1.5;
 const px = (v: number) => X0 + ((v - D_LO) / (D_HI - D_LO)) * (X1 - X0);
 const ROW_Y = [112, 176, 240, 304, 368];
+
+/** A linha onde o professor bate em cada recorte (o diamante que mais conta a história). */
+const KEY_ROW: Record<CutId, MetaRow['id']> = { tte: 'hoon', tt: 'hoon', all: 'mcm', athlete: 'sen' };
 
 const minus = (t: string): string => t.replace(/-/g, '−');
 const fmt = (e: Estimate): string => minus(`${br(e.est, 2)} (${br(e.lo, 2)} a ${br(e.hi, 2)})`);
@@ -41,9 +46,13 @@ const RowView = ({ row, cut, y }: { row: MetaRow; cut: CutId; y: number }) => {
             <SvgText x={14} y={y + 19} text={row.sub} size={16} color={C.muted} weight={500} />
             <g transform={`translate(0 ${y})`}>{e && <Diamond e={e} color={row.color} />}</g>
             {!e && !seconds && <SvgText x={(X0 + X1) / 2} y={y + 6} text="sem estimativa neste recorte" anchor="middle" size={16} color={C.muted} weight={500} />}
-            {e && <SvgText x={VIS_W - 12} y={y - 2} text={fmt(e)} anchor="end" size={17} color="#fff" weight={700} />}
+            {e && (KEY_ROW[cut] === row.id ? (
+                <SvgKeyFact key={cut} color={row.color}>
+                    <T x={VIS_W - 12} y={y - 2} anchor="end" size={17} color="#fff" weight={700}><Count text={fmt(e)} /></T>
+                </SvgKeyFact>
+            ) : <T x={VIS_W - 12} y={y - 2} anchor="end" size={17} color="#fff" weight={700}><Count text={fmt(e)} /></T>)}
             {e?.note && <SvgText x={VIS_W - 12} y={y + 19} text={e.note} anchor="end" size={16} color={C.muted} weight={500} />}
-            {seconds && <SvgText x={VIS_W - 12} y={y - 2} text={seconds} anchor="end" size={17} color="#fff" weight={700} />}
+            {seconds && <T x={VIS_W - 12} y={y - 2} anchor="end" size={17} color="#fff" weight={700}><Count text={seconds} /></T>}
             {seconds && <SvgText x={VIS_W - 12} y={y + 19} text="em segundos, fora da escala" anchor="end" size={16} color={C.muted} weight={500} />}
         </g>
     );

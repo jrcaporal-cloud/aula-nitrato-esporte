@@ -1,4 +1,5 @@
 import { C } from '../kit/palette';
+import { KeyFact } from '../kit/rhythm';
 import { Panel } from '../kit/ui';
 import { TIERS } from './eliteContent';
 
@@ -27,7 +28,9 @@ export const EliteLadder = ({ lit }: { lit: boolean }) => (
                         <span className="h-[16px] rounded transition-[width] duration-1000 ease-out"
                             style={{ width: lit ? `${BAR_NITRATE}%` : `${BAR_PLACEBO}%`, background: C.nitrate }} />
                     </span>
-                    <span className="w-[74px] shrink-0 text-right font-display text-[1.5rem] font-semibold tabular-nums" style={{ color: C.nitrateSoft }}>−2,8%</span>
+                    <span className="w-[74px] shrink-0 text-right font-display text-[1.5rem] font-semibold tabular-nums" style={{ color: C.nitrateSoft }}>
+                        {t.id === 'oli' ? <KeyFact color={C.nitrate} delay={0.5}>−2,8%</KeyFact> : '−2,8%'}
+                    </span>
                 </div>
             </Panel>
         ))}

@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from 'lucide-react'
 import { DECK } from './slides';
 import { NOTES } from '../../data/notes';
 import { PRESENTER_CHANNEL, type PresenterCommand, type PresenterMessage } from './presenterChannel';
+import { NextStepPreview } from './stage/NextStepPreview';
 
 const NOTES_KEY = 'aula-nitrato:notas';
 
@@ -107,7 +108,7 @@ const SlideCard = ({ index, label, dim }: { index: number; label: string; dim?: 
 
 /**
  * Janela do apresentador (abra com P na aula). Mostra slide atual e próximo,
- * passo dentro do slide, cronômetro, relógio e anotações por slide.
+ * passo dentro do slide, prévia ao vivo do próximo passo, cronômetro, relógio e anotações por slide.
  */
 export const Presenter = () => {
     const channelRef = useRef<BroadcastChannel | null>(null);
@@ -208,11 +209,12 @@ export const Presenter = () => {
                     </label>
                 </section>
 
-                <section className="flex flex-col gap-5">
+                <section className="flex flex-col gap-4 min-h-0">
                     <SlideCard index={index + 1} label="Próximo" dim />
                     {DECK[index + 1] && NOTES[DECK[index + 1].slide.id] && (
-                        <p className="text-base text-gray-400 leading-snug">{NOTES[DECK[index + 1].slide.id].mensagem}</p>
+                        <p className="text-base text-gray-400 leading-snug line-clamp-2">{NOTES[DECK[index + 1].slide.id].mensagem}</p>
                     )}
+                    <NextStepPreview connected={connected} index={index} step={step} stepCount={stepCount} />
                     <div className="mt-auto grid grid-cols-2 gap-4">
                         <button type="button" onClick={() => send({ type: 'prev' })}
                             className="h-24 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center gap-2 text-lg">

@@ -29,13 +29,13 @@ const FunnelSim = () => {
                 controls={plot ? <Segmented label="camada" options={LAYER_OPTIONS} value={layer} onChange={v => setOverride({ step, layer: v })} /> : undefined}
                 aside={step === 2 ? (
                     <div className="flex gap-5 pt-1">
-                        <BigStat value="3,03" label="z de Egger, potência de pico (p = 0,01)" color={C.nitrite} size={32} />
-                        <BigStat value="2,33" label="z de Egger, potência média (p = 0,03)" color={C.nitriteSoft} size={32} />
+                        <BigStat value="3,03" label="z de Egger, potência de pico (p = 0,01)" color={C.nitrite} size={32} count keyFact />
+                        <BigStat value="2,33" label="z de Egger, potência média (p = 0,03)" color={C.nitriteSoft} size={32} count />
                     </div>
                 ) : step === 3 ? (
                     <div className="flex gap-5 pt-1">
-                        <BigStat value="5" label="estudos imputados" color={C.nitrite} size={32} />
-                        <BigStat value="0,13 → ≈ 0" label="efeito agrupado (g)" color={C.risk} size={32} />
+                        <BigStat value="5" label="estudos imputados" color={C.nitrite} size={32} count />
+                        <BigStat value="0,13 → ≈ 0" label="efeito agrupado (g)" color={C.risk} size={32} keyFact />
                     </div>
                 ) : undefined}>
                 {plot ? <FunnelPlot layer={layer} /> : <QualityPanel />}

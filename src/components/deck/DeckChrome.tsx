@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { useSlideStepStore } from '../../store/useSlideSteps';
 import { useDetailsStore } from '../../lib/detailsStore';
 import { toggleDetails } from '../../lib/detailsEvent';
+import { IS_PREVIEW } from './presenterChannel';
+import { StageTools, StageToolButtons } from './stage/StageTools';
 
 interface DeckChromeProps {
     index: number;
@@ -33,6 +35,8 @@ const useFullscreen = () => {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
+const ICON_BUTTON = 'w-9 h-9 rounded-full flex items-center justify-center disabled:opacity-25 disabled:pointer-events-none transition-colors focus-visible:outline-2 focus-visible:outline-brand-accent';
+
 const IconButton = ({ label, onClick, disabled, children }: {
     label: string; onClick: () => void; disabled?: boolean; children: React.ReactNode;
 }) => (
@@ -42,13 +46,17 @@ const IconButton = ({ label, onClick, disabled, children }: {
         title={label}
         onClick={onClick}
         disabled={disabled}
-        className="w-9 h-9 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 disabled:opacity-25 disabled:pointer-events-none transition-colors focus-visible:outline-2 focus-visible:outline-brand-accent"
+        className={`${ICON_BUTTON} text-gray-300 hover:text-white hover:bg-white/10`}
     >
         {children}
     </button>
 );
 
-/** Barra de progresso, seção atual, contador e controles — somem com o mouse parado. */
+/**
+ * Barra de progresso, seção atual, contador e controles — somem com o mouse parado.
+ * Também monta as ferramentas de palco (holofote L, caneta laser K). Na prévia do
+ * apresentador (?previa) só fica o que a plateia vê: sem botões nem ferramentas.
+ */
 export const DeckChrome = ({ index, total, section, idle, has3D, onPrev, onNext, onOverview, on3D, onPresenter }: DeckChromeProps) => {
     const { isFull, toggle } = useFullscreen();
     const step = useSlideStepStore(s => s.step);
@@ -60,6 +68,8 @@ export const DeckChrome = ({ index, total, section, idle, has3D, onPrev, onNext,
 
     return (
         <>
+            {!IS_PREVIEW && <StageTools index={index} idle={idle} />}
+
             <div className="absolute top-0 left-0 right-0 h-[3px] bg-white/5 z-30" aria-hidden>
                 <div
                     className="h-full bg-gradient-to-r from-brand-deep via-brand-accent to-orange-400 transition-[width] duration-500 ease-out"
@@ -88,7 +98,7 @@ export const DeckChrome = ({ index, total, section, idle, has3D, onPrev, onNext,
                 </div>
             )}
 
-            {(has3D || detailsAvailable) && (
+            {!IS_PREVIEW && (has3D || detailsAvailable) && (
                 <div className={`absolute bottom-6 left-7 z-30 flex items-center gap-3 transition-all duration-500 ${idle ? 'opacity-60' : 'opacity-100'}`}>
                     {has3D && (
                         <button
@@ -116,7 +126,7 @@ export const DeckChrome = ({ index, total, section, idle, has3D, onPrev, onNext,
                 </div>
             )}
 
-            <nav
+            {!IS_PREVIEW && <nav
                 aria-label="Navegação dos slides"
                 className={`absolute bottom-5 right-6 z-30 flex items-center gap-1 px-2 py-1.5 rounded-full bg-black/55 border border-white/10 backdrop-blur-md transition-all duration-500 ${fade}`}
             >
@@ -130,6 +140,7 @@ export const DeckChrome = ({ index, total, section, idle, has3D, onPrev, onNext,
                     <ChevronRight size={18} />
                 </IconButton>
                 <span className="w-px h-5 bg-white/10 mx-1" />
+                <StageToolButtons className={ICON_BUTTON} />
                 <IconButton label="Modo apresentador (P)" onClick={onPresenter}>
                     <MonitorSpeaker size={16} />
                 </IconButton>
@@ -139,7 +150,7 @@ export const DeckChrome = ({ index, total, section, idle, has3D, onPrev, onNext,
                 <IconButton label={isFull ? 'Sair da tela cheia (F)' : 'Tela cheia (F)'} onClick={toggle}>
                     {isFull ? <Minimize size={16} /> : <Maximize size={16} />}
                 </IconButton>
-            </nav>
+            </nav>}
         </>
     );
 };

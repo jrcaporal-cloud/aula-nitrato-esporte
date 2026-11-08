@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { C } from './kit/palette';
+import { Reveal } from './kit/rhythm';
 import { Panel } from './kit/ui';
 import { ProtocolResults } from './ato4/ProtocolResults';
 import { ProtocolStrip } from './ato4/ProtocolStrip';
@@ -8,7 +9,7 @@ import { ExhaustCard, HeatCard } from './ato4/ProtocolStress';
 import {
     PROTOCOLS, PROTOCOL_STEPS, REST_SECONDS, REST_TICKS, SPRINT_SECONDS, SPRINT_TICKS, STEP_PICKS, findProtocol, type Pick,
 } from './ato4/protocolContent';
-import { FactList, Narration, SimFrame, Slider, Src, Tag } from './ato4/shell';
+import { FactList, Narration, SimFrame, Slider, Src, Tag, type FactHit } from './ato4/shell';
 
 /**
  * Slide 51 — "O Protocolo Decide". Controles de duração do sprint e de pausa acendem o resultado dos três
@@ -17,6 +18,9 @@ import { FactList, Narration, SimFrame, Slider, Src, Tag } from './ato4/shell';
  */
 
 interface Override extends Pick { step: number }
+
+/** Dado-chave de cada passo na lista de números: a potência com beterraba parte da do placebo. */
+const HITS: readonly (FactHit | undefined)[] = [{ index: 1 }, { index: 1, from: 539 }, { index: 1, from: 562 }, { index: 1, from: 375 }, undefined];
 
 const SprintProtocolSim = () => {
     const { step, setStep } = useSlideSteps(PROTOCOL_STEPS.length);
@@ -60,11 +64,13 @@ const SprintProtocolSim = () => {
                 <Panel className="flex flex-1 min-h-0 gap-5 px-5 py-3">
                     <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
                         <Narration stepKey={step} headline={info.headline} text={info.text} />
-                        <p className="border-l-4 pl-3 text-[16px] font-medium leading-snug text-white" style={{ borderColor: C.nitrateSoft }}>{info.takeaway}</p>
+                        <Reveal key={step} order={2}>
+                            <p className="border-l-4 pl-3 text-[16px] font-medium leading-snug text-white" style={{ borderColor: C.nitrateSoft }}>{info.takeaway}</p>
+                        </Reveal>
                     </div>
                     <div className="flex w-[330px] shrink-0 flex-col justify-between gap-2">
-                        <FactList rows={info.facts} dense />
-                        <Src>{info.source}</Src>
+                        <FactList key={step} rows={info.facts} dense hit={HITS[step]} />
+                        <Reveal key={`${step}-src`} order={2}><Src>{info.source}</Src></Reveal>
                     </div>
                 </Panel>
             </div>

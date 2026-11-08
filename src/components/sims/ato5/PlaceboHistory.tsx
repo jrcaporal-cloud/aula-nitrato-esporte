@@ -3,6 +3,7 @@ import { C } from '../kit/palette';
 import { VIS_H, VIS_W } from './ui';
 import { Glow, T } from './arte/text';
 import { Glass, VesselDefs } from './arte/vessels';
+import { SvgKeyFact } from './countText';
 
 /** Passo 4 do PlaceboSim: três placebos em cinco anos, cada um com o seu frasco. Caixa 672 × 440. */
 
@@ -66,16 +67,24 @@ export const PlaceboTimeline = () => {
             <line x1={XS[0]} x2={XS[2]} y1={TRACK_Y} y2={TRACK_Y} stroke="url(#ph-track)" strokeWidth={5} strokeLinecap="round" strokeDasharray="440" strokeDashoffset={reduce ? 0 : 440}>
                 {!reduce && <animate attributeName="stroke-dashoffset" values="440;0" dur="0.9s" begin="0.1s" fill="freeze" />}
             </line>
-            {XS.map((x, i) => (
-                <g key={x}>
-                    <path d={`M${x} 152V${TRACK_Y - 17}`} stroke={CARDS[i].color} strokeOpacity={0.6} strokeWidth={2} strokeDasharray="4 5" />
-                    <rect x={x - 40} y={TRACK_Y - 17} width={80} height={34} rx={17} fill="#07050B" stroke={CARDS[i].color} strokeWidth={2.5} />
-                    <T x={x} y={TRACK_Y + 8} size={20} color={CARDS[i].color} weight={700} anchor="middle" display>{CARDS[i].year}</T>
-                </g>
-            ))}
+            {/* cada ano acende quando a trilha chega nele; 2014, o padrão, ganha o destaque */}
+            {XS.map((x, i) => {
+                const pill = (
+                    <>
+                        <path d={`M${x} 152V${TRACK_Y - 17}`} stroke={CARDS[i].color} strokeOpacity={0.6} strokeWidth={2} strokeDasharray="4 5" />
+                        <rect x={x - 40} y={TRACK_Y - 17} width={80} height={34} rx={17} fill="#07050B" stroke={CARDS[i].color} strokeWidth={2.5} />
+                        <T x={x} y={TRACK_Y + 8} size={20} color={CARDS[i].color} weight={700} anchor="middle" display>{CARDS[i].year}</T>
+                    </>
+                );
+                return (
+                    <motion.g key={x} initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 + 0.45 * i, duration: 0.3 }}>
+                        {i === 2 ? <SvgKeyFact color={C.no} delay={1.05}>{pill}</SvgKeyFact> : pill}
+                    </motion.g>
+                );
+            })}
 
             {CARDS.map((c, i) => (
-                <motion.g key={c.year} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + 0.2 * i, duration: 0.4 }}>
+                <motion.g key={c.year} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + 0.45 * i, duration: 0.4 }}>
                     <rect x={XS[i] - 104} y={216} width={208} height={178} rx={14} fill="rgba(255,255,255,0.035)" stroke={c.color} strokeOpacity={0.6} strokeWidth={1.6} />
                     <T x={XS[i] - 92} y={240} size={16} color={C.muted} weight={500}>{c.who}</T>
                     {c.title.map((l, j) => <T key={l} x={XS[i] - 92} y={266 + 22 * j} size={19} color={c.color} weight={700} display>{l}</T>)}
@@ -83,7 +92,7 @@ export const PlaceboTimeline = () => {
                 </motion.g>
             ))}
 
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.3 }}>
                 <rect x={14} y={404} width={VIS_W - 28} height={32} rx={10} fill="rgba(248,113,113,0.08)" stroke={C.risk} strokeOpacity={0.6} />
                 <T x={28} y={426} size={16} color={C.risk} weight={700}>Não repita:</T>
                 <T x={120} y={426} size={16} color="#E5E7EB" weight={500}>Flueck 2019 usou água como placebo (handbike). Água não cega suco.</T>

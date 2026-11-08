@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { C } from '../../kit/palette';
 import { SvgText } from '../../kit/ui';
 import { Cyclist } from '../artKit/Figures';
+import { SvgCount, SvgReveal } from '../beat';
 import { Athlete, Gauge, LabRoom, Stadium } from './Stage';
 
 /** Passo 4 — laboratório × pódio: à esquerda o mostrador com agulha (mede), à direita o mostrador vazio (não mede). */
@@ -33,7 +34,9 @@ export const CompareArt = ({ reduce }: { reduce: boolean }) => (
         <SvgText x={550} y={101} text="×" size={26} weight={700} anchor="middle" color="#fff" />
         <Cyclist x={150} y={156} s={1.2} color={C.o2} still={reduce} />
         <Gauge x={390} y={124} value={0.48} color={C.o2} label="mede" />
-        <SvgText x={390} y={42} text="−0,4% · p = 0,6" size={17} weight={700} anchor="middle" color={C.nitrateSoft} />
+        <SvgReveal order={1}>
+            <SvgCount x={390} y={42} text="−0,4% · p = 0,6" size={17} weight={700} anchor="middle" color={C.nitrateSoft} />
+        </SvgReveal>
         {PODIUM.map(([x, y, h], i) => (
             <g key={x}>
                 <rect x={x} y={y} width={66} height={h} rx={4} fill="#2A1618" stroke="rgba(255,255,255,0.25)" />
@@ -41,10 +44,12 @@ export const CompareArt = ({ reduce }: { reduce: boolean }) => (
             </g>
         ))}
         <Gauge x={960} y={124} value={null} color={C.nitrite} label="não mede" />
+        <SvgReveal order={2}>
         <Side x={24} tag="LABORATÓRIO · LANE 2014" title="Mede, mas é cenário controlado" color={C.o2Soft}
             lines={['duplo-cego, quadrado latino, 4 condições, 24 ciclistas', 'prova: com nutrição de melhor prática, a beterraba', 'sozinha não mudou a potência (−0,4%, p = 0,6)', 'limite: a nutrição de melhor prática pode mascarar efeito']} />
         <Side x={576} tag="PÓDIO · EXETER 2012" title="É real, mas não mede nada" color={C.nitrite}
             lines={['sem grupo controle, sem cegamento, sem desfecho medido', 'prova: que atletas teriam usado o suco.', 'Não prova que funcionou', 'fonte: comunicado do próprio grupo que pesquisa o tema']} />
+        </SvgReveal>
         <motion.g initial={{ opacity: reduce ? 1 : 0, y: reduce ? 0 : 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: reduce ? 0 : 0.5, delay: reduce ? 0 : 0.5 }}>
             <rect x={24} y={312} width={1052} height={46} rx={12} fill={`${C.risk}1c`} stroke={`${C.risk}77`} />
             <text x={44} y={343} fontSize={22} fontWeight={600} fill="#fff" style={{ fontFamily: 'var(--font-display)' }}>Uso por atleta de elite não é prova de eficácia.</text>

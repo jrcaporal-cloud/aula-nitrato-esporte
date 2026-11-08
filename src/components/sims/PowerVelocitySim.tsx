@@ -8,13 +8,16 @@ import { FvChart } from './ato4/FvChart';
 import { peakVelocity } from './ato4/fvModel';
 import { PowerForest } from './ato4/PowerForest';
 import { ResponderCloud } from './ato4/ResponderCloud';
-import { SimFrame, StoryPanel, Tag } from './ato4/shell';
+import { SimFrame, StoryPanel, Tag, type FactHit } from './ato4/shell';
 import { VELOCITY_STEPS } from './ato4/velocityContent';
 
 /**
  * Slide 52 — "Mais Rápido, não Mais Forte". Curva força-velocidade e parábola de potência (força igual,
  * velocidade e potência sobem), os forests de Lago 2020 e Coggan 2021 e a nuvem de respondedores.
  */
+
+/** Dado-chave de cada passo na lista de números (contador + destaque). */
+const HITS: readonly FactHit[] = [{ index: 0 }, { index: 1, from: 13.1 }, { index: 1, from: 7.44 }, { index: 0 }, { index: 1 }];
 
 /** Onde o cursor para em cada passo do gráfico (rad/s). */
 const CURSOR_AT = [0.3, 11.5, peakVelocity('nitrate')] as const;
@@ -43,7 +46,7 @@ const PowerVelocitySim = () => {
                     </motion.div>
                 </Panel>
                 <StoryPanel stepKey={step} kicker={info.kicker} headline={info.headline} text={info.text} facts={info.facts}
-                    takeaway={info.takeaway} source={info.source} />
+                    takeaway={info.takeaway} source={info.source} hit={HITS[step]} />
             </div>
         </SimFrame>
     );

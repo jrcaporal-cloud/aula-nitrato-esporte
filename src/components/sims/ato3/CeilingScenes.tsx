@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { C } from '../kit/palette';
 import { SvgText } from '../kit/ui';
+import { NUMBER_DELAY_MS } from './countText';
+import { CountText } from './beat';
 import { REASONS } from './ceiling.content';
 import { KH, KW } from './CeilingChart';
 
@@ -54,7 +56,7 @@ export const ReasonsGrid = () => (
             <motion.div key={r.id} className="rounded-xl border bg-white/[0.03] px-4 py-3 flex flex-col gap-1" style={{ borderColor: `${r.color}66` }}
                 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: i * 0.12 }}>
                 <span className="font-mono text-[15px]" style={{ color: r.color }}>{i + 1} · {r.title.toUpperCase()}</span>
-                <span className="font-display text-[2rem] leading-none font-semibold tabular-nums" style={{ color: r.color }}>{r.big}</span>
+                <CountText text={r.big} delayMs={NUMBER_DELAY_MS + i * 120} className="font-display text-[2rem] leading-none font-semibold" style={{ color: r.color }} />
                 {r.lines.map(l => <span key={l} className="text-[16px] leading-snug text-gray-200">{l}</span>)}
             </motion.div>
         ))}

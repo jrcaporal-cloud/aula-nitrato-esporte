@@ -44,7 +44,7 @@ const TestNoiseSim = () => {
                 aside={calc ? (
                     <div className="flex gap-5 pt-1">
                         <BigStat value={`${Math.round(looksBetter(target, CV_TT) * 100)}%`} label="parecem melhorar, 1 medida por braço" color={C.noSoft} size={32} />
-                        <BigStat value={`${Math.round(pairedPower(TYPICAL_N, target, CV_TT) * 100)}%`} label={`poder com n = ${TYPICAL_N}`} color={C.nitrite} size={32} />
+                        <BigStat value={`${Math.round(pairedPower(TYPICAL_N, target, CV_TT) * 100)}%`} label={`poder com n = ${TYPICAL_N}`} color={C.nitrite} size={32} keyFact />
                     </div>
                 ) : undefined}>
                 {step === 0 && <RepeatStrips study={study} />}

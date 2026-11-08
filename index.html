@@ -5,13 +5,132 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/aula-nitrato-esporte/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07050B" />
   <title>Da Raiz ao Músculo · Nitrato no Esporte</title>
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700&display=swap"
-    rel="stylesheet">
+  <!-- Fontes sem bloquear a primeira pintura (folha inserida por script): a capa de entrada aparece já;
+       a aula espera as fontes, com teto (src/boot/splash.ts). -->
+  <script>
+    (function (l) {
+      l.id = 'boot-fonts'; l.rel = 'stylesheet';
+      l.href = 'https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700&display=swap';
+      document.head.appendChild(l);
+    })(document.createElement('link'));
+  </script>
+  <noscript>
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=satoshi@400,500,700&display=swap"
+      rel="stylesheet">
+  </noscript>
+  <style>
+    /* Capa de entrada: HTML + CSS puro, aparece antes do JS. O ponto faz o caminho da aula:
+       nitrato (magenta) na beterraba → nitrito (âmbar) na boca → óxido nítrico (verde) no músculo. */
+    html { background: #07050B; }
+    #boot-splash {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 42%, rgba(240, 67, 126, 0.10), transparent 60%), #07050B;
+      color: #F9FAFB; font-family: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      opacity: 1; transition: opacity var(--boot-fade, 450ms) ease;
+    }
+    #boot-splash.is-leaving { opacity: 0; pointer-events: none; }
+    .bs-inner { width: min(1100px, calc(100vw - 32px)); text-align: center; }
+    .bs-kicker {
+      margin: 0 0 18px; font-family: 'Clash Display', system-ui, sans-serif; font-weight: 600;
+      font-size: 15px; letter-spacing: 0.3em; text-transform: uppercase; color: #34D399;
+    }
+    .bs-title {
+      margin: 0 0 56px; font-family: 'Clash Display', system-ui, sans-serif; font-weight: 700;
+      font-size: clamp(40px, 7.2vw, 92px); line-height: 1.02; letter-spacing: -0.01em;
+      background: linear-gradient(135deg, #FFFFFF, #FCE7F3 45%, rgba(244, 114, 182, 0.9));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .bs-track { position: relative; width: min(460px, 78vw); height: 82px; margin: 0 auto; }
+    .bs-line, .bs-fill {
+      position: absolute; left: 0; right: 0; top: 10px; height: 3px; border-radius: 3px;
+    }
+    .bs-line { background: rgba(255, 255, 255, 0.10); }
+    .bs-fill {
+      background: linear-gradient(90deg, #F0437E, #FBBF24 50%, #34D399);
+      transform-origin: left center; transform: scaleX(0);
+      animation: bs-fill 3.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+    .bs-node { position: absolute; top: 0; width: 0; }
+    .bs-dotnode {
+      position: absolute; left: -11px; top: 0; width: 22px; height: 22px; border-radius: 50%;
+      box-sizing: border-box; border: 2px solid var(--c); background: #07050B;
+      opacity: 0.45; animation: var(--lit) 3.2s ease infinite;
+    }
+    .bs-label {
+      position: absolute; left: -70px; width: 140px; top: 32px; line-height: 1.25;
+      font-size: 16px; font-weight: 700; color: var(--c);
+    }
+    .bs-label small { display: block; font-size: 14px; font-weight: 500; color: #9CA3AF; }
+    .bs-runner {
+      position: absolute; left: 0; right: 0; top: 0; height: 22px;
+      animation: bs-run 3.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+    .bs-dot {
+      position: absolute; left: -7px; top: 4px; width: 14px; height: 14px; border-radius: 50%;
+      background: #F0437E; box-shadow: 0 0 16px 4px rgba(240, 67, 126, 0.55);
+      animation: bs-color 3.2s linear infinite;
+    }
+    .bs-wait {
+      margin: 40px 0 0; font-size: 15px; letter-spacing: 0.08em; color: #9CA3AF;
+      opacity: 0; animation: bs-show 600ms ease 8s forwards;
+    }
+    @keyframes bs-run {
+      0%, 10% { transform: translateX(0); }
+      42%, 54% { transform: translateX(50%); }
+      86%, 100% { transform: translateX(100%); }
+    }
+    @keyframes bs-fill {
+      0%, 10% { transform: scaleX(0); }
+      42%, 54% { transform: scaleX(0.5); }
+      86%, 94% { transform: scaleX(1); opacity: 1; }
+      100% { transform: scaleX(1); opacity: 0; }
+    }
+    @keyframes bs-color {
+      0%, 14% { background: #F0437E; box-shadow: 0 0 16px 4px rgba(240, 67, 126, 0.55); }
+      40%, 56% { background: #FBBF24; box-shadow: 0 0 16px 4px rgba(251, 191, 36, 0.55); }
+      84%, 94% { background: #34D399; box-shadow: 0 0 18px 5px rgba(52, 211, 153, 0.6); opacity: 1; }
+      100% { background: #34D399; box-shadow: 0 0 18px 5px rgba(52, 211, 153, 0.6); opacity: 0; }
+    }
+    @keyframes bs-lit1 { 0%, 14% { opacity: 1; box-shadow: 0 0 14px rgba(240, 67, 126, 0.5); } 30%, 100% { opacity: 0.45; box-shadow: none; } }
+    @keyframes bs-lit2 { 0%, 36% { opacity: 0.45; box-shadow: none; } 44%, 56% { opacity: 1; box-shadow: 0 0 14px rgba(251, 191, 36, 0.5); } 70%, 100% { opacity: 0.45; box-shadow: none; } }
+    @keyframes bs-lit3 { 0%, 80% { opacity: 0.45; box-shadow: none; } 88%, 96% { opacity: 1; box-shadow: 0 0 14px rgba(52, 211, 153, 0.55); } 100% { opacity: 0.45; box-shadow: none; } }
+    @keyframes bs-show { to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      /* Sem movimento: o caminho aparece completo e parado. */
+      .bs-runner { animation: none; transform: translateX(100%); }
+      .bs-fill { animation: none; transform: scaleX(1); }
+      .bs-dot { animation: none; background: #34D399; box-shadow: 0 0 14px 3px rgba(52, 211, 153, 0.5); }
+      .bs-dotnode { animation: none; opacity: 1; }
+      .bs-wait { animation: bs-show 1ms linear 8s forwards; }
+    }
+  </style>
 </head>
 
 <body>
-  <div id="root"></div>
+  <div id="root">
+    <div id="boot-splash" role="status" aria-label="Carregando a aula Da Raiz ao Músculo">
+      <div class="bs-inner">
+        <p class="bs-kicker">Nitrato inorgânico no exercício e no esporte</p>
+        <h1 class="bs-title">Da Raiz ao Músculo</h1>
+        <div class="bs-track" aria-hidden="true">
+          <div class="bs-line"></div>
+          <div class="bs-fill"></div>
+          <div class="bs-node" style="left:0;--c:#F0437E;--lit:bs-lit1"><div class="bs-dotnode"></div>
+            <div class="bs-label">NO₃⁻<small>beterraba</small></div></div>
+          <div class="bs-node" style="left:50%;--c:#FBBF24;--lit:bs-lit2"><div class="bs-dotnode"></div>
+            <div class="bs-label">NO₂⁻<small>boca</small></div></div>
+          <div class="bs-node" style="left:100%;--c:#34D399;--lit:bs-lit3"><div class="bs-dotnode"></div>
+            <div class="bs-label">NO<small>músculo</small></div></div>
+          <div class="bs-runner"><div class="bs-dot"></div></div>
+        </div>
+        <p class="bs-wait">carregando a aula…</p>
+      </div>
+    </div>
+    <div id="app"></div>
+  </div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 

@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { C } from '../../kit/palette';
 import { SvgText } from '../../kit/ui';
 import { Cyclist } from '../artKit/Figures';
+import { NUMBER_DELAY_MS } from '../countText';
+import { SvgCount, SvgReveal } from '../beat';
 import { LabRoom } from './Stage';
 
 /** Passo 1 — Londres 2012: o ciclista no ergômetro do laboratório "pedala" o percurso olímpico do contrarrelógio. */
@@ -21,9 +23,11 @@ export const CourseArt = ({ reduce }: { reduce: boolean }) => (
         </path>
         <Cyclist x={140} y={276} s={1.45} color={C.o2} still={reduce} />
         <SvgText x={24} y={36} text="LABORATÓRIO · LANE 2014" size={17} weight={700} color={C.o2Soft} />
-        {['12 homens e 12 mulheres, ciclistas competitivos', 'beterraba 8,4 mmol, 2 h antes; cafeína 40 min antes', 'quatro condições, duplo-cego, quadrado latino'].map((t, i) => (
-            <SvgText key={t} x={24} y={308 + i * 24} text={t} size={16} weight={i === 0 ? 600 : 500} color={i === 0 ? '#E5E7EB' : '#CBD5E1'} />
-        ))}
+        <SvgReveal order={2} delay={0.3}>
+            {['12 homens e 12 mulheres, ciclistas competitivos', 'beterraba 8,4 mmol, 2 h antes; cafeína 40 min antes', 'quatro condições, duplo-cego, quadrado latino'].map((t, i) => (
+                <SvgText key={t} x={24} y={308 + i * 24} text={t} size={16} weight={i === 0 ? 600 : 500} color={i === 0 ? '#E5E7EB' : '#CBD5E1'} />
+            ))}
+        </SvgReveal>
         <path d="M 512 150 H 590 M 576 138 L 590 150 L 576 162" fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
         <SvgText x={551} y={130} text="simula" size={17} weight={600} anchor="middle" color={C.muted} />
         <rect x={604} y={20} width={472} height={258} rx={16} fill="rgba(240,67,126,0.05)" stroke="rgba(255,255,255,0.14)" />
@@ -37,11 +41,15 @@ export const CourseArt = ({ reduce }: { reduce: boolean }) => (
             {!reduce && <animateMotion dur="7s" repeatCount="indefinite" path={LOOP} />}
         </circle>
         {STATS.map(([k, v], i) => (
-            <g key={k} transform={`translate(${604 + i * 160} 292)`}>
-                <rect width={150} height={74} rx={12} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.16)" />
-                <SvgText x={14} y={27} text={k} size={16} weight={500} color={C.muted} />
-                <SvgText x={14} y={60} text={v} size={i === 2 ? 20 : 24} weight={700} color="#fff" />
-            </g>
+            <SvgReveal key={k} order={1} delay={i * 0.1}>
+                <g transform={`translate(${604 + i * 160} 292)`}>
+                    <rect width={150} height={74} rx={12} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.16)" />
+                    <SvgText x={14} y={27} text={k} size={16} weight={500} color={C.muted} />
+                    {i < 2
+                        ? <SvgCount x={14} y={60} text={v} size={24} weight={700} color="#fff" count={{ delayMs: NUMBER_DELAY_MS + i * 100 }} />
+                        : <SvgText x={14} y={60} text={v} size={20} weight={700} color="#fff" />}
+                </g>
+            </SvgReveal>
         ))}
     </g>
 );

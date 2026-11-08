@@ -1,7 +1,9 @@
 import { useRef, type ReactNode } from 'react';
-import { motion } from 'framer-motion';
 import { C } from '../kit/palette';
 import { Chip, Source, StepTabs } from '../kit/ui';
+import { REVEAL_GAP } from '../kit/countUp';
+import { KeyFact, Reveal } from '../kit/rhythm';
+import { CountText } from '../ato1/countText';
 import { clamp, norm } from './hooks';
 
 /** Peças comuns aos simuladores do Ato II (primeira metade). Texto sempre ≥14 px de projeto. */
@@ -43,13 +45,28 @@ export const SimFrame = ({ tabs, step, setStep, layoutId, chips, hint3d = false,
     </div>
 );
 
-/** Texto do passo: manchete + duas ou três frases, com fade a cada troca (use `key={step}`). */
-export const Narration = ({ headline, children }: { headline: string; children: ReactNode }) => (
-    <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
-        className="flex flex-col gap-1.5">
+interface NarrationProps { headline: string; children: ReactNode; order?: number }
+
+/**
+ * Texto do passo: manchete + duas ou três frases (use `key={step}`). Ritmo do passo: arte (0) → número (1) → legenda (2);
+ * a narração entra como legenda, depois do número. Quando o número-chave mora no próprio texto, use order={1}.
+ */
+export const Narration = ({ headline, children, order = 2 }: NarrationProps) => (
+    <Reveal order={order} className="flex flex-col gap-1.5">
         <p className="font-display text-[1.3rem] font-semibold leading-tight text-white">{headline}</p>
         <p className="text-[17px] leading-snug text-gray-100">{children}</p>
-    </motion.div>
+    </Reveal>
+);
+
+interface KeyNumProps { c: string; children: string; order?: number; count?: boolean }
+
+/** Número-chave dentro da narração: sobe como contador e ganha o destaque curto (1 por passo). */
+export const KeyNum = ({ c, children, order = 1, count = true }: KeyNumProps) => (
+    <KeyFact color={c} delay={order * REVEAL_GAP}>
+        <b className="font-semibold" style={{ color: c }}>
+            {count ? <CountText text={children} delayMs={order * REVEAL_GAP * 1000} /> : children}
+        </b>
+    </KeyFact>
 );
 
 /** Palavra em destaque colorido dentro da narração. */
@@ -57,20 +74,44 @@ export const Hl = ({ c, children }: { c: string; children: ReactNode }) => (
     <b className="font-semibold" style={{ color: c }}>{children}</b>
 );
 
-/** Rodapé de fonte da coluna de texto. */
+/** Rodapé de fonte da coluna de texto (entra por último no passo; dê `key={step}`). */
 export const SourceLine = ({ children }: { children: ReactNode }) => (
-    <div className="mt-auto border-t border-white/10 pt-2"><Source>{children}</Source></div>
+    <div className="mt-auto border-t border-white/10 pt-2"><Reveal order={2} delay={0.08}><Source>{children}</Source></Reveal></div>
 );
 
-interface BigStatProps { value: string; label: string; color?: string; size?: number }
+interface BigStatProps {
+    value: string;
+    label: string;
+    color?: string;
+    size?: number;
+    /** Número-chave do passo: conta até o texto e ganha o destaque. */
+    hit?: boolean;
+    /** Atraso extra (s) para escalonar uma lista. */
+    delay?: number;
+}
 
-/** Número de destaque com legenda curta. */
-export const BigStat = ({ value, label, color = C.text, size = 34 }: BigStatProps) => (
-    <div className="flex min-w-0 flex-col">
-        <span className="font-display font-semibold leading-none tabular-nums" style={{ color, fontSize: size }}>{value}</span>
-        <span className="mt-1 text-[14px] leading-tight text-gray-300">{label}</span>
-    </div>
-);
+/** Número de destaque com legenda curta: número (ordem 1) e depois a legenda (ordem 2). */
+export const BigStat = ({ value, label, color = C.text, size = 34, hit = false, delay = 0 }: BigStatProps) => {
+    const num = (
+        <span className="font-display font-semibold leading-none tabular-nums" style={{ color, fontSize: size }}>
+            {hit ? <CountText text={value} delayMs={(REVEAL_GAP + delay) * 1000} /> : value}
+        </span>
+    );
+    return (
+        <div className="flex min-w-0 flex-col">
+            <Reveal order={1} delay={delay}>{hit ? <KeyFact color={color} delay={REVEAL_GAP + delay}>{num}</KeyFact> : num}</Reveal>
+            <Reveal order={2} delay={delay}><span className="mt-1 block text-[14px] leading-tight text-gray-300">{label}</span></Reveal>
+        </div>
+    );
+};
+
+export interface StatItem { value: string; label: string; color: string; hit?: boolean }
+
+/** Lista de números do passo; o marcado com `hit` (ou o primeiro) é o número-chave. */
+export const StatList = ({ items, size }: { items: readonly StatItem[]; size: number }) => {
+    const hitAt = Math.max(0, items.findIndex(s => s.hit));
+    return <>{items.map((s, i) => <BigStat key={s.label} value={s.value} label={s.label} color={s.color} size={size} hit={i === hitAt} delay={i * 0.08} />)}</>;
+};
 
 interface SliderProps {
     label: string;

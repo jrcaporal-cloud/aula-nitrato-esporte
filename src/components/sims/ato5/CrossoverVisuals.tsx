@@ -4,6 +4,7 @@ import { VIS_H, VIS_W } from './ui';
 import type { CrossoverStep } from './crossoverContent';
 import { T } from './arte/text';
 import { Seal } from './arte/figures';
+import { Count } from './countText';
 import { DesignPanel, LearningPanel, OrderPanel } from './CrossoverPanels';
 import { BiologyPanel, GoodPanel } from './CrossoverPanels2';
 
@@ -90,7 +91,7 @@ const Timeline = ({ focus, step, reduce }: { focus: Focus; step: number; reduce:
             </g>
             {badge && (
                 <motion.g key={focus} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.25 }}>
-                    <T x={598} y={LANE_A + 34} size={focus === 'order' ? 20 : 26} color={badge[2]} weight={700} anchor="middle" display>{badge[0]}</T>
+                    <T x={598} y={LANE_A + 34} size={focus === 'order' ? 20 : 26} color={badge[2]} weight={700} anchor="middle" display><Count text={badge[0]} delayMs={250} ms={700} /></T>
                     <T x={598} y={LANE_A + 58} size={16} color={badge[2]} weight={600} anchor="middle">{badge[1]}</T>
                 </motion.g>
             )}

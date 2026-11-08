@@ -1,5 +1,6 @@
 import { C } from '../kit/palette';
 import { SvgText } from '../kit/ui';
+import { SvgCount, SvgReveal } from './beat';
 import { AMANN } from './tteTt.content';
 import { TH, TW } from './TteBars';
 
@@ -31,8 +32,12 @@ export const AmannBars = () => (
                         return (
                             <g key={b.id}>
                                 <rect x={b.x} y={y} width={BAR_W} height={Math.max(h, 3)} rx={4} fill={b.color} fillOpacity={0.92} />
-                                <SvgText x={b.x + BAR_W / 2} y={up ? y - 28 : y + h + 24} text={b.text} size={19} weight={700} anchor="middle" color="#fff" />
-                                <SvgText x={b.x + BAR_W / 2} y={up ? y - 8 : y + h + 44} text={b.sub} size={16} weight={500} anchor="middle" color={C.muted} />
+                                <SvgReveal order={1}>
+                                    <SvgCount x={b.x + BAR_W / 2} y={up ? y - 28 : y + h + 24} text={b.text} size={19} weight={700} anchor="middle" color="#fff" />
+                                </SvgReveal>
+                                <SvgReveal order={2}>
+                                    <SvgText x={b.x + BAR_W / 2} y={up ? y - 8 : y + h + 44} text={b.sub} size={16} weight={500} anchor="middle" color={C.muted} />
+                                </SvgReveal>
                             </g>
                         );
                     })}

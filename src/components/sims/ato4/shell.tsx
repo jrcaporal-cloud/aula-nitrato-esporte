@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { CountText } from '../ato3/beat';
 import { C, PANEL_BG } from '../kit/palette';
+import { KeyFact, Reveal } from '../kit/rhythm';
 import { Panel } from '../kit/ui';
 
 /**
@@ -84,14 +86,15 @@ interface NarrationProps {
     color?: string;
 }
 
-/** Texto do passo: etiqueta + manchete + duas ou três frases, com fade a cada troca. */
+/** Texto do passo: etiqueta + manchete (ordem 1, junto com o número) e as frases (ordem 2, legenda). */
 export const Narration = ({ stepKey, kicker, headline, text, color = C.nitrateSoft }: NarrationProps) => (
-    <motion.div key={stepKey} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
-        className="flex flex-col gap-1.5">
-        {kicker && <span className="font-mono text-[15px] tracking-wide" style={{ color: C.muted }}>{kicker}</span>}
-        <p className="font-display text-[1.45rem] font-semibold leading-tight" style={{ color }}>{headline}</p>
-        <p className="text-[17px] leading-snug text-gray-100">{text}</p>
-    </motion.div>
+    <div key={stepKey} className="flex flex-col gap-1.5">
+        <Reveal order={1} className="flex flex-col gap-1.5">
+            {kicker && <span className="font-mono text-[15px] tracking-wide" style={{ color: C.muted }}>{kicker}</span>}
+            <p className="font-display text-[1.45rem] font-semibold leading-tight" style={{ color }}>{headline}</p>
+        </Reveal>
+        <Reveal order={2}><p className="text-[17px] leading-snug text-gray-100">{text}</p></Reveal>
+    </div>
 );
 
 interface BigStatProps {
@@ -163,27 +166,40 @@ export const Slider = ({ label, value, min, max, step, onChange, color, ticks, r
     </div>
 );
 
+/** Dado-chave do passo dentro da lista: a linha `index` sobe como contador (de `from`) e ganha o destaque. */
+export interface FactHit {
+    index: number;
+    from?: number;
+    /** Cor do destaque (padrão: a cor da lista). */
+    color?: string;
+}
+
 interface FactListProps {
     rows: readonly (readonly [string, string])[];
     color?: string;
     /** Linhas mais baixas, para painéis com pouca altura. */
     dense?: boolean;
+    hit?: FactHit;
 }
 
-/** Linhas "rótulo · valor" para os números que o passo cita (mono, 15–16 px). */
-export const FactList = ({ rows, color = C.nitrateSoft, dense = false }: FactListProps) => (
-    <div className={`flex flex-col rounded-xl border border-white/10 bg-white/[0.03] px-3 ${dense ? 'py-0.5' : 'py-1.5'}`}>
-        {rows.map(([k, v]) => (
+/** Linhas "rótulo · valor" para os números que o passo cita (mono, 15–16 px). Entram na ordem 1 (número). */
+export const FactList = ({ rows, color = C.nitrateSoft, dense = false, hit }: FactListProps) => (
+    <Reveal order={1} className={`flex flex-col rounded-xl border border-white/10 bg-white/[0.03] px-3 ${dense ? 'py-0.5' : 'py-1.5'}`}>
+        {rows.map(([k, v], i) => (
             <div key={k} className={`flex items-baseline justify-between gap-3 border-b border-white/5 last:border-b-0 ${dense ? 'py-0.5' : 'py-1'}`}>
                 <span className="text-[15px] text-gray-300">{k}</span>
-                <span className="font-mono text-[16px] font-bold tabular-nums text-right" style={{ color }}>{v}</span>
+                <span className="font-mono text-[16px] font-bold tabular-nums text-right" style={{ color }}>
+                    {hit?.index === i ? <KeyFact color={hit.color ?? color}><CountText text={v} from={hit.from} /></KeyFact> : v}
+                </span>
             </div>
         ))}
-    </div>
+    </Reveal>
 );
 
 interface StoryPanelProps extends NarrationProps {
     facts?: readonly (readonly [string, string])[];
+    /** Dado-chave do passo entre os `facts` (contador + destaque). */
+    hit?: FactHit;
     /** Frase-síntese do passo, em destaque acima da fonte. */
     takeaway?: string;
     source?: string;
@@ -191,23 +207,21 @@ interface StoryPanelProps extends NarrationProps {
 }
 
 /** Painel à direita: narração do passo, números citados, a síntese e a fonte no rodapé. */
-export const StoryPanel = ({ facts, takeaway, source, children, ...narration }: StoryPanelProps) => {
+export const StoryPanel = ({ facts, hit, takeaway, source, children, ...narration }: StoryPanelProps) => {
     const color = narration.color ?? C.nitrateSoft;
     return (
         <Panel className="p-4 flex flex-col gap-3 min-h-0">
             <Narration {...narration} />
-            {facts && <FactList rows={facts} color={narration.color} />}
+            {facts && <FactList key={`${narration.stepKey}-f`} rows={facts} color={narration.color} hit={hit} />}
             {children}
-            <div className="mt-auto flex flex-col gap-2">
+            <Reveal key={`${narration.stepKey}-t`} order={2} className="mt-auto flex flex-col gap-2">
                 {takeaway && (
-                    <motion.p key={`${narration.stepKey}-t`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.25 }}
-                        className="rounded-lg border-l-4 bg-white/[0.04] px-3 py-2 text-[16px] font-medium leading-snug text-white"
-                        style={{ borderColor: color }}>
+                    <p className="rounded-lg border-l-4 bg-white/[0.04] px-3 py-2 text-[16px] font-medium leading-snug text-white" style={{ borderColor: color }}>
                         {takeaway}
-                    </motion.p>
+                    </p>
                 )}
                 {source && <div className="border-t border-white/10 pt-2"><Src>{source}</Src></div>}
-            </div>
+            </Reveal>
         </Panel>
     );
 };

@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
 import { ForestPlot, type ForestRow } from '../kit/ForestPlot';
 import { C } from '../kit/palette';
+import { Reveal } from '../kit/rhythm';
 import { SvgText } from '../kit/ui';
+import { SvgKeyFact, SvgReveal } from './beat';
 import { SUSTAIN } from './timing.content';
 
 /** Cenas dos passos 2–4 do slide 43 (todas em 660 × 360). */
@@ -19,7 +21,7 @@ export const ForestScene = ({ rows, domain, ticks, label, foot, sides }: {
         <div style={{ width: FW, height: 270 }}>
             <ForestPlot rows={rows} width={FW} height={270} domain={domain} ticks={ticks} axisLabel={label} labelWidth={205} valueWidth={185} sides={sides} />
         </div>
-        {note(foot)}
+        <Reveal order={2}>{note(foot)}</Reveal>
     </div>
 );
 
@@ -48,14 +50,22 @@ export const SustainGrid = ({ reduce }: { reduce: boolean }) => {
                                     transition={{ duration: reduce ? 0 : 0.4, delay: reduce ? 0 : 0.12 * (ri * 3 + ci) }}>
                                     <rect x={COL_X[ci] - 62} y={y + 12} width={124} height={46} rx={10}
                                         fill={empty ? 'rgba(148,163,184,0.1)' : `${r.color}2e`} stroke={empty ? 'rgba(148,163,184,0.3)' : r.color} />
-                                    <SvgText x={COL_X[ci]} y={y + 43} text={empty ? 'sem mudança' : cell} size={empty ? 16 : 19} weight={700} anchor="middle" color={empty ? C.muted : '#fff'} />
+                                    {ri === 2 && !empty ? (
+                                        <SvgKeyFact color={C.o2} delay={reduce ? 0 : 0.12 * (ri * 3 + ci) + 0.3}>
+                                            <SvgText x={COL_X[ci]} y={y + 43} text={cell} size={19} weight={700} anchor="middle" color="#fff" />
+                                        </SvgKeyFact>
+                                    ) : (
+                                        <SvgText x={COL_X[ci]} y={y + 43} text={empty ? 'sem mudança' : cell} size={empty ? 16 : 19} weight={700} anchor="middle" color={empty ? C.muted : '#fff'} />
+                                    )}
                                 </motion.g>
                             );
                         })}
                     </g>
                 );
             })}
-            <SvgText x={FW / 2} y={FH - 14} text="dois relógios: O₂ e pressão em horas, potência de pico em semanas" size={17} weight={600} anchor="middle" color="#CBD5E1" />
+            <SvgReveal order={2} delay={0.9}>
+                <SvgText x={FW / 2} y={FH - 14} text="dois relógios: O₂ e pressão em horas, potência de pico em semanas" size={17} weight={600} anchor="middle" color="#CBD5E1" />
+            </SvgReveal>
         </svg>
     );
 };

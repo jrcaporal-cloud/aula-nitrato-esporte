@@ -1,6 +1,7 @@
 import { useReducedMotion } from 'framer-motion';
 import { useSlideSteps } from '../../store/useSlideSteps';
 import { C } from './kit/palette';
+import { Reveal } from './kit/rhythm';
 import { Panel } from './kit/ui';
 import { JUDO_STEPS } from './ato4/judoContent';
 import { FactList, Narration, SimFrame, Src, Tag } from './ato4/shell';
@@ -29,8 +30,8 @@ const JudoDaySim = () => {
                         <Narration stepKey={step} headline={info.headline} text={info.text} />
                     </div>
                     <div className="flex w-[330px] shrink-0 flex-col justify-between gap-1.5">
-                        <FactList rows={info.facts} dense />
-                        <Src>{info.source}</Src>
+                        <FactList key={step} rows={info.facts} dense hit={step === 0 ? { index: 0 } : undefined} />
+                        <Reveal key={`${step}-src`} order={2}><Src>{info.source}</Src></Reveal>
                     </div>
                 </Panel>
             </div>

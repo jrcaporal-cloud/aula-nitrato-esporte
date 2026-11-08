@@ -1,7 +1,13 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { REVEAL_GAP } from '../../kit/countUp';
 import { C } from '../../kit/palette';
+import { KeyFact, Reveal } from '../../kit/rhythm';
+import { CountText } from '../countText';
 
-/** Dois grupos de barras (controle × nitrato) a partir do zero. Usado em 2006–07 (Larsen) e 2009 (Bailey). */
+/**
+ * Dois grupos de barras (controle × nitrato) a partir do zero. Usado em 2006–07 (Larsen) e 2009 (Bailey).
+ * Ritmo: as barras crescem e o número sobe junto; a variação (Δ) ganha o destaque; a nota de rodapé vem por último.
+ */
 
 export interface BarSide {
     label: string;
@@ -24,7 +30,7 @@ const Bar = ({ side, max, color, delay }: { side: BarSide; max: number; color: s
     const reduce = useReducedMotion() ?? false;
     return (
         <div className="flex w-[96px] flex-col items-center justify-end">
-            <span className="mb-1.5 text-[17px] font-bold leading-none text-white">{side.shown}</span>
+            <CountText text={side.shown} delayMs={(reduce ? 0 : delay) * 1000} ms={800} className="mb-1.5 text-[17px] font-bold leading-none text-white" />
             <motion.div className="w-full rounded-t-lg" style={{ background: color }}
                 initial={{ height: 0 }} animate={{ height: (side.value / max) * BAR_AREA }}
                 transition={{ duration: reduce ? 0 : 0.8, delay: reduce ? 0 : delay, ease: 'easeOut' }} />
@@ -39,7 +45,9 @@ const Group = ({ group, order }: { group: BarGroup; order: number }) => (
             {group.delta && (
                 <span className="rounded-md border px-2.5 py-0.5 font-display text-[1.3rem] font-bold leading-tight"
                     style={{ borderColor: `${C.nitrate}99`, color: C.nitrateSoft, background: `${C.nitrate}1a` }}>
-                    {group.delta}
+                    <KeyFact color={C.nitrate} delay={0.5 + order * 0.15 + REVEAL_GAP}>
+                        <CountText text={group.delta} delayMs={(0.5 + order * 0.15) * 1000} />
+                    </KeyFact>
                 </span>
             )}
         </div>
@@ -59,6 +67,6 @@ export const PairBars = ({ groups, footnote }: { groups: readonly BarGroup[]; fo
         <div className="flex items-start justify-center gap-16">
             {groups.map((group, i) => <Group key={group.title} group={group} order={i} />)}
         </div>
-        {footnote && <p className="text-center font-mono text-[16px] text-gray-400">{footnote}</p>}
+        {footnote && <Reveal order={2} delay={0.8}><p className="text-center font-mono text-[16px] text-gray-400">{footnote}</p></Reveal>}
     </div>
 );

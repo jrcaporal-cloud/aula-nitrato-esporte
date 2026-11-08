@@ -3,6 +3,8 @@ import { C } from '../kit/palette';
 import { VIS_H, VIS_W } from './ui';
 import { Person } from './arte/figures';
 import { Glow, T } from './arte/text';
+import { Count, SvgKeyFact } from './countText';
+import { Ord } from './svgOrderA';
 
 /** Passo 2 do BlindingSim: 3 escaladores acertaram de 10; ao lado, o que o acaso daria. Caixa 672 × 440. */
 
@@ -38,8 +40,10 @@ export const UrnVsChance = () => {
                     </motion.g>
                 );
             })}
-            <circle cx={50} cy={390} r={8} fill={C.no} /><T x={66} y={396} size={17} color={C.noSoft} weight={700}>acertou: 3</T>
-            <circle cx={50} cy={418} r={8} fill={C.placebo} fillOpacity={0.6} /><T x={66} y={424} size={17} color="#E5E7EB" weight={600}>errou: 7</T>
+            <Ord at={0.75}>
+                <circle cx={50} cy={390} r={8} fill={C.no} /><T x={66} y={396} size={17} color={C.noSoft} weight={700}>acertou: 3</T>
+                <circle cx={50} cy={418} r={8} fill={C.placebo} fillOpacity={0.6} /><T x={66} y={424} size={17} color="#E5E7EB" weight={600}>errou: 7</T>
+            </Ord>
 
             <T x={482} y={34} size={19} color="#fff" weight={700} anchor="middle">Se todos chutassem</T>
             <T x={482} y={58} size={16} color={C.muted} weight={500} anchor="middle">acertos em 10 palpites entre 2 opções</T>
@@ -52,11 +56,19 @@ export const UrnVsChance = () => {
             ))}
             {[0, 2, 4, 6, 8, 10].map(k => <T key={k} x={bx(k) + 12} y={BASE_Y + 24} size={17} color={C.muted} weight={600} anchor="middle">{k}</T>)}
             <line x1={bx(5) + 12} x2={bx(5) + 12} y1={96} y2={BASE_Y} stroke="rgba(255,255,255,0.5)" strokeDasharray="5 5" />
-            <T x={bx(5) + 20} y={110} size={17} color="#E5E7EB" weight={700}>esperado: 5</T>
-            <T x={bx(3) + 12} y={BASE_Y - hOf(BINOM[3]) - 12} size={17} color="#fff" weight={700} anchor="middle">observado: 3</T>
-            <path d={`M${bx(0)} ${BASE_Y + 42}V${BASE_Y + 52}H${bx(3) + 24}V${BASE_Y + 42}`} stroke={C.noSoft} strokeWidth={2} fill="none" />
-            <T x={bx(0) - 6} y={BASE_Y + 80} size={26} color={C.noSoft} weight={700} display>17%</T>
-            <T x={bx(0) + 58} y={BASE_Y + 80} size={16} color={C.noSoft} weight={600}>das vezes dão 3 ou menos (cálculo)</T>
+            <Ord at={0.8}>
+                <T x={bx(5) + 20} y={110} size={17} color="#E5E7EB" weight={700}>esperado: 5</T>
+                <T x={bx(3) + 12} y={BASE_Y - hOf(BINOM[3]) - 12} size={17} color="#fff" weight={700} anchor="middle">observado: 3</T>
+            </Ord>
+            <Ord at={1.0}>
+                <path d={`M${bx(0)} ${BASE_Y + 42}V${BASE_Y + 52}H${bx(3) + 24}V${BASE_Y + 42}`} stroke={C.noSoft} strokeWidth={2} fill="none" />
+                <SvgKeyFact color={C.no} delay={1.1}>
+                    <T x={bx(0) - 6} y={BASE_Y + 80} size={26} color={C.noSoft} weight={700} display><Count text="17%" delayMs={1000} ms={800} /></T>
+                </SvgKeyFact>
+            </Ord>
+            <Ord at={1.25}>
+                <T x={bx(0) + 58} y={BASE_Y + 80} size={16} color={C.noSoft} weight={600}>das vezes dão 3 ou menos (cálculo)</T>
+            </Ord>
         </svg>
     );
 };

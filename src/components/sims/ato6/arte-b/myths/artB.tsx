@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 import { C } from '../../../kit/palette';
 import { Kick, Src } from '../kit';
 import { cv } from '../util';
+import { KeyFact } from '../../../kit/rhythm';
+import { Count, CountText } from '../../../ato5/countText';
 
 /** Mito 3 (força): voluntária × evocada no mesmo eixo de newtons. Mito 4 (VO₂max): mostrador que desce e cronômetro que avança. */
 
@@ -15,15 +17,15 @@ const Bar = ({ value, ghost, color, delay }: { value: number; ghost?: number; co
     </div>
 );
 
-const Row = ({ icon, title, sub, a, b, shownA, shownB, color, verdict, delay }: { icon: ReactNode; title: string; sub: string; a: number; b: number; shownA: string; shownB: string; color: string; verdict: string; delay: number }) => (
+const Row = ({ icon, title, sub, a, b, shownA, shownB, color, verdict, delay, keyFact = false }: { icon: ReactNode; title: string; sub: string; a: number; b: number; shownA: string; shownB: string; color: string; verdict: string; delay: number; keyFact?: boolean }) => (
     <div className="flex items-center gap-3 rounded-xl border bg-black/25 px-3 py-4" style={{ borderColor: `${color}55` }}>
         <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2" style={{ borderColor: color, background: `${color}22` }}>{icon}</span>
         <div className="w-[150px] shrink-0"><p className="m-0 text-[16px] font-semibold leading-tight text-white">{title}</p><p className="m-0 text-[14px] leading-tight text-gray-400">{sub}</p></div>
         <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-            <div className="flex items-center gap-2"><span className="w-[52px] shrink-0 font-mono text-[14px] text-gray-400">antes</span><Bar value={a} color={C.placebo} delay={delay} /><span className="w-[58px] shrink-0 text-right font-display text-[18px] font-semibold text-gray-200">{shownA}</span></div>
-            <div className="flex items-center gap-2"><span className="w-[52px] shrink-0 font-mono text-[14px] text-gray-400">depois</span><Bar value={b} ghost={a} color={color} delay={delay + 0.2} /><span className="w-[58px] shrink-0 text-right font-display text-[18px] font-semibold" style={{ color }}>{shownB}</span></div>
+            <div className="flex items-center gap-2"><span className="w-[52px] shrink-0 font-mono text-[14px] text-gray-400">antes</span><Bar value={a} color={C.placebo} delay={delay} /><span className="w-[58px] shrink-0 text-right font-display text-[18px] font-semibold text-gray-200"><CountText text={shownA} delayMs={delay * 1000} ms={800} /></span></div>
+            <div className="flex items-center gap-2"><span className="w-[52px] shrink-0 font-mono text-[14px] text-gray-400">depois</span><Bar value={b} ghost={a} color={color} delay={delay + 0.2} /><span className="w-[58px] shrink-0 text-right font-display text-[18px] font-semibold" style={{ color }}><CountText text={shownB} delayMs={(delay + 0.2) * 1000} ms={800} /></span></div>
         </div>
-        <span className="w-[74px] shrink-0 text-center font-display text-[22px] font-semibold uppercase leading-none" style={{ color }}>{verdict}</span>
+        <span className="w-[74px] shrink-0 text-center font-display text-[22px] font-semibold uppercase leading-none" style={{ color }}>{keyFact ? <KeyFact color={color} delay={delay + 1}>{verdict}</KeyFact> : verdict}</span>
     </div>
 );
 
@@ -31,7 +33,7 @@ export const ForceArt = () => (
     <div className="flex flex-col gap-2">
         <Kick>newtons, mesmo eixo de 0 a 700 N · traço branco = valor de antes</Kick>
         <Row icon={<Brain size={24} color={C.placebo} />} title="Força voluntária máxima" sub="sem mudança" a={596} b={602} shownA="596" shownB="602" color={C.placebo} verdict="igual" delay={0.5} />
-        <Row icon={<Zap size={24} color={C.o2} />} title="Twitch evocado" sub="baixa frequência · p < 0,01" a={136.5} b={164} shownA="136,5" shownB="164,0" color={C.o2} verdict="maior" delay={0.9} />
+        <Row icon={<Zap size={24} color={C.o2} />} title="Twitch evocado" sub="baixa frequência · p < 0,01" a={136.5} b={164} shownA="136,5" shownB="164,0" color={C.o2} verdict="maior" delay={0.9} keyFact />
         <div className="relative h-5 border-t border-white/20" style={{ marginLeft: 295, marginRight: 164 }}>
             {[0, 350, 700].map(t => <span key={t} className="absolute top-0.5 -translate-x-1/2 font-mono text-[14px] text-gray-400" style={{ left: `${(t / MAX_N) * 100}%` }}>{t}</span>)}
         </div>
@@ -81,12 +83,12 @@ export const Vo2Art = () => (
         <div className="grid grid-cols-[1fr_1fr] gap-3">
             <div className="flex flex-col items-center rounded-xl border bg-black/25 px-2 pb-2 pt-2" style={{ borderColor: `${C.hypoxia}55` }}>
                 <Gauge />
-                <p className="m-0 -mt-1 text-center text-[16px] font-semibold text-white">VO₂max <span className="font-display text-[22px]" style={{ color: C.hypoxia }}>3,72 → 3,62</span> L/min</p>
+                <p className="m-0 -mt-1 text-center text-[16px] font-semibold text-white">VO₂max <KeyFact color={C.hypoxia} delay={1.2}><span className="font-display text-[22px]" style={{ color: C.hypoxia }}><Count text="3,72 → 3,62" all delayMs={400} /></span></KeyFact> L/min</p>
                 <p className="m-0 text-[14px] text-gray-300"><b style={{ color: C.hypoxia }}>caiu 2,7%</b> · <Src>p &lt; 0,05</Src></p>
             </div>
             <div className="flex flex-col items-center rounded-xl border bg-black/25 px-2 pb-2 pt-2" style={{ borderColor: `${C.no}55` }}>
                 <Watch />
-                <p className="m-0 -mt-1 text-center text-[16px] font-semibold text-white">Tempo até a exaustão <span className="font-display text-[22px]" style={{ color: C.no }}>524 → 563</span> s</p>
+                <p className="m-0 -mt-1 text-center text-[16px] font-semibold text-white">Tempo até a exaustão <span className="font-display text-[22px]" style={{ color: C.no }}><Count text="524 → 563" all delayMs={600} /></span> s</p>
                 <p className="m-0 text-[14px] text-gray-300"><b style={{ color: C.no }}>tendeu a subir</b> · <Src>p = 0,13</Src></p>
             </div>
         </div>

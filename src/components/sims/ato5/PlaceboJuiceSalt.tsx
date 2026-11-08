@@ -3,6 +3,7 @@ import { C } from '../kit/palette';
 import { VIS_H, VIS_W } from './ui';
 import { Glow, T } from './arte/text';
 import { Flask, Glass, VesselDefs } from './arte/vessels';
+import { Count, SvgKeyFact } from './countText';
 
 /** Passo 5 do PlaceboSim: suco × sal (mesma dose, mesmo nitrito, VO₂ diferente) e as duas hipóteses. Caixa 672 × 440. */
 
@@ -83,18 +84,20 @@ export const JuiceVsSalt = () => {
                     <T x={b.x + 35} y={246} size={16} color={b.c} weight={700} anchor="middle">{b.n}</T>
                 </motion.g>
             ))}
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
                 <path d="M384 84H548" stroke="#E5E7EB" strokeOpacity={0.6} strokeDasharray="5 5" />
                 <path d="M542 84V90" stroke={C.nitrateSoft} strokeWidth={2} />
                 <Glow id="js-gl" cx={590} cy={120} r={60} color={C.nitrate} opacity={0.3} pulse={!reduce} />
-                <T x={590} y={112} size={28} color={C.nitrateSoft} weight={700} anchor="middle" display>≈ −4%</T>
+                <SvgKeyFact color={C.nitrate} delay={0.8}>
+                    <T x={590} y={112} size={28} color={C.nitrateSoft} weight={700} anchor="middle" display><Count text="≈ −4%" delayMs={700} /></T>
+                </SvgKeyFact>
                 <T x={590} y={134} size={16} color="#E5E7EB" weight={500} anchor="middle">com suco</T>
                 <T x={590} y={154} size={16} color={C.muted} weight={500} anchor="middle">p = 0,003</T>
             </motion.g>
 
             {/* as duas hipóteses em cena */}
             {[{ x: 14, c: C.nitrate, t: 'A · algo na beterraba', l: ['cofator além do nitrato', 'age no músculo'] }, { x: 340, c: C.nitrite, t: 'B · ruído', l: ['sete visitas por pessoa', 'e várias comparações'] }].map((h, i) => (
-                <motion.g key={h.t} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 + 0.15 * i, duration: 0.4 }}>
+                <motion.g key={h.t} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.95 + 0.15 * i, duration: 0.4 }}>
                     <rect x={h.x} y={292} width={318} height={92} rx={14} fill="rgba(255,255,255,0.035)" stroke={h.c} strokeOpacity={0.7} strokeWidth={1.6} />
                     <T x={h.x + 116} y={322} size={19} color={h.c} weight={700} display>{h.t}</T>
                     {h.l.map((l, j) => <T key={l} x={h.x + 116} y={346 + 21 * j} size={16} color="#E5E7EB" weight={500}>{l}</T>)}
@@ -106,7 +109,7 @@ export const JuiceVsSalt = () => {
             <T x={74} y={340} size={20} color={C.nitriteSoft} weight={700} anchor="middle" display>?</T>
             <Noise x={350} y={314} reduce={reduce} />
 
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
                 <rect x={14} y={392} width={VIS_W - 28} height={44} rx={12} fill="rgba(52,211,153,0.07)" stroke={C.no} strokeOpacity={0.5} />
                 <T x={28} y={411} size={16} color={C.no} weight={700}>Contrarrelógio de 10 km em handbike:</T>
                 <T x={338} y={411} size={16} color="#E5E7EB" weight={500}>suco, sal e água, sem diferença</T>

@@ -5,6 +5,8 @@ import { SvgText } from '../../kit/ui';
 import { DOSE_BANDS, num } from '../shared';
 import { EXAMPLES, POWDER_RANGE } from '../labelContent';
 import { ArtSvg, Stage } from './stage';
+import { SvgCount, SvgReveal } from './rhythm';
+import { SvgKeyFact } from '../../ato5/countText';
 
 /** Passo 3 do slide 45: copos de 0 a 9 mmol. O líquido é o medido; a linha com o círculo vazio é o que o rótulo prometia. */
 
@@ -55,11 +57,17 @@ export const LabelGlassesArt = () => {
                                     {worse && <rect x={x - W / 2 + 3} y={yOf(c.label)} width={W - 6} height={yOf(c.measured) - yOf(c.label)} fill={C.risk} opacity={0.22} />}
                                     <line x1={x - W / 2 - 8} x2={x + W / 2 + 8} y1={yOf(c.label)} y2={yOf(c.label)} stroke="#fff" strokeWidth={2} strokeDasharray="3 3" />
                                     <circle cx={x + W / 2 + 8} cy={yOf(c.label)} r={7} fill="#07050B" stroke="#fff" strokeWidth={2.2} />
-                                    {worse && <SvgText x={x + W / 2 + 12} y={yOf(c.label) + (yOf(c.measured) - yOf(c.label)) * 0.3 + 9} text="3×" size={26} color={C.risk} weight={800} />}
+                                    {worse && (
+                                        <SvgKeyFact color={C.risk} delay={1 + i * 0.08}>
+                                            <SvgText x={x + W / 2 + 12} y={yOf(c.label) + (yOf(c.measured) - yOf(c.label)) * 0.3 + 9} text="3×" size={26} color={C.risk} weight={800} />
+                                        </SvgKeyFact>
+                                    )}
                                 </motion.g>
                             )}
-                            <SvgText x={x} y={64} text={c.range ? `${num(c.range.lo, 1)}–${num(c.range.hi, 1)}` : num(c.measured, 2)} anchor="middle" size={26} color={c.color} weight={800} />
-                            <SvgText x={x} y={90} text={c.label !== undefined ? `rótulo ${num(c.label, 2)}` : c.range ? 'mmol medidos' : 'só medido'} anchor="middle" size={16} color="#D1D5DB" weight={500} />
+                            <SvgCount x={x} y={64} text={c.range ? `${num(c.range.lo, 1)}–${num(c.range.hi, 1)}` : num(c.measured, 2)} anchor="middle" size={26} color={c.color} weight={800} all />
+                            <SvgReveal order={2}>
+                                <SvgText x={x} y={90} text={c.label !== undefined ? `rótulo ${num(c.label, 2)}` : c.range ? 'mmol medidos' : 'só medido'} anchor="middle" size={16} color="#D1D5DB" weight={500} />
+                            </SvgReveal>
                             {NAMES[i].map((t, k) => (
                                 <SvgText key={t} x={x} y={374 + k * 20} text={t} anchor="middle" size={16} color={k === 0 ? '#fff' : '#9CA3AF'} weight={k === 0 ? 700 : 500} />
                             ))}

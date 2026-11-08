@@ -3,11 +3,18 @@ import { C } from '../kit/palette';
 import { VIS_H, VIS_W } from './ui';
 import { Person } from './arte/figures';
 import { Glow, T } from './arte/text';
+import { REVEAL_GAP } from '../kit/countUp';
+import { Count, SvgKeyFact } from './countText';
 
 /** Passos 1 e 2 do SexGapSim. Caixa 672 × 440. Homens em azul, mulheres em rosa (cores do kit). */
 
 export const MEN = C.o2;
 export const WOMEN = C.nitrateSoft;
+
+/** Ritmo do passo 1: o pictograma (arte) termina perto de 0,6 s; aí entram os números e, depois, as legendas. */
+const NUM_AT = 0.6;
+const LEG_AT = NUM_AT + REVEAL_GAP;
+const COUNT = { delayMs: NUM_AT * 1000, ms: 650 };
 
 /** Passo 1: cem participantes (88 homens, 12 mulheres) e as barras em escala 1.179 × 156. */
 export const ParticipantPictogram = () => {
@@ -30,14 +37,18 @@ export const ParticipantPictogram = () => {
                     </motion.g>
                 );
             })}
-            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7, duration: 0.5 }}>
-                <T x={354} y={92} size={46} color={MEN} weight={700} display>1.179</T>
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduce ? 0 : NUM_AT, duration: 0.5 }}>
+                <T x={354} y={92} size={46} color={MEN} weight={700} display><Count text="1.179" {...COUNT} /></T>
                 <T x={484} y={92} size={20} color="#E5E7EB" weight={600}>homens</T>
                 <rect x={354} y={104} width={wBar} height={18} rx={9} fill="url(#sv-men)" />
-                <T x={354} y={186} size={46} color={WOMEN} weight={700} display>156</T>
+                <SvgKeyFact color={WOMEN} delay={NUM_AT}>
+                    <T x={354} y={186} size={46} color={WOMEN} weight={700} display><Count text="156" {...COUNT} /></T>
+                </SvgKeyFact>
                 <T x={456} y={186} size={20} color="#E5E7EB" weight={600}>mulheres</T>
                 <rect x={354} y={198} width={(wBar * 156) / 1179} height={18} rx={9} fill="url(#sv-wom)" />
                 <T x={408} y={213} size={16} color={C.muted} weight={500}>mesma escala</T>
+            </motion.g>
+            <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: reduce ? 0 : LEG_AT, duration: 0.5 }}>
                 <line x1={354} x2={VIS_W - 30} y1={248} y2={248} stroke="rgba(255,255,255,0.15)" />
                 <T x={354} y={284} size={18} color={C.muted} weight={600}>80 estudos, 2009 a 2019</T>
                 <T x={354} y={314} size={18} color={C.muted} weight={600}>~10% da amostra (os autores)</T>
@@ -82,7 +93,13 @@ export const DatasetSquares = () => {
             {SETS.map((s, i) => (
                 <motion.g key={s.label} initial={{ opacity: 0, x: 14 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 + 0.2 * i, duration: 0.4 }}>
                     <rect x={362} y={72 + i * 112} width={290} height={96} rx={16} fill={`${s.color}14`} stroke={s.color} strokeOpacity={0.7} strokeWidth={1.6} />
-                    <T x={380} y={128 + i * 112} size={52} color={s.color === C.placebo ? '#E5E7EB' : s.color} weight={700} display>{s.big}</T>
+                    {i === 0 ? (
+                        <SvgKeyFact color={s.color} delay={0.7 + REVEAL_GAP}>
+                            <T x={380} y={128 + i * 112} size={52} color={s.color} weight={700} display><Count text={s.big} delayMs={(0.7 + 0.2 * i) * 1000} ms={600} /></T>
+                        </SvgKeyFact>
+                    ) : (
+                        <T x={380} y={128 + i * 112} size={52} color={s.color === C.placebo ? '#E5E7EB' : s.color} weight={700} display><Count text={s.big} delayMs={(0.7 + 0.2 * i) * 1000} ms={600} /></T>
+                    )}
                     <T x={500} y={112 + i * 112} size={21} color="#fff" weight={700}>{s.name}</T>
                     <T x={500} y={138 + i * 112} size={17} color={C.muted} weight={500}>{s.sub}</T>
                 </motion.g>

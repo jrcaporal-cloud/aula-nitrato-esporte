@@ -25,9 +25,9 @@ const PcrCostSim = () => {
                 </svg>
             </GraphicPanel>
             <SidePanel stepKey={step} headline={plan.headline} text={plan.text} source={plan.source} facts={plan.facts}>
-                {step === 1 && <BigStat value="8,1 → 5,2" label="mM de PCr gasta (placebo → nitrato)" color={C.nitrateSoft} />}
-                {step === 2 && <BigStat value="−35%" label="turnover na carga baixa (cálculo: 296 → 192)" color={C.nitrateSoft} />}
-                {step === 4 && <BigStat value="586 → 734 s" label="tempo até a exaustão (+25%)" color={C.noSoft} size={30} />}
+                {step === 1 && <BigStat value="8,1 → 5,2" label="mM de PCr gasta (placebo → nitrato)" color={C.nitrateSoft} keyFact />}
+                {step === 2 && <BigStat value="−35%" label="turnover na carga baixa (cálculo: 296 → 192)" color={C.nitrateSoft} keyFact />}
+                {step === 4 && <BigStat value="586 → 734 s" label="tempo até a exaustão (+25%)" color={C.noSoft} size={30} keyFact />}
             </SidePanel>
         </SimFrame>
     );

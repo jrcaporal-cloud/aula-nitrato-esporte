@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { C, PANEL_BG } from '../kit/palette';
+import { KeyFact, Reveal } from '../kit/rhythm';
+import { CountText } from './beat';
 
 /** Altura total da caixa dos simuladores do Ato III (≤ 516 px de projeto). */
 export const SIM_H = 500;
@@ -57,10 +59,11 @@ export const Frame = ({ tabs, step, setStep, layoutId, chips, foot, children }: 
         </div>
         <div className="flex-1 min-h-0 rounded-2xl border border-white/10 px-5 pt-3 pb-3 flex flex-col gap-2" style={PANEL_BG}>
             <div className="flex-1 min-h-0">{children}</div>
-            <motion.p key={step} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
-                className="pt-2 border-t border-white/10 text-[1.08rem] leading-snug text-white font-medium" style={{ minHeight: 52 }}>
-                {foot}
-            </motion.p>
+            <div className="pt-2 border-t border-white/10" style={{ minHeight: 52 }}>
+                <Reveal key={step} order={2}>
+                    <p className="text-[1.08rem] leading-snug text-white font-medium">{foot}</p>
+                </Reveal>
+            </div>
         </div>
     </div>
 );
@@ -81,13 +84,31 @@ export const Card = ({ tag, title, lines, color, children, className = '' }: {
     </div>
 );
 
+interface BigProps {
+    value: string;
+    label: string;
+    color?: string;
+    size?: string;
+    /** O número sobe como contador (termina no texto de `value`). Não use em valor que muda com controle deslizante. */
+    count?: boolean;
+    /** Valor de partida do contador. */
+    from?: number;
+    /** Destaque curto do dado-chave do passo (no máximo 1 por passo). */
+    hit?: boolean;
+}
+
 /** Número grande com rótulo curto. */
-export const Big = ({ value, label, color = '#fff', size = '2.6rem' }: { value: string; label: string; color?: string; size?: string }) => (
-    <div className="flex flex-col">
-        <span className="font-display font-semibold leading-none tabular-nums" style={{ color, fontSize: size }}>{value}</span>
-        <span className="mt-1 text-[16px] leading-tight text-gray-300">{label}</span>
-    </div>
-);
+export const Big = ({ value, label, color = '#fff', size = '2.6rem', count = false, from, hit = false }: BigProps) => {
+    const num = count ? <CountText text={value} from={from} /> : value;
+    return (
+        <div className="flex flex-col">
+            <span className="font-display font-semibold leading-none tabular-nums" style={{ color, fontSize: size }}>
+                {hit ? <KeyFact color={color}>{num}</KeyFact> : num}
+            </span>
+            <span className="mt-1 text-[16px] leading-tight text-gray-300">{label}</span>
+        </div>
+    );
+};
 
 /** Entrada suave de um bloco quando o passo muda (sem exit: a troca não prende texto velho). */
 export const Swap = ({ k, children, className = '' }: { k: string | number; children: ReactNode; className?: string }) => (

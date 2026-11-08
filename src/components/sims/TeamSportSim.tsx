@@ -37,7 +37,8 @@ const TeamSportSim = () => {
                         {visual}
                     </motion.div>
                 </Panel>
-                <StoryPanel stepKey={step} kicker={info.kicker} headline={info.headline} text={info.text} facts={info.facts} takeaway={info.takeaway} source={info.source} />
+                <StoryPanel stepKey={step} kicker={info.kicker} headline={info.headline} text={info.text} facts={info.facts} takeaway={info.takeaway} source={info.source}
+                    hit={step === 4 ? { index: 0 } : undefined} />
             </div>
         </SimFrame>
     );

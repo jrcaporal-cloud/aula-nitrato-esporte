@@ -4,6 +4,8 @@ import { VIS_H, VIS_W } from './ui';
 import { Person } from './arte/figures';
 import { Glow, T } from './arte/text';
 import { Glass } from './arte/vessels';
+import { Count, SvgKeyFact } from './countText';
+import { Ord } from './svgOrderA';
 
 /** Passo 3 do BlindingSim: 100 pessoas, 4 com urina vermelha, as mesmas nos dois braços. Caixa 672 × 440. */
 
@@ -53,15 +55,21 @@ export const BeeturiaGrids = () => {
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 + 0.1 * k }} />
                 </g>
             ))}
-            <rect x={268} y={176} width={136} height={52} rx={12} fill="#07050B" fillOpacity={0.88} />
-            <T x={336} y={198} size={17} color="#fff" weight={700} anchor="middle">as mesmas 4</T>
-            <T x={336} y={220} size={17} color="#fff" weight={700} anchor="middle">pessoas</T>
+            <Ord at={0.7}>
+                <SvgKeyFact color={RED} delay={0.8}>
+                    <rect x={268} y={176} width={136} height={52} rx={12} fill="#07050B" fillOpacity={0.88} />
+                    <T x={336} y={198} size={17} color="#fff" weight={700} anchor="middle"><Count text="as mesmas 4" delayMs={700} ms={600} /></T>
+                    <T x={336} y={220} size={17} color="#fff" weight={700} anchor="middle">pessoas</T>
+                </SvgKeyFact>
+            </Ord>
 
             <Vial id="bb-v1" x={96} />
-            <T x={158} y={360} size={17} color={C.nitrateSoft} weight={700}>urina vermelha</T>
             <Vial id="bb-v2" x={480} />
-            <T x={542} y={360} size={17} color={C.nitrateSoft} weight={700}>urina vermelha</T>
-            <T x={VIS_W / 2} y={VIS_H - 10} size={16} color={C.muted} weight={500} anchor="middle">A resina tirou o ânion, não o pigmento: o placebo continua vermelho.</T>
+            <Ord at={1.0}>
+                <T x={158} y={360} size={17} color={C.nitrateSoft} weight={700}>urina vermelha</T>
+                <T x={542} y={360} size={17} color={C.nitrateSoft} weight={700}>urina vermelha</T>
+                <T x={VIS_W / 2} y={VIS_H - 10} size={16} color={C.muted} weight={500} anchor="middle">A resina tirou o ânion, não o pigmento: o placebo continua vermelho.</T>
+            </Ord>
         </svg>
     );
 };

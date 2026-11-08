@@ -1,5 +1,7 @@
 import { C } from '../kit/palette';
 import { SvgText } from '../kit/ui';
+import { REVEAL_GAP } from '../kit/countUp';
+import { useCountText } from '../ato1/countFrame';
 import type { Stage } from './cascade.content';
 import { useTweenVec } from './useTweenVec';
 
@@ -20,6 +22,13 @@ interface FunnelProps {
 }
 
 const MAX_VALUE = 1051;
+
+type LabelProps = Parameters<typeof SvgText>[0] & { order: number };
+
+/** Rótulo do degrau: o número sobe como contador, degrau a degrau, de cima para baixo (texto final idêntico). */
+const CountLabel = ({ text, order, ...rest }: LabelProps) => (
+    <SvgText {...rest} text={useCountText(text, { delayMs: (REVEAL_GAP + order * 0.12) * 1000 })} />
+);
 
 /** Largura do degrau: valor medido (linear ou log) ou fração fixa para os qualitativos. */
 const widthOf = (s: Stage, maxW: number, log: boolean): number => {
@@ -72,11 +81,11 @@ export const Funnel = ({ id, cx, top, maxW, rowH, gap, stages, log, reduce, comp
                         {!compact && (
                             <>
                                 <SvgText x={24} y={y + rowH / 2 + 6} text={s.name} size={18} color={s.color === C.text ? C.text : s.color} weight={700} />
-                                <SvgText x={cx + maxW / 2 + 22} y={y + rowH / 2 + 8} text={s.label} size={ghost ? 20 : 26} color={ghost ? C.muted : C.text} weight={800} />
+                                <CountLabel key={s.label} order={i} x={cx + maxW / 2 + 22} y={y + rowH / 2 + 8} text={s.label} size={ghost ? 20 : 26} color={ghost ? C.muted : C.text} weight={800} />
                             </>
                         )}
                         {compact && i === stages.length - 1 && (
-                            <SvgText x={cx} y={y + rowH + 28} text={s.label} anchor="middle" size={22} color={C.text} weight={800} />
+                            <CountLabel key={s.label} order={i} x={cx} y={y + rowH + 28} text={s.label} anchor="middle" size={22} color={C.text} weight={800} />
                         )}
                     </g>
                 );

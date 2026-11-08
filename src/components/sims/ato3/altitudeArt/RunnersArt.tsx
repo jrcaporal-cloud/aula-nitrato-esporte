@@ -3,6 +3,7 @@ import { C } from '../../kit/palette';
 import { SvgText } from '../../kit/ui';
 import { useEntered } from '../../ato4/hooks';
 import { Flag } from '../artKit/Figures';
+import { SvgCount, SvgKeyFact, SvgReveal } from '../beat';
 import { ridgeY } from './geometry';
 
 /** Passo 2 — Shannon 2016: 12 corredores sobem a encosta (todos melhoraram) e as barras de tempo do 1.500 m. */
@@ -29,10 +30,14 @@ export const RunnersArt = ({ reduce }: { reduce: boolean }) => {
     const t = (d: number) => `transform 1s cubic-bezier(0.22,0.8,0.24,1) ${d}s`;
     return (
         <g>
-            <SvgText x={24} y={80} text="12 / 12" size={54} weight={700} color={C.no} />
-            <SvgText x={24} y={112} text="melhoraram o 1.500 m" size={21} weight={700} color="#fff" />
-            <SvgText x={420} y={150} text="12 corredores, VO₂max de 47,1 a 76,8: cada um é um ponto" size={16} weight={600} anchor="middle" color="#CBD5E1" />
-            <SvgText x={420} y={174} text="melhora sem relação com o VO₂max (r² = 0,05)" size={16} weight={500} anchor="middle" color={C.muted} />
+            <SvgKeyFact color={C.no} delay={reduce ? 0 : 1.2}>
+                <SvgCount x={24} y={80} text="12 / 12" size={54} weight={700} color={C.no} count={{ delayMs: 300, ms: 1100 }} />
+            </SvgKeyFact>
+            <SvgReveal order={2}>
+                <SvgText x={24} y={112} text="melhoraram o 1.500 m" size={21} weight={700} color="#fff" />
+                <SvgText x={420} y={150} text="12 corredores, VO₂max de 47,1 a 76,8: cada um é um ponto" size={16} weight={600} anchor="middle" color="#CBD5E1" />
+                <SvgText x={420} y={174} text="melhora sem relação com o VO₂max (r² = 0,05)" size={16} weight={500} anchor="middle" color={C.muted} />
+            </SvgReveal>
             <path d={`M 90 ${ridgeY(90) - 8} L 745 ${ridgeY(745) - 8}`} stroke="rgba(255,255,255,0.28)" strokeWidth={3} strokeDasharray="2 9" strokeLinecap="round" />
             <Flag x={760} y={ridgeY(760)} h={46} color={C.no} />
             {Array.from({ length: COUNT }, (_, i) => <Climber key={i} i={i} reduce={reduce} />)}
@@ -47,8 +52,10 @@ export const RunnersArt = ({ reduce }: { reduce: boolean }) => {
                         <SvgText x={100 + v * TIME_PX - 8} y={22} text={txt} size={17} weight={700} anchor="end" color="#fff" />
                     </g>
                 ))}
-                <SvgText x={16} y={152} text="−3,2%" size={32} weight={700} color={C.nitrate} />
-                <SvgText x={118} y={152} text="tempo com beterraba" size={16} weight={500} color={C.muted} />
+                <SvgCount x={16} y={152} text="−3,2%" size={32} weight={700} color={C.nitrate} count={{ delayMs: 500 }} />
+                <SvgReveal order={2} delay={0.4}>
+                    <SvgText x={118} y={152} text="tempo com beterraba" size={16} weight={500} color={C.muted} />
+                </SvgReveal>
             </g>
         </g>
     );

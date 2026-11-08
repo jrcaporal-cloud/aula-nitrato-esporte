@@ -45,8 +45,8 @@ const TwoPathwaysSim = () => {
             </div>
             <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <Panel className="flex h-[210px] flex-col gap-2 p-3.5">
-                    <Narration key={step} headline={plan.headline}>{plan.text}</Narration>
-                    <SourceLine>{plan.source}</SourceLine>
+                    <Narration key={step} order={1} headline={plan.headline}>{plan.text}</Narration>
+                    <SourceLine key={`src-${step}`}>{plan.source}</SourceLine>
                 </Panel>
                 <Panel className="min-h-0 flex-1">
                     <ActivityChart sat={sat} ph={ph} />

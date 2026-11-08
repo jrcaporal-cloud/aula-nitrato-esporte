@@ -3,6 +3,9 @@ import { C } from '../kit/palette';
 import { SvgText } from '../kit/ui';
 import { EGGER, FILL, POOLED, STUDIES } from './funnelModel';
 import { VIS_H, VIS_W } from './ui';
+import { REVEAL_GAP } from '../kit/countUp';
+import { T } from './arte/text';
+import { Count, SvgKeyFact } from './countText';
 
 /** Desenhos do FunnelSim. Caixa 672 × 440. */
 
@@ -16,6 +19,10 @@ const SE_MAX = 0.8;
 const sx = (g: number) => X0 + ((g - G_LO) / (G_HI - G_LO)) * (X1 - X0);
 const sy = (se: number) => TOP + (se / SE_MAX) * (BOT - TOP);
 const DIAMOND_Y = 374;
+/** Legenda nova de cada camada: entra depois da arte (ordem 2 do ritmo). */
+const legend = { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay: 2 * REVEAL_GAP, duration: 0.4 } };
+/** Os 12 pontos entram até ~0,45 s; o número do agrupado sobe logo depois. */
+const POOLED_COUNT_MS = 450;
 
 interface FunnelProps { layer: number }
 
@@ -49,13 +56,13 @@ export const FunnelPlot = ({ layer }: FunnelProps) => {
                         fill={C.nitrite} fillOpacity={0.2} stroke={C.nitrite} strokeOpacity={0.5} strokeDasharray="4 4" />}
                 </motion.g>
             )}
-            {layer === 1 && <SvgText x={sx(-0.82)} y={sy(0.5)} text="faltam estudos aqui" anchor="middle" size={18} color={C.nitriteSoft} weight={700} />}
+            {layer === 1 && <motion.g {...legend}><SvgText x={sx(-0.82)} y={sy(0.5)} text="faltam estudos aqui" anchor="middle" size={18} color={C.nitriteSoft} weight={700} /></motion.g>}
 
             {showEgger && (
                 <motion.line x1={sx(EGGER.a + EGGER.b * 0.14)} x2={sx(EGGER.a + EGGER.b * 0.74)} y1={sy(0.14)} y2={sy(0.74)} stroke={C.nitrite} strokeWidth={3.5} strokeLinecap="round"
                     initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, ease: 'easeOut' }} />
             )}
-            {showEgger && <SvgText x={sx(EGGER.a + EGGER.b * 0.74) + 12} y={sy(0.74) - 4} text="reta de Egger" size={17} color={C.nitriteSoft} weight={700} />}
+            {showEgger && <motion.g {...legend}><SvgText x={sx(EGGER.a + EGGER.b * 0.74) + 12} y={sy(0.74) - 4} text="reta de Egger" size={17} color={C.nitriteSoft} weight={700} /></motion.g>}
 
             {showFill && FILL.ghosts.map((p, i) => (
                 <motion.g key={`ghost${i}`} initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 * i + 0.1, duration: 0.5 }}>
@@ -78,8 +85,11 @@ export const FunnelPlot = ({ layer }: FunnelProps) => {
             <motion.g initial={false} animate={{ x: sx(est) }} transition={{ duration: 1.1, ease: 'easeInOut' }}>
                 <polygon points={`${-halfPx},${DIAMOND_Y} 0,${DIAMOND_Y - 13} ${halfPx},${DIAMOND_Y} 0,${DIAMOND_Y + 13}`} fill={showFill ? C.risk : C.no} fillOpacity={0.9} stroke="#fff" strokeWidth={1.5} />
             </motion.g>
-            <SvgText x={VIS_W - 14} y={DIAMOND_Y + 40} text={showFill ? 'ajustado ≈ 0 (praticamente zero)' : 'g = 0,13 (−0,07 a 0,32)'}
-                anchor="end" size={16} color={showFill ? C.risk : C.noSoft} weight={700} />
+            <motion.g key={showFill ? 'fill' : 'pooled'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: showFill ? 2 * REVEAL_GAP : 0, duration: 0.4 }}>
+                <T x={VIS_W - 14} y={DIAMOND_Y + 40} anchor="end" size={16} color={showFill ? C.risk : C.noSoft} weight={700}>
+                    {showFill ? 'ajustado ≈ 0 (praticamente zero)' : <>g = <Count text="0,13" delayMs={POOLED_COUNT_MS} /> (−0,07 a 0,32)</>}
+                </T>
+            </motion.g>
         </svg>
     );
 };
@@ -96,6 +106,9 @@ const GRADE = [
     { t: 'muito baixo', d: 'lactato e PSE', c: C.risk },
 ] as const;
 
+/** As 45 células entram até ~0,55 s; aí os totais de cada cor sobem. */
+const ROB_COUNT_MS = 550;
+
 /** Passo 5: risco de viés (RoB 2) dos 45 ECRs e certeza GRADE por desfecho. */
 export const QualityPanel = () => {
     const cells = ROB.flatMap(r => Array.from({ length: r.n }, () => r.color));
@@ -109,7 +122,11 @@ export const QualityPanel = () => {
             {ROB.map((r, i) => (
                 <g key={r.label}>
                     <rect x={[26, 176, 420][i]} y={252} width={16} height={16} rx={4} fill={r.color} />
-                    <SvgText x={[48, 198, 442][i]} y={266} text={r.label} size={16} color="#E5E7EB" weight={600} />
+                    {i === 0 ? (
+                        <SvgKeyFact color={r.color} delay={ROB_COUNT_MS / 1000}>
+                            <T x={48} y={266} size={16} color="#E5E7EB" weight={600}><Count text={r.label} delayMs={ROB_COUNT_MS} ms={600} /></T>
+                        </SvgKeyFact>
+                    ) : <T x={[48, 198, 442][i]} y={266} size={16} color="#E5E7EB" weight={600}><Count text={r.label} delayMs={ROB_COUNT_MS} ms={600} /></T>}
                 </g>
             ))}
             <line x1={14} x2={VIS_W - 14} y1={288} y2={288} stroke="rgba(255,255,255,0.12)" />

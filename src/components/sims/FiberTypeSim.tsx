@@ -31,10 +31,10 @@ const FiberTypeSim = () => {
                 </svg>
             </GraphicPanel>
             <SidePanel stepKey={step} headline={plan.headline} text={plan.text} source={plan.source} facts={plan.facts}>
-                {step === 0 && <BigStat value="~35%" label="mais rápida a ~100 Hz, só na fibra rápida" color={C.noSoft} />}
-                {step === 1 && <BigStat value="r = 0,74" label="fluxo × % de fibra IIb + d/x, 28 músculos" color={C.text} size={30} />}
-                {step === 2 && <BigStat value="14 → 19" label="mmHg de PO₂ no gastrocnêmio" color={C.nitrateSoft} size={30} />}
-                {step === 3 && <BigStat value="297 → 362 s" label="tempo limite a 115 rpm (+22%)" color={C.noSoft} size={28} />}
+                {step === 0 && <BigStat value="~35%" label="mais rápida a ~100 Hz, só na fibra rápida" color={C.noSoft} keyFact />}
+                {step === 1 && <BigStat value="r = 0,74" label="fluxo × % de fibra IIb + d/x, 28 músculos" color={C.text} size={30} keyFact />}
+                {step === 2 && <BigStat value="14 → 19" label="mmHg de PO₂ no gastrocnêmio" color={C.nitrateSoft} size={30} keyFact />}
+                {step === 3 && <BigStat value="297 → 362 s" label="tempo limite a 115 rpm (+22%)" color={C.noSoft} size={28} keyFact />}
             </SidePanel>
         </SimFrame>
     );

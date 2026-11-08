@@ -6,6 +6,9 @@ import { FOODS, type FoodId } from '../foodContent';
 import { MG_PER_MMOL, SHOT_MMOL, num } from '../shared';
 import { ArtSvg, Stage } from './stage';
 import { PlateDisc, Pile, ShotGlass } from './veg';
+import { SvgCount, SvgReveal } from './rhythm';
+import { SvgKeyFact } from '../../ato5/countText';
+import { REVEAL_GAP } from '../../kit/countUp';
 
 /** Passo 2 do slide 44: quatro pratos com a mesma carga de nitrato (1 shot); a área do prato é proporcional aos gramas. */
 
@@ -39,11 +42,19 @@ export const FoodShotArt = () => {
                         <PlateDisc cx={cx} cy={CY} r={r} />
                         <Pile kind={f.id} cx={cx} cy={CY + 6} radius={r * 0.78} count={g / UNIT_G[f.id]} cap={Math.ceil(g / UNIT_G[f.id])} scale={f.id === 'rucula' ? 0.8 : 1} />
                         <ShotGlass x={cx + r * 0.62} y={CY - r - 26} w={26} h={38} />
-                        <SvgText x={cx} y={394} text={`≈ ${f.shotGrams} g`} anchor="middle" size={28} color="#fff" weight={700} />
-                        <SvgText x={cx} y={422} text={f.name} anchor="middle" size={18} color={C.nitrateSoft} weight={600} />
+                        {i === 0 ? (
+                            <SvgKeyFact color={C.o2} delay={REVEAL_GAP + i * 0.12}>
+                                <SvgCount x={cx} y={394} text={`≈ ${f.shotGrams} g`} anchor="middle" size={28} color="#fff" weight={700} delayMs={(REVEAL_GAP + i * 0.12) * 1000} />
+                            </SvgKeyFact>
+                        ) : <SvgCount x={cx} y={394} text={`≈ ${f.shotGrams} g`} anchor="middle" size={28} color="#fff" weight={700} delayMs={(REVEAL_GAP + i * 0.12) * 1000} />}
+                        <SvgReveal order={2} delay={i * 0.12}>
+                            <SvgText x={cx} y={422} text={f.name} anchor="middle" size={18} color={C.nitrateSoft} weight={600} />
+                        </SvgReveal>
                     </motion.g>
                 ))}
-                <SvgText x={406} y={448} text="mesma dose, pratos muito diferentes" anchor="middle" size={16} color="#9CA3AF" weight={500} />
+                <SvgReveal order={2} delay={0.4}>
+                    <SvgText x={406} y={448} text="mesma dose, pratos muito diferentes" anchor="middle" size={16} color="#9CA3AF" weight={500} />
+                </SvgReveal>
             </ArtSvg>
         </Stage>
     );

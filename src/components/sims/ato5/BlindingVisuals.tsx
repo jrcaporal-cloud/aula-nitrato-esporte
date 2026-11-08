@@ -3,6 +3,8 @@ import { C } from '../kit/palette';
 import { br } from '../kit/format';
 import { VIS_H, VIS_W } from './ui';
 import { Glow, T } from './arte/text';
+import { Count, SvgKeyFact } from './countText';
+import { Ord } from './svgOrderA';
 
 /** Passo 1 do BlindingSim: cena do experimento cego e o índice de Bang. Caixa 672 × 440. */
 
@@ -91,11 +93,19 @@ export const BangScale = () => {
                 <motion.g key={p.label} initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: p.delay }}>
                     <line x1={x(p.v)} x2={x(p.v)} y1={TRACK_Y - 26} y2={TRACK_Y + 15} stroke={p.c} strokeWidth={3} />
                     <circle cx={x(p.v)} cy={TRACK_Y + 15} r={13} fill={p.c} stroke="#fff" strokeWidth={2.5} />
-                    <T x={x(p.v) + p.dx} y={TRACK_Y - 34} size={24} color="#fff" weight={700} anchor={p.anchor} display>{p.num}</T>
+                    {p.label === 'beterraba' ? (
+                        <SvgKeyFact color={C.no} delay={0.75}>
+                            <T x={x(p.v) + p.dx} y={TRACK_Y - 34} size={24} color="#fff" weight={700} anchor={p.anchor} display><Count text={p.num} delayMs={p.delay * 1000} ms={700} /></T>
+                        </SvgKeyFact>
+                    ) : (
+                        <T x={x(p.v) + p.dx} y={TRACK_Y - 34} size={24} color="#fff" weight={700} anchor={p.anchor} display><Count text={p.num} delayMs={p.delay * 1000} ms={700} /></T>
+                    )}
                     <T x={x(p.v) + p.nx} y={TRACK_Y - 34} size={16} color={p.c === C.placebo ? '#E5E7EB' : C.nitrateSoft} weight={700} anchor={p.anchor}>{p.label}</T>
                 </motion.g>
             ))}
-            <T x={VIS_W / 2} y={VIS_H - 8} size={18} color={C.noSoft} weight={700} anchor="middle" display>quase perfeito, segundo os autores</T>
+            <Ord at={1.0}>
+                <T x={VIS_W / 2} y={VIS_H - 8} size={18} color={C.noSoft} weight={700} anchor="middle" display>quase perfeito, segundo os autores</T>
+            </Ord>
         </svg>
     );
 };

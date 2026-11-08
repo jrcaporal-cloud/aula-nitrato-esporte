@@ -4,6 +4,8 @@ import { br, signed } from '../kit/format';
 import { SvgText } from '../kit/ui';
 import { AMANN, TTE_PER_TT, TYPICAL_N, Z_TT, Z_TTE, bell, signalToNoise, type NoiseStudy } from './noiseModel';
 import { VIS_H, VIS_W } from './ui';
+import { Count, SvgKeyFact } from './countText';
+import { Ord } from './svgOrderA';
 
 /** Desenhos do TestNoiseSim. Caixa 672 × 440. */
 
@@ -26,7 +28,13 @@ export const RepeatStrips = ({ study }: { study: NoiseStudy }) => {
             {rows.map(r => (
                 <g key={r.label}>
                     <SvgText x={36} y={r.y - 78} text={r.label} size={19} color={r.color} weight={700} />
-                    <SvgText x={VIS_W - 36} y={r.y - 78} text={`CV ${fmtCv(r.cv)}%`} anchor="end" size={26} color="#fff" weight={700} />
+                    <Ord at={0.5}>
+                        {r.color === TTE_COLOR ? (
+                            <SvgKeyFact color={TTE_COLOR} delay={0.6}>
+                                <SvgText x={VIS_W - 36} y={r.y - 78} text={`CV ${fmtCv(r.cv)}%`} anchor="end" size={26} color="#fff" weight={700} />
+                            </SvgKeyFact>
+                        ) : <SvgText x={VIS_W - 36} y={r.y - 78} text={`CV ${fmtCv(r.cv)}%`} anchor="end" size={26} color="#fff" weight={700} />}
+                    </Ord>
                     <rect x={x(100 - r.cv)} y={r.y - 46} width={x(100 + r.cv) - x(100 - r.cv)} height={92} rx={12} fill={r.color} fillOpacity={0.1} stroke={r.color} strokeOpacity={0.4} strokeDasharray="5 5" />
                     <line x1={36} x2={VIS_W - 36} y1={r.y} y2={r.y} stroke="rgba(255,255,255,0.25)" />
                     <line x1={x(100)} x2={x(100)} y1={r.y - 52} y2={r.y + 52} stroke="rgba(255,255,255,0.6)" strokeDasharray="4 4" />
@@ -38,7 +46,9 @@ export const RepeatStrips = ({ study }: { study: NoiseStudy }) => {
                     {[50, 100, 150].map(t => <SvgText key={t} x={x(t)} y={r.y + 72} text={`${t}%`} anchor="middle" size={16} color={C.muted} weight={500} />)}
                 </g>
             ))}
-            <SvgText x={VIS_W / 2} y={VIS_H - 10} text={`faixa tracejada = ±1 DP · ${study.caption}`} anchor="middle" size={16} color={C.muted} weight={500} />
+            <Ord at={0.7}>
+                <SvgText x={VIS_W / 2} y={VIS_H - 10} text={`faixa tracejada = ±1 DP · ${study.caption}`} anchor="middle" size={16} color={C.muted} weight={500} />
+            </Ord>
         </svg>
     );
 };
@@ -68,19 +78,28 @@ export const NoiseRuler = () => {
                 <motion.g key={r.label} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 * i, duration: 0.45 }}>
                     <SvgText x={40} y={r.y - 22} text={r.label} size={17} color="#E5E7EB" weight={700} />
                     <rect x={x(r.a)} y={r.y - 8} width={x(r.b) - x(r.a)} height={26} rx={13} fill={r.color} fillOpacity={0.85} />
-                    {x(r.b) + 120 > VIS_W
-                        ? <SvgText x={x(r.a) - 12} y={r.y + 12} text={r.text} anchor="end" size={18} color={r.color} weight={700} />
-                        : <SvgText x={x(r.b) + 12} y={r.y + 12} text={r.text} size={18} color={r.color} weight={700} />}
+                    <text x={x(r.b) + 120 > VIS_W ? x(r.a) - 12 : x(r.b) + 12} y={r.y + 12} textAnchor={x(r.b) + 120 > VIS_W ? 'end' : 'start'} fontSize={18} fontWeight={700} fill={r.color}
+                        style={{ fontFamily: 'var(--font-body)', paintOrder: 'stroke', stroke: '#07050B', strokeWidth: 4, strokeLinejoin: 'round' }}>
+                        <Count text={r.text} all delayMs={300 * i + 150} ms={700} />
+                    </text>
                 </motion.g>
             ))}
             <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 0.5 }}>
                 <line x1={x(2.8)} x2={x(2.8)} y1={52} y2={356} stroke={C.nitrate} strokeWidth={3} strokeDasharray="7 5" />
                 <rect x={x(2.8) - 74} y={394} width={148} height={30} rx={8} fill="#07050B" stroke={C.nitrate} />
-                <SvgText x={x(2.8)} y={415} text="efeito: ~3%" anchor="middle" size={17} color={C.nitrateSoft} weight={700} />
+                <SvgKeyFact color={C.nitrate} delay={1.25}>
+                    <text x={x(2.8)} y={415} textAnchor="middle" fontSize={17} fontWeight={700} fill={C.nitrateSoft}
+                        style={{ fontFamily: 'var(--font-body)', paintOrder: 'stroke', stroke: '#07050B', strokeWidth: 4, strokeLinejoin: 'round' }}>
+                        <Count text="efeito: ~3%" delayMs={1100} ms={600} />
+                    </text>
+                </SvgKeyFact>
             </motion.g>
         </svg>
     );
 };
+
+/** Os números sinal/ruído entram depois das barras dos dois painéis. */
+const SNR_AT = 0.8;
 
 interface PanelDef { x0: number; title: string; sub: string; color: string; domain: readonly [number, number]; rows: readonly { cond: string; mean: number; sd: number }[] }
 
@@ -117,13 +136,23 @@ export const AmannPanels = () => (
                         );
                     })}
                     <line x1={p.x0 + 16} x2={p.x0 + w - 16} y1={306} y2={306} stroke="rgba(255,255,255,0.15)" />
-                    <SvgText x={p.x0 + w / 2} y={332} text="mudança ÷ DP (cálculo)" anchor="middle" size={16} color={C.muted} weight={500} />
-                    {p.rows.map((r, i) => (
-                        <SvgText key={r.cond} x={p.x0 + w / 4 + (i * w) / 2} y={382} text={br(signalToNoise(r.mean, r.sd), 1)} anchor="middle" size={38} color="#fff" weight={700} />
-                    ))}
-                    {p.rows.map((r, i) => (
-                        <SvgText key={`c${r.cond}`} x={p.x0 + w / 4 + (i * w) / 2} y={408} text={r.cond} anchor="middle" size={16} color={C.muted} weight={500} />
-                    ))}
+                    <Ord at={SNR_AT}>
+                        {(() => {
+                            const nums = p.rows.map((r, i) => (
+                                <text key={r.cond} x={p.x0 + w / 4 + (i * w) / 2} y={382} textAnchor="middle" fontSize={38} fontWeight={700} fill="#fff"
+                                    style={{ fontFamily: 'var(--font-body)', paintOrder: 'stroke', stroke: '#07050B', strokeWidth: 4, strokeLinejoin: 'round' }}>
+                                    <Count text={br(signalToNoise(r.mean, r.sd), 1)} delayMs={SNR_AT * 1000} ms={800} />
+                                </text>
+                            ));
+                            return p.color === TT_COLOR ? <SvgKeyFact color={TT_COLOR} delay={SNR_AT + 0.35}>{nums}</SvgKeyFact> : nums;
+                        })()}
+                    </Ord>
+                    <Ord at={SNR_AT + 0.32}>
+                        <SvgText x={p.x0 + w / 2} y={332} text="mudança ÷ DP (cálculo)" anchor="middle" size={16} color={C.muted} weight={500} />
+                        {p.rows.map((r, i) => (
+                            <SvgText key={`c${r.cond}`} x={p.x0 + w / 4 + (i * w) / 2} y={408} text={r.cond} anchor="middle" size={16} color={C.muted} weight={500} />
+                        ))}
+                    </Ord>
                 </g>
             );
         })}

@@ -1,6 +1,8 @@
-import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { CountText } from '../ato1/countText';
+import { REVEAL_GAP } from '../kit/countUp';
 import { C } from '../kit/palette';
+import { KeyFact, Reveal } from '../kit/rhythm';
 import { Chip, Panel, StepTabs } from '../kit/ui';
 
 /**
@@ -69,42 +71,67 @@ interface SideProps {
     facts?: readonly string[];
 }
 
-/** Painel de texto do passo: manchete, parágrafo curto, destaques e linha de fonte. */
+/**
+ * Painel de texto do passo: manchete, parágrafo curto, destaques e linha de fonte.
+ * Ritmo: manchete (com a arte) → números (ordem 1) → parágrafo e fonte (ordem 2). A fonte só reentra quando muda.
+ */
 export const SidePanel = ({ stepKey, headline, text, color = C.noSoft, source, children, facts }: SideProps) => (
     <Panel className="w-[390px] shrink-0 p-4 flex flex-col gap-3">
-        <motion.div key={stepKey} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
-            className="flex flex-col gap-2">
-            <p className="font-display text-[1.3rem] font-semibold leading-tight" style={{ color }}>{headline}</p>
-            <p className="text-[16px] leading-snug text-gray-100">{text}</p>
-        </motion.div>
+        <div key={stepKey} className="flex flex-col gap-2">
+            <Reveal order={0}><p className="font-display text-[1.3rem] font-semibold leading-tight" style={{ color }}>{headline}</p></Reveal>
+            <Reveal order={2}><p className="text-[16px] leading-snug text-gray-100">{text}</p></Reveal>
+        </div>
         {children && (
-            <motion.div key={`s${stepKey}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.1 }}
-                className="flex flex-col gap-2.5">
+            <Reveal key={`s${stepKey}`} order={1} className="flex flex-col gap-2.5">
                 {children}
-            </motion.div>
+            </Reveal>
         )}
         <div className="mt-auto flex flex-col gap-2">
-            {facts && facts.length > 0 && (
-                <div className="flex flex-wrap gap-1.5">
-                    {facts.map(f => <Chip key={f} color={C.placebo}>{f}</Chip>)}
-                </div>
-            )}
-            <p className="text-[14px] leading-snug text-gray-400">{source}</p>
+            <Reveal key={`${source}|${facts?.join('|') ?? ''}`} order={2} className="flex flex-col gap-2">
+                {facts && facts.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5">
+                        {facts.map(f => <Chip key={f} color={C.placebo}>{f}</Chip>)}
+                    </div>
+                )}
+                <p className="text-[14px] leading-snug text-gray-400">{source}</p>
+            </Reveal>
         </div>
     </Panel>
 );
+
+interface StatValueProps {
+    value: string;
+    color: string;
+    keyFact?: boolean;
+}
+
+/**
+ * Valor de destaque que sobe como contador (texto final idêntico a `value`). Uma cópia invisível do valor final
+ * reserva a largura, para a legenda ao lado não dançar enquanto os dígitos sobem.
+ */
+export const StatValue = ({ value, color, keyFact = false }: StatValueProps) => {
+    const count = (
+        <span className="inline-grid">
+            <span aria-hidden className="invisible col-start-1 row-start-1">{value}</span>
+            <CountText text={value} delayMs={REVEAL_GAP * 1000} className="col-start-1 row-start-1" />
+        </span>
+    );
+    return keyFact ? <KeyFact color={color}>{count}</KeyFact> : count;
+};
 
 interface BigStatProps {
     value: string;
     label: string;
     color?: string;
     size?: number;
+    /** Destaque curto (KeyFact): no máximo um por passo. */
+    keyFact?: boolean;
 }
 
 /** Número de destaque com legenda curta. */
-export const BigStat = ({ value, label, color = C.text, size = 34 }: BigStatProps) => (
+export const BigStat = ({ value, label, color = C.text, size = 34, keyFact = false }: BigStatProps) => (
     <div className="flex items-baseline gap-3">
-        <span className="font-display font-semibold leading-none tabular-nums shrink-0" style={{ color, fontSize: size }}>{value}</span>
+        <span className="font-display font-semibold leading-none tabular-nums shrink-0" style={{ color, fontSize: size }}><StatValue value={value} color={color} keyFact={keyFact} /></span>
         <span className="text-[15px] leading-snug text-gray-300">{label}</span>
     </div>
 );

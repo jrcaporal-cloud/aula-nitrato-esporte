@@ -9,6 +9,8 @@ import { C } from '../../kit/palette';
 import { ArtSvg, Stage } from './stage';
 import { Portrait } from './portrait';
 import { ShotGlass } from './veg';
+import { SvgCount, SvgReveal } from './rhythm';
+import { REVEAL_GAP } from '../../kit/countUp';
 
 /**
  * Passo 5 do slide 46: o dia de cada personagem numa régua de 04h a 23h (céu de madrugada → dia → noite).
@@ -38,7 +40,7 @@ const Flag = ({ x, y, color, h = 48 }: { x: number; y: number; color: string; h?
     </g>
 );
 
-const Lane = ({ p, top, hatch, sky }: { p: PresetCase; top: number; hatch: string; sky: string }) => {
+const Lane = ({ p, top, hatch, sky, delay }: { p: PresetCase; top: number; hatch: string; sky: string; delay: number }) => {
     const color = COLOR[p.id];
     const doseAt = p.eventAt - p.hoursBefore;
     const end = p.eventAt + p.eventHours;
@@ -59,9 +61,11 @@ const Lane = ({ p, top, hatch, sky }: { p: PresetCase; top: number; hatch: strin
             <Flag x={xOf(p.eventAt)} y={top + 6} color={color} />
             <SvgText x={xOf(p.eventAt) + 28} y={top + 24} text={clockText(p.eventAt)} size={16} color="#fff" weight={700} />
             <SvgText x={TX0} y={top + 74} text={p.scheme} size={16} color="#E5E7EB" weight={500} />
-            <SvgText x={836} y={top + 30} text={`${num(p.mmol, 1)} mmol · ${num(mmolToMg(p.mmol))} mg`} size={22} color="#fff" weight={800} />
-            <SvgText x={836} y={top + 52} text={`≈ ${num(p.mmol / SHOT_MMOL, 1)} shot · ${num(gramsFor(p.mmol, FOODS[0].mgPerKg))} g de rúcula`} size={16} color="#F3F4F6" weight={500} />
-            <SvgText x={836} y={top + 72} text={p.source} size={16} color="#9CA3AF" weight={500} />
+            <SvgCount x={836} y={top + 30} text={`${num(p.mmol, 1)} mmol · ${num(mmolToMg(p.mmol))} mg`} size={22} color="#fff" weight={800} all delayMs={(delay + REVEAL_GAP) * 1000} />
+            <SvgReveal order={2} delay={delay}>
+                <SvgText x={836} y={top + 52} text={`≈ ${num(p.mmol / SHOT_MMOL, 1)} shot · ${num(gramsFor(p.mmol, FOODS[0].mgPerKg))} g de rúcula`} size={16} color="#F3F4F6" weight={500} />
+                <SvgText x={836} y={top + 72} text={p.source} size={16} color="#9CA3AF" weight={500} />
+            </SvgReveal>
         </g>
     );
 };
@@ -94,7 +98,7 @@ export const ProtoDayArt = () => {
                 {[4, 8, 12, 16, 20].map(h => <SvgText key={h} x={xOf(h)} y={74} text={`${String(h).padStart(2, '0')}h`} anchor="middle" size={16} color="#D1D5DB" weight={500} />)}
                 {PRESETS.map((p, i) => (
                     <motion.g key={p.id} initial={reduce ? false : { opacity: 0, x: 18 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.14, duration: 0.45 }}>
-                        <Lane p={p} top={LY0 + i * PITCH} hatch={`${id}-h`} sky={`${id}-sky`} />
+                        <Lane p={p} top={LY0 + i * PITCH} hatch={`${id}-h`} sky={`${id}-sky`} delay={i * 0.14} />
                     </motion.g>
                 ))}
                 <SvgText x={W / 2} y={448} text="exemplos de cálculo com a literatura, não são prescrição · horários inventados para a aula" anchor="middle" size={16} color="#9CA3AF" weight={500} />

@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
+import { REVEAL_GAP } from '../kit/countUp';
 import { SvgText } from '../kit/ui';
+import { SvgCount, SvgKeyFact } from './beat';
 
 /** Barras horizontais com base em zero: rótulo à esquerda, valor na ponta. Peça comum às cenas do Ato III. */
 
@@ -52,12 +54,19 @@ export const HBars = ({ rows, x, y, labelW, barW, rowH, max, reduce, delay = 0, 
     </g>
 );
 
-/** Chave vertical entre duas alturas, com o delta ao lado (ex.: "−5,4%"). */
-export const DeltaBrace = ({ x, y1, y2, text, color, reduce, size = 26 }: {
-    x: number; y1: number; y2: number; text: string; color: string; reduce: boolean; size?: number;
-}) => (
-    <motion.g initial={{ opacity: reduce ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: reduce ? 0 : 0.4, delay: reduce ? 0 : 0.9 }}>
-        <path d={`M ${x} ${y1} h 10 v ${y2 - y1} h -10`} fill="none" stroke={color} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-        <SvgText x={x + 20} y={(y1 + y2) / 2 + size / 3} text={text} size={size} weight={700} color={color} />
-    </motion.g>
-);
+/**
+ * Chave vertical entre duas alturas, com o delta ao lado (ex.: "−5,4%"). É o número do passo: entra na ordem 1
+ * (logo depois das barras começarem), sobe como contador e, com `hit`, ganha o destaque do dado-chave.
+ */
+export const DeltaBrace = ({ x, y1, y2, text, color, reduce, size = 26, hit = false, delay = 0 }: {
+    x: number; y1: number; y2: number; text: string; color: string; reduce: boolean; size?: number; hit?: boolean; delay?: number;
+}) => {
+    const at = REVEAL_GAP + delay;
+    const value = <SvgCount x={x + 20} y={(y1 + y2) / 2 + size / 3} text={text} size={size} weight={700} color={color} count={{ delayMs: at * 1000 }} />;
+    return (
+        <motion.g initial={{ opacity: reduce ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: reduce ? 0 : 0.4, delay: reduce ? 0 : at }}>
+            <path d={`M ${x} ${y1} h 10 v ${y2 - y1} h -10`} fill="none" stroke={color} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+            {hit ? <SvgKeyFact color={color} delay={at}>{value}</SvgKeyFact> : value}
+        </motion.g>
+    );
+};

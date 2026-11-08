@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
+import { Reveal } from '../../kit/rhythm';
 import { StepTabs } from '../../kit/ui';
 
 /** Altura total da caixa dos simuladores com arte grande (teto do palco: 516 px). */
@@ -32,11 +32,10 @@ export const ArtFrame = ({ tabs, step, setStep, layoutId, chips, caption, childr
         </div>
         <div className="relative flex-1 min-h-0 overflow-hidden rounded-2xl border border-white/10" style={{ background: '#08050D' }}>
             {children}
-            <motion.p key={step} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.35 }}
-                className="absolute inset-x-0 bottom-0 px-6 pb-3 pt-6 text-[16.5px] font-medium leading-snug text-white"
+            <div className="absolute inset-x-0 bottom-0 px-6 pb-3 pt-6 text-[16.5px] font-medium leading-snug text-white"
                 style={{ background: 'linear-gradient(to top, rgba(7,5,11,0.96) 0%, rgba(7,5,11,0.9) 62%, rgba(7,5,11,0) 100%)' }}>
-                {caption}
-            </motion.p>
+                <Reveal key={step} order={2}><p>{caption}</p></Reveal>
+            </div>
         </div>
     </div>
 );

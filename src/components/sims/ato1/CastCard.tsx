@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { Timer } from 'lucide-react';
+import { Reveal } from '../kit/rhythm';
 import { Panel } from '../kit/ui';
 import type { CastMember } from './cast';
 import { CastScene } from './art/CastScenes';
@@ -7,7 +8,10 @@ import { CAST_LOOK } from './art/castLook';
 import { DurationBar } from './art/DurationBar';
 import { VoGauge } from './art/VoGauge';
 
-/** Ficha de um caso fictício: cena da prova, VO₂max em medidor, duração na régua e o dilema num balão. Antes de entrar, é só uma silhueta. */
+/**
+ * Ficha de um caso fictício: cena da prova, VO₂max em medidor, duração na régua e o dilema num balão. Antes de entrar, é só uma silhueta.
+ * Ao entrar: cena e ficha → o VO₂max sobe no medidor (com destaque, ver VoGauge) → o dilema.
+ */
 
 interface CastCardProps {
     member: CastMember;
@@ -57,11 +61,11 @@ export const CastCard = ({ member, revealed, state }: CastCardProps) => {
 
                     <DurationBar member={member} color={look.color} soft={look.soft} />
 
-                    <div className="relative mt-auto rounded-2xl border px-3 pb-1.5 pt-1" style={{ borderColor: `${look.color}77`, background: `${look.color}18` }}>
+                    <Reveal order={2} delay={0.3} className="relative mt-auto rounded-2xl border px-3 pb-1.5 pt-1" style={{ borderColor: `${look.color}77`, background: `${look.color}18` }}>
                         <span aria-hidden className="absolute -top-[7px] left-6 size-3 rotate-45 border-l border-t" style={{ borderColor: `${look.color}77`, background: '#150E1B' }} />
                         <p className="font-mono text-[14px] leading-none" style={{ color: look.soft }}>dilema</p>
                         <p className="mt-0.5 text-[16px] leading-[1.3] text-gray-100">{member.dilemma}</p>
-                    </div>
+                    </Reveal>
                 </div>
             </motion.div>
         </Panel>

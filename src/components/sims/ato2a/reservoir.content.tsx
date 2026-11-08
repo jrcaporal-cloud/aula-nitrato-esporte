@@ -4,7 +4,7 @@ import { Hl } from './ui';
 
 export type ReservoirMode = 'basal' | 'dose' | 'machinery' | 'exercise' | 'rat';
 
-export interface ReservoirStat { value: string; label: string; color: string }
+export interface ReservoirStat { value: string; label: string; color: string; hit?: boolean }
 
 export interface ReservoirStep {
     tab: string;
@@ -23,7 +23,7 @@ export const RESERVOIR_STEPS: readonly ReservoirStep[] = [
         source: 'Wylie 2019 (J Physiol) · biópsias do vasto lateral, jovens saudáveis',
         stats: [
             { value: '~4×', label: 'nitrato no músculo, em relação ao plasma', color: C.nitrate },
-            { value: '~29×', label: 'nitrito no músculo, em relação ao plasma', color: C.nitrite },
+            { value: '~29×', label: 'nitrito no músculo, em relação ao plasma', color: C.nitrite, hit: true },
         ],
     },
     {
@@ -33,7 +33,7 @@ export const RESERVOIR_STEPS: readonly ReservoirStep[] = [
         source: 'Wylie 2019 · Kadach 2022 · razão ≈ 1 é cálculo a partir de 1082 e 1139 nmol/g',
         stats: [
             { value: '~19×', label: 'nitrato no plasma, 2 h após a dose', color: C.nitrateSoft },
-            { value: '~5×', label: 'nitrato no músculo, 2 h após a dose', color: C.nitrate },
+            { value: '~5×', label: 'nitrato no músculo, 2 h após a dose', color: C.nitrate, hit: true },
             { value: '~3×', label: 'nitrito no plasma; no músculo, sem significância (p = 0,13)', color: C.nitrite },
         ],
     },

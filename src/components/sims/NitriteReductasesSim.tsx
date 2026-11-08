@@ -34,9 +34,9 @@ const NitriteReductasesSim = () => {
             <div className="flex w-[690px] shrink-0 flex-col gap-2">
                 <Panel className="h-[336px]">
                     <svg width={690} height={336} viewBox="0 0 690 336" role="img" aria-label="Três redutases do nitrito: desoxi-hemoglobina, desoxi-mioglobina e xantina oxidorredutase">
-                        <HbCard sat={sat} level={nitriteReduction(sat, ph)} lit={lit('hb')} reduce={reduce} />
-                        <MbCard sat={sat} level={mbActivity(sat, ph)} lit={lit('mb')} reduce={reduce} />
-                        <XorCard sat={sat} level={xorActivity(sat, ph)} lit={lit('xor')} reduce={reduce} />
+                        <HbCard sat={sat} level={nitriteReduction(sat, ph)} lit={lit('hb')} solo={plan.focus === 'hb'} reduce={reduce} />
+                        <MbCard sat={sat} level={mbActivity(sat, ph)} lit={lit('mb')} solo={plan.focus === 'mb'} reduce={reduce} />
+                        <XorCard sat={sat} level={xorActivity(sat, ph)} lit={lit('xor')} solo={plan.focus === 'xor'} reduce={reduce} />
                     </svg>
                 </Panel>
                 <Panel className="flex h-[104px] flex-col justify-center gap-1 px-5">
@@ -51,8 +51,8 @@ const NitriteReductasesSim = () => {
             </div>
             <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <Panel className="flex h-[210px] flex-col gap-2 p-3.5">
-                    <Narration key={step} headline={plan.headline}>{plan.text}</Narration>
-                    <SourceLine>{plan.source}</SourceLine>
+                    <Narration key={step} order={1} headline={plan.headline}>{plan.text}</Narration>
+                    <SourceLine key={`src-${step}`}>{plan.source}</SourceLine>
                 </Panel>
                 <Panel className="min-h-0 flex-1">
                     <Ec50Chart ph={ph} />

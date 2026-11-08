@@ -1,5 +1,8 @@
 import { motion, useReducedMotion } from 'framer-motion';
+import { REVEAL_GAP } from '../kit/countUp';
+import { KeyFact } from '../kit/rhythm';
 import { Panel } from '../kit/ui';
+import { CountText } from './countText';
 import { VOTE_LABEL, type Claim, type Vote } from './claims';
 import { ClaimIcon } from './art/ClaimIcons';
 import { CLAIM_ACCENT } from './art/claimLook';
@@ -11,7 +14,8 @@ import { VOTE_COLOR } from './voteLook';
 
 /**
  * Palco do veredito (passos 2–7 do slide 10): a frase com o seu selo; um instante de suspensão; o martelo bate e o carimbo da
- * resposta pousa (clarão e tremor); só então aparecem o número que decide e o gráfico.
+ * resposta pousa (clarão e tremor); só então aparecem o número que decide (sobe como contador, com destaque) e o gráfico;
+ * a fonte entra por último.
  */
 
 interface VerdictStageProps {
@@ -59,7 +63,7 @@ export const VerdictStage = ({ claim, vote }: VerdictStageProps) => {
                 <div className="mt-2 flex min-h-0 flex-1 gap-5">
                     <div className="flex min-w-0 flex-1 flex-col justify-center gap-2.5">
                         <div className="pb-1 pt-3"><VerdictStamp label={VOTE_LABEL[claim.answer]} color={color} delay={SLAM} /></div>
-                        <motion.div {...reveal} transition={{ delay: after, duration: 0.4 }} className="flex flex-col gap-1.5">
+                        <motion.div {...reveal} transition={{ delay: after + 0.1 + 2 * REVEAL_GAP, duration: 0.4 }} className="flex flex-col gap-1.5">
                             <p className="font-display text-[1.6rem] font-semibold leading-tight text-white">{claim.headline}</p>
                             <p className="text-[18px] leading-snug text-gray-200">{claim.why}</p>
                         </motion.div>
@@ -68,14 +72,21 @@ export const VerdictStage = ({ claim, vote }: VerdictStageProps) => {
                         className="flex w-[392px] shrink-0 flex-col justify-center gap-3 rounded-2xl border px-5 py-3"
                         style={{ borderColor: `${color}55`, background: `linear-gradient(160deg, ${color}18, rgba(10,6,14,0.5))` }}>
                         <div>
-                            <p className="whitespace-nowrap font-display text-[2.1rem] font-bold leading-none text-white">{claim.stat}</p>
+                            <p className="whitespace-nowrap font-display text-[2.1rem] font-bold leading-none text-white">
+                                <KeyFact color={color} delay={after + 0.1}>
+                                    <CountText text={claim.stat} delayMs={(after + 0.1) * 1000} />
+                                </KeyFact>
+                            </p>
                             <p className="mt-1.5 text-[16px] leading-snug text-gray-300">{claim.statNote}</p>
                         </div>
                         <ClaimArt viz={claim.viz} delay={after + 0.3} />
                     </motion.div>
                 </div>
 
-                <p className="mt-2 border-t border-white/10 pt-2 font-mono text-[16px] text-gray-400">fonte · {claim.source}</p>
+                <motion.p className="mt-2 border-t border-white/10 pt-2 font-mono text-[16px] text-gray-400"
+                    initial={{ opacity: reduce ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ delay: after + 0.45, duration: 0.4 }}>
+                    fonte · {claim.source}
+                </motion.p>
             </motion.div>
         </Panel>
     );

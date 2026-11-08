@@ -13,10 +13,10 @@ import { OXYGEN_STEPS } from './ato2b/oxygen.content';
 
 const SIDE_STATS = [
     null,
-    [{ v: '2,98 → 2,82', l: 'L/min (placebo → nitrato)', c: C.nitrateSoft }, { v: '−5,4%', l: 'de consumo de O₂', c: C.nitrate }],
-    [{ v: '19,7 → 21,1%', l: 'eficiência bruta', c: C.nitrateSoft }],
-    [{ v: '0', l: 'diferença em FC, lactato, ventilação, VE/VO₂ e RER', c: C.placebo }],
-    [{ v: '0,74 → 0,57', l: 'L/min de componente lento', c: C.nitrateSoft }, { v: '583 → 675 s', l: 'tempo até a exaustão (+15,8%)', c: C.nitrate }],
+    [{ v: '2,98 → 2,82', l: 'L/min (placebo → nitrato)', c: C.nitrateSoft }, { v: '−5,4%', l: 'de consumo de O₂', c: C.nitrate, k: true }],
+    [{ v: '19,7 → 21,1%', l: 'eficiência bruta', c: C.nitrateSoft, k: true }],
+    [{ v: '0', l: 'diferença em FC, lactato, ventilação, VE/VO₂ e RER', c: C.placebo, k: true }],
+    [{ v: '0,74 → 0,57', l: 'L/min de componente lento', c: C.nitrateSoft }, { v: '583 → 675 s', l: 'tempo até a exaustão (+15,8%)', c: C.nitrate, k: true }],
 ] as const;
 
 const OxygenCostSim = () => {
@@ -39,7 +39,7 @@ const OxygenCostSim = () => {
                 </svg>
             </GraphicPanel>
             <SidePanel stepKey={step} headline={plan.headline} text={plan.text} source={plan.source} facts={plan.facts}>
-                {stats?.map(s => <BigStat key={s.v} value={s.v} label={s.l} color={s.c} size={s.v.length > 8 ? 28 : 34} />)}
+                {stats?.map(s => <BigStat key={s.v} value={s.v} label={s.l} color={s.c} size={s.v.length > 8 ? 28 : 34} keyFact={'k' in s && s.k} />)}
             </SidePanel>
         </SimFrame>
     );

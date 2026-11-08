@@ -1,9 +1,20 @@
 import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 import { C } from '../kit/palette';
 import { br } from '../kit/format';
 import { SvgText } from '../kit/ui';
 import { FILTER_STUDIES, MBI_ERRORS, NULL_P_VALUES, powerAt } from './powerModel';
 import { VIS_H, VIS_W } from './ui';
+import { Count, SvgKeyFact } from './countText';
+import { Ord } from './svgOrderA';
+
+/** Texto SVG com o mesmo contorno do SvgText, aceitando um contador dentro. */
+const CText = ({ x, y, size, color, anchor = 'start', children }: { x: number; y: number; size: number; color: string; anchor?: 'start' | 'middle' | 'end'; children: ReactNode }) => (
+    <text x={x} y={y} textAnchor={anchor} fontSize={size} fontWeight={700} fill={color}
+        style={{ fontFamily: 'var(--font-body)', paintOrder: 'stroke', stroke: '#07050B', strokeWidth: 4, strokeLinejoin: 'round' }}>
+        {children}
+    </text>
+);
 
 /** Desenhos do StatPowerSim. Caixa 672 × 440. */
 
@@ -14,7 +25,7 @@ const Dots100 = ({ x0, y0, hot, color, label, sub }: { x0: number; y0: number; h
             return <circle key={i} cx={x0 + (i % 10) * 17 + 8} cy={y0 + Math.floor(i / 10) * 17 + 8} r={6} fill={on ? color : C.placebo} fillOpacity={on ? 1 : 0.28}
                 stroke={on ? '#fff' : 'none'} strokeWidth={1} />;
         })}
-        <SvgText x={x0 + 85} y={y0 + 196} text={label} anchor="middle" size={20} color={color} weight={700} />
+        <CText x={x0 + 85} y={y0 + 196} anchor="middle" size={20} color={color}><Count text={label} delayMs={1000} ms={700} /></CText>
         <SvgText x={x0 + 85} y={y0 + 218} text={sub} anchor="middle" size={16} color={C.muted} weight={500} />
     </g>
 );
@@ -29,9 +40,13 @@ export const TypicalStudy = () => (
                 <path d={`M${96 + i * 53 - 14} 96 Q${96 + i * 53} 70 ${96 + i * 53 + 14} 96 Z`} fill={C.nitrate} fillOpacity={0.85} />
             </motion.g>
         ))}
-        <SvgText x={VIS_W / 2} y={120} text="n mediano = 10 por grupo (IQR 8 a 15)" anchor="middle" size={18} color={C.nitrateSoft} weight={700} />
+        <Ord at={0.75}>
+            <SvgKeyFact color={C.nitrate} delay={0.85}>
+                <CText x={VIS_W / 2} y={120} anchor="middle" size={18} color={C.nitrateSoft}><Count text="n mediano = 10 por grupo (IQR 8 a 15)" delayMs={750} ms={600} /></CText>
+            </SvgKeyFact>
+        </Ord>
         <line x1={14} x2={VIS_W - 14} y1={138} y2={138} stroke="rgba(255,255,255,0.12)" />
-        <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8, duration: 0.5 }}>
+        <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0, duration: 0.5 }}>
             <Dots100 x0={58} y0={152} hot={15} color={C.no} label="15 em 100" sub="calcularam a amostra" />
             <Dots100 x0={394} y0={152} hot={14} color={C.nitrite} label="14 em 100" sub="declararam desfecho primário" />
         </motion.g>
@@ -56,10 +71,16 @@ export const ThirtyTests = () => {
                     </motion.g>
                 );
             })}
-            <SvgText x={14} y={338} text={`${hits} “achados” sem efeito algum`} size={20} color={C.nitrite} weight={700} />
+            <Ord at={0.95}>
+                <CText x={14} y={338} size={20} color={C.nitrite}><Count text={`${hits} “achados” sem efeito algum`} delayMs={950} ms={600} /></CText>
+            </Ord>
             <rect x={14} y={360} width={VIS_W - 28} height={22} rx={11} fill="rgba(255,255,255,0.08)" />
             <motion.rect x={14} y={360} height={22} rx={11} fill={C.nitrite} fillOpacity={0.9} initial={{ width: 0 }} animate={{ width: (VIS_W - 28) * 0.785 }} transition={{ delay: 1.2, duration: 0.9 }} />
-            <SvgText x={14} y={412} text="chance de pelo menos 1 achado em 30 testes: 79% (cálculo)" size={18} color="#fff" weight={700} />
+            <Ord at={1.2}>
+                <SvgKeyFact color={C.nitrite} delay={1.9}>
+                    <CText x={14} y={412} size={18} color="#fff">chance de pelo menos 1 achado em 30 testes: <Count text="79%" delayMs={1200} ms={900} /> (cálculo)</CText>
+                </SvgKeyFact>
+            </Ord>
         </svg>
     );
 };
@@ -136,9 +157,13 @@ export const FilterDots = () => {
                     fill={s.significant ? C.nitrite : C.placebo} fillOpacity={s.significant ? 1 : 0.45} stroke={s.significant ? '#fff' : 'none'} strokeWidth={1.5}
                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.008 * s.id }} />
             ))}
-            <SvgText x={14} y={VIS_H - 52} text="mais preciso ↑   menos preciso ↓ (erro padrão)" size={16} color={C.muted} weight={500} />
-            <rect x={14} y={VIS_H - 40} width={VIS_W - 28} height={32} rx={10} fill="rgba(251,191,36,0.1)" stroke={C.nitrite} strokeOpacity={0.6} />
-            <SvgText x={VIS_W / 2} y={VIS_H - 18} text={`${sig.length} com p < 0,05: média ${br(meanSig, 1)}% (${br(meanSig, 0)}× o efeito real)`} anchor="middle" size={18} color={C.nitriteSoft} weight={700} />
+            <Ord at={0.9}>
+                <rect x={14} y={VIS_H - 40} width={VIS_W - 28} height={32} rx={10} fill="rgba(251,191,36,0.1)" stroke={C.nitrite} strokeOpacity={0.6} />
+                <CText x={VIS_W / 2} y={VIS_H - 18} anchor="middle" size={18} color={C.nitriteSoft}><Count text={`${sig.length} com p < 0,05: média ${br(meanSig, 1)}% (${br(meanSig, 0)}× o efeito real)`} delayMs={900} ms={700} /></CText>
+            </Ord>
+            <Ord at={1.1}>
+                <SvgText x={14} y={VIS_H - 52} text="mais preciso ↑   menos preciso ↓ (erro padrão)" size={16} color={C.muted} weight={500} />
+            </Ord>
         </svg>
     );
 };
@@ -164,11 +189,17 @@ export const MbiBars = () => {
                     <motion.g key={m.label} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 * i + 0.2, duration: 0.5 }}>
                         <SvgText x={x0} y={y - 18} text={m.label} size={18} color="#E5E7EB" weight={700} />
                         <rect x={sx(m.lo)} y={y - 4} width={sx(m.hi) - sx(m.lo)} height={34} rx={10} fill={C.risk} fillOpacity={0.85} />
-                        <SvgText x={sx(m.hi) + 12} y={y + 22} text={`${m.lo} a ${m.hi}%`} size={20} color={C.risk} weight={700} />
+                        {i === MBI_ERRORS.length - 1 ? (
+                            <SvgKeyFact color={C.risk} delay={0.3 * i + 0.9}>
+                                <CText x={sx(m.hi) + 12} y={y + 22} size={20} color={C.risk}><Count text={`${m.lo} a ${m.hi}%`} all delayMs={300 * i + 360} ms={700} /></CText>
+                            </SvgKeyFact>
+                        ) : <CText x={sx(m.hi) + 12} y={y + 22} size={20} color={C.risk}><Count text={`${m.lo} a ${m.hi}%`} all delayMs={300 * i + 360} ms={700} /></CText>}
                     </motion.g>
                 );
             })}
-            <SvgText x={VIS_W / 2} y={VIS_H - 22} text="erro tipo I de 12 a 22% e de 22 a 45%, contra 5% do teste nulo" anchor="middle" size={16} color={C.muted} weight={500} />
+            <Ord at={1.15}>
+                <SvgText x={VIS_W / 2} y={VIS_H - 22} text="erro tipo I de 12 a 22% e de 22 a 45%, contra 5% do teste nulo" anchor="middle" size={16} color={C.muted} weight={500} />
+            </Ord>
         </svg>
     );
 };

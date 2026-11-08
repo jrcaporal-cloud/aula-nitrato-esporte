@@ -5,6 +5,7 @@ import { br } from '../kit/format';
 import { VIS_H, VIS_W } from './ui';
 import { Glow, T } from './arte/text';
 import { Glass, NitrateDots, VesselDefs } from './arte/vessels';
+import { Count, SvgKeyFact } from './countText';
 
 /** Desenhos dos passos 2 e 3 do PlaceboSim (o 4 e o 5 ficam em PlaceboHistory e PlaceboJuiceSalt). Caixa 672 × 440. */
 
@@ -66,12 +67,16 @@ export const SameJuice = () => {
 
             <motion.g {...fade(6)}>
                 <rect x={14} y={346} width={VIS_W - 28} height={86} rx={16} fill="rgba(240,67,126,0.1)" stroke={C.nitrate} strokeOpacity={0.75} strokeWidth={1.6} />
-                <T x={40} y={378} size={30} color={C.nitrate} weight={700} display>7,5 mmol</T>
+                <T x={40} y={378} size={30} color={C.nitrate} weight={700} display><Count text="7,5 mmol" delayMs={720} /></T>
                 <rect x={40} y={390} width={226} height={11} rx={5.5} fill="url(#av-juice)" />
-                <T x={VIS_W - 40} y={378} size={30} color="#E5E7EB" weight={700} anchor="end" display>0,002 mmol</T>
+                <T x={VIS_W - 40} y={378} size={30} color="#E5E7EB" weight={700} anchor="end" display><Count text="0,002 mmol" delayMs={720} /></T>
                 <rect x={VIS_W - 40 - 226} y={390} width={226} height={11} rx={5.5} fill="rgba(255,255,255,0.08)" />
                 <rect x={VIS_W - 40 - 226} y={390} width={3} height={11} rx={1.5} fill={C.nitrate} />
-                <T x={VIS_W / 2} y={382} size={32} color={C.nitrateSoft} weight={700} anchor="middle" display>≠</T>
+                <SvgKeyFact color={C.nitrate} delay={0.9}>
+                    <T x={VIS_W / 2} y={382} size={32} color={C.nitrateSoft} weight={700} anchor="middle" display>≠</T>
+                </SvgKeyFact>
+            </motion.g>
+            <motion.g {...fade(9)}>
                 <T x={VIS_W / 2} y={422} size={16} color={C.nitrateSoft} weight={700} anchor="middle">nitrato por 250 mL: a única diferença</T>
             </motion.g>
         </svg>
@@ -124,7 +129,13 @@ export const ThreeArms = () => {
             {ARMS.map((a, i) => (
                 <motion.g key={a.id} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.18 * i }}>
                     <Dial cx={a.x} o2={a.o2} color={a.id === 'br' ? C.nitrate : '#CBD5E1'} ghost={a.ghost} reduce={reduce} />
-                    <T x={a.x} y={152} size={a.ghost ? 16 : 24} color={a.id === 'br' ? C.nitrateSoft : '#E5E7EB'} weight={700} anchor="middle" display={!a.ghost}>{a.ghost ? '≈ depletado' : br(a.o2, 2)}</T>
+                    {a.id === 'br' ? (
+                        <SvgKeyFact color={C.nitrate} delay={1.3}>
+                            <T x={a.x} y={152} size={24} color={C.nitrateSoft} weight={700} anchor="middle" display><Count text={br(a.o2, 2)} delayMs={350} ms={1000} /></T>
+                        </SvgKeyFact>
+                    ) : (
+                        <T x={a.x} y={152} size={a.ghost ? 16 : 24} color="#E5E7EB" weight={700} anchor="middle" display={!a.ghost}>{a.ghost ? '≈ depletado' : <Count text={br(a.o2, 2)} delayMs={350} ms={1000} />}</T>
+                    )}
                     <Glass id={`ta-${a.id}`} x={a.x - 48} y={176} w={96} h={118} level={0.8} ghost={a.ghost}>
                         <NitrateDots x={a.x - 40} y={206} w={80} h={84} count={a.dots} r={3.2} reduce={reduce} />
                     </Glass>

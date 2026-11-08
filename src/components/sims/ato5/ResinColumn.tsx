@@ -3,6 +3,8 @@ import { C } from '../kit/palette';
 import { VIS_H, VIS_W } from './ui';
 import { Glow, T } from './arte/text';
 import { Glass, VesselDefs } from './arte/vessels';
+import { Count } from './countText';
+import { Ord } from './svgOrderA';
 
 /**
  * A coluna de resina (passo 1 do PlaceboSim): nitratos descem e ficam presos nas esferas;
@@ -120,6 +122,7 @@ export const ResinColumn = () => {
             <Meter y={360} fill={0.02} label="NO₃⁻" />
 
             {/* legenda à esquerda */}
+            <Ord order={2}>
             <rect x={14} y={112} width={246} height={122} rx={14} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" />
             <circle cx={36} cy={142} r={6.8} fill={C.nitrate} stroke="#fff" strokeWidth={1.2} />
             <T x={54} y={148} size={17} color={C.nitrateSoft} weight={700}>nitrato: fica preso</T>
@@ -127,14 +130,19 @@ export const ResinColumn = () => {
             <T x={54} y={182} size={17}>pigmento: atravessa</T>
             <circle cx={36} cy={210} r={3.8} fill="#F8FAFC" stroke="#CBD5E1" strokeWidth={1.2} />
             <T x={54} y={216} size={17}>açúcar e sabor: passam</T>
+            </Ord>
 
             {/* valores à direita */}
-            <T x={CX + 122} y={46} size={19} color={C.nitrateSoft} weight={700}>entra: 7,5 mmol</T>
-            <T x={CX + 122} y={68} size={16} color={C.muted} weight={500}>de nitrato por 250 mL</T>
-            <T x={CX + 80} y={212} size={17} color={C.o2Soft} weight={700}>resina Purolite A520e</T>
-            <T x={CX + 80} y={234} size={16} color={C.muted} weight={500}>troca o ânion nitrato</T>
-            <T x={CX + 122} y={386} size={19} color="#E5E7EB" weight={700}>sai: 0,002 mmol</T>
-            <T x={CX + 122} y={408} size={16} color={C.muted} weight={500}>por 250 mL</T>
+            <Ord order={1}>
+                <T x={CX + 122} y={46} size={19} color={C.nitrateSoft} weight={700}><Count text="entra: 7,5 mmol" /></T>
+                <T x={CX + 122} y={386} size={19} color="#E5E7EB" weight={700}><Count text="sai: 0,002 mmol" /></T>
+            </Ord>
+            <Ord order={2}>
+                <T x={CX + 122} y={68} size={16} color={C.muted} weight={500}>de nitrato por 250 mL</T>
+                <T x={CX + 80} y={212} size={17} color={C.o2Soft} weight={700}>resina Purolite A520e</T>
+                <T x={CX + 80} y={234} size={16} color={C.muted} weight={500}>troca o ânion nitrato</T>
+                <T x={CX + 122} y={408} size={16} color={C.muted} weight={500}>por 250 mL</T>
+            </Ord>
         </svg>
     );
 };

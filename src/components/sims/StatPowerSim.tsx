@@ -35,13 +35,13 @@ const StatPowerSim = () => {
                 controls={chart ? <Segmented label="efeito real" options={EFFECT_OPTIONS} value={effect} onChange={setEffect} /> : undefined}
                 aside={chart ? (
                     <div className="flex gap-5 pt-1">
-                        <BigStat value={`${Math.round(powerAt(Math.round(n), effect) * 100)}%`} label={`poder com n = ${Math.round(n)}`} color={C.nitrate} size={32} />
-                        <BigStat value={String(nAt80(effect))} label="atletas para 80% de poder" color={C.noSoft} size={32} />
+                        <BigStat value={`${Math.round(powerAt(Math.round(n), effect) * 100)}%`} label={`poder com n = ${Math.round(n)}`} color={C.nitrate} size={32} keyFact={step === 2} />
+                        <BigStat value={String(nAt80(effect))} label="atletas para 80% de poder" color={C.noSoft} size={32} keyFact={step === 3} />
                     </div>
                 ) : step === 4 ? (
                     <div className="flex gap-5 pt-1">
-                        <BigStat value={`${sig.length}`} label="de 100 passam de p < 0,05" color={C.nitrite} size={32} />
-                        <BigStat value={`${br(meanSig, 1)}%`} label="efeito médio entre eles (real: 1%)" color="#fff" size={32} />
+                        <BigStat value={`${sig.length}`} label="de 100 passam de p < 0,05" color={C.nitrite} size={32} count />
+                        <BigStat value={`${br(meanSig, 1)}%`} label="efeito médio entre eles (real: 1%)" color="#fff" size={32} count keyFact />
                     </div>
                 ) : undefined}>
                 {step === 0 && <TypicalStudy />}

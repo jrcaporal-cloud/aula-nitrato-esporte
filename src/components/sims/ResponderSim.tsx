@@ -55,8 +55,8 @@ const ResponderSim = () => {
 
     const aside = step === 1 ? (
         <div className="flex gap-5 pt-1">
-            <BigStat value={`${signed(Math.min(...full), 0)} a ${signed(Math.max(...full), 0)}%`} label="faixa só por erro de medida" color={C.nitrite} size={28} />
-            <BigStat value={`${countAbove(full, RESPONDER_CUT)} e ${countBelow(full, 0)}`} label="“respondedores” e “não”" color={C.noSoft} size={28} />
+            <BigStat value={`${signed(Math.min(...full), 0)} a ${signed(Math.max(...full), 0)}%`} label="faixa só por erro de medida" color={C.nitrite} size={28} count />
+            <BigStat value={`${countAbove(full, RESPONDER_CUT)} e ${countBelow(full, 0)}`} label="“respondedores” e “não”" color={C.noSoft} size={28} count keyFact />
         </div>
     ) : step === 4 ? (
         <div className="flex gap-5 pt-1">

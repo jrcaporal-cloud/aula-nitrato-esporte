@@ -5,6 +5,9 @@ import { VOTE_COLOR } from '../../../ato1/voteLook';
 import type { Claim, Vote } from '../../claimsBridge';
 import { EXPLAIN, STAMP_COLOR } from '../../verdictContent';
 import { Glass, Kick, Rise, Src } from '../kit';
+import { KeyFact, Reveal } from '../../../kit/rhythm';
+import { REVEAL_GAP } from '../../../kit/countUp';
+import { CountText } from '../../../ato5/countText';
 
 /** Coluna da direita: no passo 1 a urna (pilhas de votos × dados fechados); nos demais, o número que decide cada frase virada. */
 
@@ -51,18 +54,22 @@ export const Urn = ({ votes, claims }: { votes: Readonly<Record<number, Vote | u
     );
 };
 
-const Card = ({ claim, vote, delay }: { claim: Claim; vote: Vote | undefined; delay: number }) => {
+/** Ritmo do cartão: o cartão entra (arte), o número da frase sobe (ordem 1), a explicação e a fonte vêm por último (ordem 2). */
+const Card = ({ claim, vote, delay, keyFact }: { claim: Claim; vote: Vote | undefined; delay: number; keyFact: boolean }) => {
     const ex = EXPLAIN[claim.id];
+    const stat = <CountText text={claim.stat} all delayMs={(delay + REVEAL_GAP) * 1000} />;
     return (
         <Rise delay={delay} className="min-h-0 flex-1">
             <Glass color={STAMP_COLOR} glow={1} className="flex h-full flex-col justify-center gap-1 px-4 py-3">
                 <span className="font-mono text-[14px] text-gray-300">
                     frase {String(claim.id).padStart(2, '0')} · turma <b style={{ color: vote ? VOTE_COLOR[vote] : C.placebo }}>{vote ?? '—'}</b> · dados <b style={{ color: VOTE_COLOR[claim.answer] }}>{claim.answer}</b>
                 </span>
-                <p className="m-0 whitespace-nowrap font-display text-[34px] font-semibold leading-none" style={{ color: STAMP_COLOR }}>{claim.stat}</p>
-                <p className="m-0 text-[18px] font-semibold leading-tight text-white">{ex.headline}</p>
-                <p className="m-0 text-[15px] leading-snug text-gray-200">{ex.line}</p>
-                <Src>{ex.source}</Src>
+                <p className="m-0 whitespace-nowrap font-display text-[34px] font-semibold leading-none" style={{ color: STAMP_COLOR }}>{keyFact ? <KeyFact color={STAMP_COLOR} delay={delay + REVEAL_GAP}>{stat}</KeyFact> : stat}</p>
+                <Reveal order={2} delay={delay} className="flex flex-col gap-1">
+                    <p className="m-0 text-[18px] font-semibold leading-tight text-white">{ex.headline}</p>
+                    <p className="m-0 text-[15px] leading-snug text-gray-200">{ex.line}</p>
+                    <Src>{ex.source}</Src>
+                </Reveal>
             </Glass>
         </Rise>
     );
@@ -70,6 +77,6 @@ const Card = ({ claim, vote, delay }: { claim: Claim; vote: Vote | undefined; de
 
 export const EvidencePair = ({ claims, votes }: { claims: readonly Claim[]; votes: Readonly<Record<number, Vote | undefined>> }) => (
     <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-        {claims.map((c, i) => <Card key={c.id} claim={c} vote={votes[c.id]} delay={0.1 + i * 0.15} />)}
+        {claims.map((c, i) => <Card key={c.id} claim={c} vote={votes[c.id]} delay={0.1 + i * 0.15} keyFact={i === 0} />)}
     </div>
 );

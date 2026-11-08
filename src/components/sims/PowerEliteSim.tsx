@@ -6,13 +6,16 @@ import { EliteLadder } from './ato4/EliteLadder';
 import { TimeForest, XieForest } from './ato4/EliteForests';
 import { ELITE_STEPS } from './ato4/eliteContent';
 import { useEntered } from './ato4/hooks';
-import { SimFrame, StoryPanel, Tag } from './ato4/shell';
+import { SimFrame, StoryPanel, Tag, type FactHit } from './ato4/shell';
 import { WingateChart } from './ato4/WingateChart';
 
 /**
  * Slide 53 — "A Elite da Potência". Jonvik 2018 (todos chegam ao pico ~2,8% mais cedo, pico igual, do amador ao
  * olímpico) × Xie 2026 (nulo agregado em atletas) × Eroglu 2026 (só o tempo até o pico se mexe; certeza baixa).
  */
+
+/** Dado-chave de cada passo na lista de números (o passo 2 destaca no desenho dos níveis). */
+const HITS: readonly (FactHit | undefined)[] = [{ index: 2 }, undefined, { index: 0 }, { index: 0 }];
 
 const Ladder = ({ reduce }: { reduce: boolean }) => <EliteLadder lit={useEntered(reduce, 500)} />;
 
@@ -36,7 +39,7 @@ const PowerEliteSim = () => {
                     </motion.div>
                 </Panel>
                 <StoryPanel stepKey={step} kicker={info.kicker} headline={info.headline} text={info.text} facts={info.facts}
-                    takeaway={info.takeaway} source={info.source} />
+                    takeaway={info.takeaway} source={info.source} hit={HITS[step]} />
             </div>
         </SimFrame>
     );

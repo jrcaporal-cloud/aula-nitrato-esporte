@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import { C, PANEL_BG } from '../kit/palette';
 import { Panel } from '../kit/ui';
+import { KeyFact, Reveal } from '../kit/rhythm';
+import { CountText } from './countText';
 
 /**
  * Peças comuns do Ato V (O Contra-Interrogatório): moldura, abas, selos, narração por passo,
@@ -87,13 +89,12 @@ interface NarrationProps {
     color?: string;
 }
 
-/** Texto do passo: manchete + duas ou três frases, com fade a cada troca. */
+/** Texto do passo: manchete entra com o desenho (ordem 0), o texto corrido como legenda (ordem 2). Reinicia a cada passo. */
 export const Narration = ({ stepKey, headline, text, color = ACCENT_SOFT }: NarrationProps) => (
-    <motion.div key={stepKey} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}
-        className="flex flex-col gap-1.5">
-        <p className="font-display text-[1.45rem] font-semibold leading-tight" style={{ color }}>{headline}</p>
-        <p className="text-[18px] leading-snug text-gray-100">{text}</p>
-    </motion.div>
+    <div key={stepKey} className="flex flex-col gap-1.5">
+        <Reveal order={0}><p className="font-display text-[1.45rem] font-semibold leading-tight" style={{ color }}>{headline}</p></Reveal>
+        <Reveal order={2}><p className="text-[18px] leading-snug text-gray-100">{text}</p></Reveal>
+    </div>
 );
 
 interface SegmentedProps<T extends string | number> {
@@ -128,15 +129,24 @@ interface BigStatProps {
     label: string;
     color?: string;
     size?: number;
+    /** O número sobe como contador até o texto exato de `value` (não use em valor que muda por interação). */
+    count?: boolean;
+    /** Destaque curto (KeyFact) na cor do número: 1 por passo, no dado onde o professor bate. */
+    keyFact?: boolean;
 }
 
 /** Número de destaque com legenda curta. */
-export const BigStat = ({ value, label, color = C.text, size = 36 }: BigStatProps) => (
+export const BigStat = ({ value, label, color = C.text, size = 36, count = false, keyFact = false }: BigStatProps) => {
+    const shown = count ? <CountText text={value} /> : value;
+    return (
     <div className="flex flex-col min-w-0">
-        <span className="font-display font-semibold leading-none tabular-nums" style={{ color, fontSize: size }}>{value}</span>
+        <span className="font-display font-semibold leading-none tabular-nums" style={{ color, fontSize: size }}>
+            {keyFact ? <KeyFact color={color}>{shown}</KeyFact> : shown}
+        </span>
         <span className="mt-1 text-[15px] leading-snug text-gray-300">{label}</span>
     </div>
-);
+    );
+};
 
 interface StoryLayoutProps {
     step: number;
@@ -156,7 +166,7 @@ interface StoryLayoutProps {
     children: ReactNode;
 }
 
-/** Desenho do passo à esquerda (caixa fixa), narração e fonte à direita. */
+/** Desenho do passo à esquerda (caixa fixa, ordem 0), números do passo (aside, ordem 1), texto/fonte (ordem 2) à direita. */
 export const StoryLayout = ({ step, visualKey, headline, text, source, tone = ACCENT, headlineColor = ACCENT_SOFT, aside, controls, takeaway, children }: StoryLayoutProps) => (
     <div className="h-full flex gap-3">
         <Panel className="shrink-0" state="active" glow={tone}>
@@ -167,18 +177,18 @@ export const StoryLayout = ({ step, visualKey, headline, text, source, tone = AC
         </Panel>
         <Panel className="flex-1 min-w-0 p-4 flex flex-col gap-3">
             <Narration stepKey={step} headline={headline} text={text} color={headlineColor} />
-            {aside}
+            {aside && <Reveal key={`as${step}`} order={1}>{aside}</Reveal>}
             <div className="mt-auto flex flex-col gap-2">
                 {takeaway && (
-                    <motion.div key={`tk${step}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.25 }}
+                    <Reveal key={`tk${step}`} order={2} delay={0.08}
                         className="rounded-xl border px-3 py-2 text-[16px] leading-snug text-gray-50"
                         style={{ borderColor: `${tone}80`, background: `${tone}18` }}>
                         <span className="font-mono text-[14px] uppercase tracking-wide mr-1.5" style={{ color: tone }}>para levar</span>
                         {takeaway}
-                    </motion.div>
+                    </Reveal>
                 )}
                 {controls}
-                <Src>{source}</Src>
+                <Reveal key={`src${step}`} order={2}><Src>{source}</Src></Reveal>
             </div>
         </Panel>
     </div>

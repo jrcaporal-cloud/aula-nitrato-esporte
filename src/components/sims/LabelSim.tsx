@@ -5,6 +5,8 @@ import { LabelShelfArt } from './ato6/arte-a/LabelShelfArt';
 import { LabelWhyArt } from './ato6/arte-a/LabelWhyArt';
 import { LABEL_SOURCE, LABEL_TABS } from './ato6/labelContent';
 import { FadeSwap, Illustrative, Shell, Story } from './ato6/ui';
+import { CountText } from './ato5/countText';
+import { KeyFact } from './kit/rhythm';
 
 /**
  * Slide 45 — O Rótulo Confere? Quatro passos: a gôndola (24 produtos, 21 empresas, 45 lotes), só 5 acendem acima de 5 mmol,
@@ -25,7 +27,7 @@ const LabelSim = () => {
         <div className="grid grid-cols-3 gap-2 text-center">
             {[['24', 'produtos'], ['21', 'empresas'], ['45', 'lotes']].map(([n, l]) => (
                 <div key={l} className="rounded-xl border border-white/15 py-1.5">
-                    <p className="m-0 font-display text-[28px] font-semibold leading-none text-white">{n}</p>
+                    <p className="m-0 font-display text-[28px] font-semibold leading-none text-white"><CountText text={n} /></p>
                     <p className="m-0 mt-1 text-[14px] text-gray-300">{l}</p>
                 </div>
             ))}
@@ -36,7 +38,7 @@ const LabelSim = () => {
         <Shell tabs={LABEL_TABS} step={step} setStep={setStep} layoutId="label-tabs" chips={step <= 1 ? <Illustrative>ilustrativo na disposição</Illustrative> : undefined}>
             <Story id={step} width={284} {...s}>
                 {step === 0 && counts}
-                {step === 1 && <p className="m-0 font-display text-[44px] font-semibold leading-none" style={{ color: C.no }}>5 <span className="text-[26px] text-gray-200">de 24</span></p>}
+                {step === 1 && <p className="m-0 font-display text-[44px] font-semibold leading-none" style={{ color: C.no }}><KeyFact color={C.no}><CountText text="5" /></KeyFact> <span className="text-[26px] text-gray-200">de 24</span></p>}
             </Story>
             {step <= 1 ? <LabelShelfArt lit={step === 1} /> : <FadeSwap id={step} className="flex min-w-0 flex-1">{step === 2 ? <LabelGlassesArt /> : <LabelWhyArt />}</FadeSwap>}
         </Shell>

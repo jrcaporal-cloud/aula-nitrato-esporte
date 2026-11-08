@@ -27,8 +27,8 @@ const PlaceboSim = () => {
             <StoryLayout step={step} headline={plan.headline} text={plan.text} source={plan.source} takeaway={plan.takeaway} tone={TONES[step]}
                 aside={step === 0 ? (
                     <div className="flex gap-6 pt-1">
-                        <BigStat value="7,5" label="mmol de nitrato por 250 mL, no suco" color={C.nitrate} size={34} />
-                        <BigStat value="0,002" label="mmol por 250 mL, no placebo" color="#E5E7EB" size={34} />
+                        <BigStat value="7,5" label="mmol de nitrato por 250 mL, no suco" color={C.nitrate} size={34} count keyFact />
+                        <BigStat value="0,002" label="mmol por 250 mL, no placebo" color="#E5E7EB" size={34} count />
                     </div>
                 ) : undefined}>
                 <Visual />

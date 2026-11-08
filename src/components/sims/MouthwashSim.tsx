@@ -38,10 +38,10 @@ const MouthwashSim = () => {
             <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <Panel className="flex h-[210px] flex-col gap-2 p-3.5">
                     <Narration key={step} headline={plan.headline}>{plan.text}</Narration>
-                    <SourceLine>{plan.source}</SourceLine>
+                    <SourceLine key={`src-${step}`}>{plan.source}</SourceLine>
                 </Panel>
                 <Panel className="min-h-0 flex-1 p-4">
-                    <MouthwashFacts kind={plan.facts} />
+                    <MouthwashFacts key={step} kind={plan.facts} />
                 </Panel>
             </div>
         </SimFrame>

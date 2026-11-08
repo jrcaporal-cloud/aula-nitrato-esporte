@@ -29,7 +29,7 @@ const OralMicrobiomeSim = () => {
             </GraphicPanel>
             <SidePanel stepKey={step} headline={plan.headline} text={plan.text} source={plan.source} facts={plan.facts}
                 color={step === 5 ? C.nitrite : C.noSoft}>
-                {step === 1 && <BigStat value="+351%" label="Neisseria em 10 dias" color={C.noSoft} />}
+                {step === 1 && <BigStat value="+351%" label="Neisseria em 10 dias" color={C.noSoft} keyFact />}
                 {step === 3 && <BigStat value="limiar" label="acima dele, mais bactérias não dão mais NO" color={C.text} size={28} />}
             </SidePanel>
         </SimFrame>

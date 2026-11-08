@@ -2,6 +2,8 @@ import { br } from '../../kit/format';
 import { C } from '../../kit/palette';
 import { SvgText } from '../../kit/ui';
 import { SPRINT_ROWS, YOYO_SD } from '../teamContent';
+import { NUMBER_DELAY_MS } from '../../ato3/countText';
+import { SvgCount, SvgKeyFact } from '../../ato3/beat';
 import { Turf } from './Pitch';
 
 /**
@@ -56,7 +58,9 @@ export const SprintArt = ({ reduce }: { reduce: boolean }) => {
                         <Racer y={y + 10} finish={fin} time={r.placebo} color={C.placebo} reduce={reduce} />
                         <Racer y={y + 30} finish={fin} time={r.nitrate} color={C.nitrate} reduce={reduce} />
                         <SvgText x={fin + 16} y={y + 16} text={`${br(r.placebo, 2)} → ${br(r.nitrate, 2)} s`} size={16} weight={600} color="#E5E7EB" />
-                        <SvgText x={fin + 16} y={y + 40} text={r.delta} size={20} weight={700} color={C.nitrateSoft} />
+                        {i === 0
+                            ? <SvgKeyFact color={C.nitrate}><SvgCount x={fin + 16} y={y + 40} text={r.delta} size={20} weight={700} color={C.nitrateSoft} /></SvgKeyFact>
+                            : <SvgCount x={fin + 16} y={y + 40} text={r.delta} size={20} weight={700} color={C.nitrateSoft} count={{ delayMs: NUMBER_DELAY_MS + i * 120 }} />}
                     </g>
                 );
             })}

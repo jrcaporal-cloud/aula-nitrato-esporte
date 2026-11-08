@@ -5,6 +5,7 @@ import { SCALES, type CaseVerdict } from '../cases';
 import { Kicker } from '../ui';
 import { Dial, Meter, Seal } from './caseDial';
 import { Portrait } from './portrait';
+import { Reveal } from '../../kit/rhythm';
 
 /** Slide 47: a carta de um caso (retrato, evidência, mostradores e selo) e o quadro com as quatro cartas. */
 
@@ -46,7 +47,7 @@ const Evidence = ({ c }: { c: CaseVerdict }) => {
 
 const Verdict = ({ c }: { c: CaseVerdict }) => (
     <div className="relative flex w-[520px] shrink-0 flex-col gap-3 rounded-2xl border p-4" style={cardBg(c.color)}>
-        <div className="absolute -right-2 -top-3"><Seal c={c} /></div>
+        <div className="absolute -right-2 -top-3"><Seal c={c} keyFact /></div>
         <Kicker color={c.color}>o que dá para dizer</Kicker>
         <p className="m-0 pr-24 font-display text-[21px] font-semibold leading-tight text-white">{c.headline}</p>
         <div className="mt-2 flex justify-between">
@@ -54,9 +55,11 @@ const Verdict = ({ c }: { c: CaseVerdict }) => (
             <Dial title="magnitude" zones={SCALES.magnitude} range={c.magnitude} color={c.color} delay={0.45} />
             <Dial title="certeza" zones={SCALES.certainty} range={c.certainty} color={c.color} delay={0.65} />
         </div>
-        <ul className="m-0 mt-auto flex list-none flex-col gap-1 border-t border-white/10 p-0 pt-2">
-            {c.reading.map(r => <li key={r} className="text-[15px] leading-snug text-gray-200">{r}</li>)}
-        </ul>
+        <Reveal order={2} delay={0.4} className="mt-auto">
+            <ul className="m-0 flex list-none flex-col gap-1 border-t border-white/10 p-0 pt-2">
+                {c.reading.map(r => <li key={r} className="text-[15px] leading-snug text-gray-200">{r}</li>)}
+            </ul>
+        </Reveal>
     </div>
 );
 

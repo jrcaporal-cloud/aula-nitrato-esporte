@@ -7,7 +7,8 @@ import { PkChart } from './ato2a/PkChart';
 import { DOSES, axisOf, timeOf } from './ato2a/pkModel';
 import { DOSE_RESULTS, PK_STEPS } from './ato2a/pk.content';
 import { useStepValue } from './ato2a/hooks';
-import { BigStat, IllustrativeChip, Narration, SimFrame, Slider, SourceLine } from './ato2a/ui';
+import { Reveal } from './kit/rhythm';
+import { IllustrativeChip, Narration, SimFrame, Slider, SourceLine, StatList } from './ato2a/ui';
 
 /**
  * "Do Copo ao Sangue" (Ato II). Linha do tempo de uma dose: nitrato plasmático, nitrito plasmático e
@@ -53,19 +54,19 @@ const PharmacokineticsSim = () => {
             <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <Panel className="flex h-[210px] flex-col gap-2 p-3.5">
                     <Narration key={step} headline={plan.headline}>{plan.text}</Narration>
-                    <SourceLine>{plan.source}</SourceLine>
+                    <SourceLine key={`src-${step}`}>{plan.source}</SourceLine>
                 </Panel>
-                <Panel className="flex min-h-0 flex-1 flex-col justify-center gap-3 p-4">
+                <Panel key={step} className="flex min-h-0 flex-1 flex-col justify-center gap-3 p-4">
                     {byDose ? (
                         DOSE_RESULTS.map((r, i) => (
-                            <div key={r.head} className="flex flex-col rounded-lg border px-3 py-1.5 transition-colors"
+                            <Reveal key={r.head} order={1} delay={i * 0.08} className="flex flex-col rounded-lg border px-3 py-1.5 transition-colors"
                                 style={{ borderColor: i === dose ? `${C.nitrite}b3` : 'rgba(255,255,255,0.08)', background: i === dose ? 'rgba(251,191,36,0.07)' : 'transparent' }}>
                                 <span className="font-mono text-[15px] font-semibold" style={{ color: C.nitrite }}>{r.head}</span>
                                 <span className="text-[16px] leading-snug text-gray-100">{r.body}</span>
-                            </div>
+                            </Reveal>
                         ))
                     ) : (
-                        plan.stats.map(s => <BigStat key={s.label} value={s.value} label={s.label} color={s.color} size={42} />)
+                        <StatList items={plan.stats} size={42} />
                     )}
                 </Panel>
             </div>

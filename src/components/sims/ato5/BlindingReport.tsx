@@ -3,6 +3,8 @@ import { C } from '../kit/palette';
 import { VIS_H, VIS_W } from './ui';
 import { Seal } from './arte/figures';
 import { T } from './arte/text';
+import { Count, SvgKeyFact } from './countText';
+import { Ord } from './svgOrderA';
 
 /** Passo 4 do BlindingSim: veredito de cada estudo como selo grande (mediu e mostrou o cego?). Caixa 672 × 440. */
 
@@ -45,15 +47,25 @@ export const ReportSeals = () => (
                     <T x={cx} y={96} size={16} color={C.muted} weight={500} anchor="middle">{c.sub}</T>
                     <motion.g initial={{ opacity: 0, scale: 1.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.25 + 0.2 * i, type: 'spring', stiffness: 240, damping: 15 }}
                         style={{ transformBox: 'fill-box', transformOrigin: 'center' }}>
-                        <Seal cx={cx} cy={166} r={46} color={c.color} mark={c.mark} rotate={i % 2 ? 7 : -7} />
+                        {c.mark === 'no' ? (
+                            <SvgKeyFact color={C.risk} delay={0.95}>
+                                <Seal cx={cx} cy={166} r={46} color={c.color} mark={c.mark} rotate={i % 2 ? 7 : -7} />
+                            </SvgKeyFact>
+                        ) : <Seal cx={cx} cy={166} r={46} color={c.color} mark={c.mark} rotate={i % 2 ? 7 : -7} />}
                     </motion.g>
-                    {c.verdict.map((v, j) => <T key={v} x={cx} y={238 + 21 * j} size={17} color={c.color === C.placebo ? '#E5E7EB' : c.color} weight={700} anchor="middle">{v}</T>)}
-                    {i === 3 ? <Dots45 x={cx - 52} y={286} /> : null}
-                    {c.result.map((r, j) => <T key={r} x={cx} y={(i === 3 ? 340 : 296) + 21 * j} size={16} color="#E5E7EB" weight={500} anchor="middle">{r}</T>)}
+                    <Ord at={0.35 + 0.2 * i}>
+                        {c.verdict.map((v, j) => <T key={v} x={cx} y={238 + 21 * j} size={17} color={c.color === C.placebo ? '#E5E7EB' : c.color} weight={700} anchor="middle">{i === 3 && j === 0 ? <Count text={v} delayMs={950} ms={700} /> : v}</T>)}
+                        {i === 3 ? <Dots45 x={cx - 52} y={286} /> : null}
+                    </Ord>
+                    <Ord at={0.5 + 0.2 * i}>
+                        {c.result.map((r, j) => <T key={r} x={cx} y={(i === 3 ? 340 : 296) + 21 * j} size={16} color="#E5E7EB" weight={500} anchor="middle">{r}</T>)}
+                    </Ord>
                 </g>
             );
         })}
-        <T x={VIS_W / 2} y={402} size={16} color={C.muted} weight={500} anchor="middle">Bang 2004: apesar de milhares de ensaios “duplo-cegos” por ano,</T>
-        <T x={VIS_W / 2} y={424} size={16} color={C.muted} weight={500} anchor="middle">medir a eficácia do cegamento raramente é discutido.</T>
+        <Ord at={1.25}>
+            <T x={VIS_W / 2} y={402} size={16} color={C.muted} weight={500} anchor="middle">Bang 2004: apesar de milhares de ensaios “duplo-cegos” por ano,</T>
+            <T x={VIS_W / 2} y={424} size={16} color={C.muted} weight={500} anchor="middle">medir a eficácia do cegamento raramente é discutido.</T>
+        </Ord>
     </svg>
 );

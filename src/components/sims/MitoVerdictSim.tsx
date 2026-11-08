@@ -26,8 +26,8 @@ const MitoVerdictSim = () => {
             glow={step === 4 ? C.nitrate : undefined}
             scene={<g key={step <= 1 ? 0 : step}>{scene}</g>}
             headline={plan.headline} text={MITO_SHORT[step]} color={step >= 2 ? C.nitrateSoft : C.noSoft}
-            stat={step === 2 ? <Stat value="−3%" label="VO₂ do corpo todo (p < 0,05)" color={C.nitrate} />
-                : step === 3 ? <Stat value="H₂O₂ ↑" label="única medida que mudou" color={C.hypoxia} size={28} /> : undefined}
+            stat={step === 2 ? <Stat value="−3%" label="VO₂ do corpo todo (p < 0,05)" color={C.nitrate} keyFact />
+                : step === 3 ? <Stat value="H₂O₂ ↑" label="única medida que mudou" color={C.hypoxia} size={28} keyFact /> : undefined}
             facts={plan.facts} source={step === 3 ? plan.source.replace('barras ilustram', 'ponteiros ilustram') : plan.source} />
     );
 };

@@ -3,6 +3,7 @@ import { SvgText } from '../../kit/ui';
 import { useEntered } from '../../ato4/hooks';
 import { LAB_BARS } from '../london.content';
 import { Cyclist } from '../artKit/Figures';
+import { SvgCount, SvgKeyFact, SvgReveal } from '../beat';
 import { LabRoom } from './Stage';
 
 /** Passo 2 — no laboratório: quatro ergômetros (controle e três condições) com a torre de potência de cada um. */
@@ -17,13 +18,20 @@ const ROWS = [
     ...LAB_BARS,
 ] as const;
 
+/** Valor no topo da torre: sobe junto com a entrada do texto (0,7 s + 0,15 s por coluna, depois do useEntered). */
+const valueText = (text: string, x: number, y: number, i: number) => (
+    <SvgCount x={x} y={y} text={text} size={28} weight={700} anchor="middle" color="#fff" count={{ delayMs: 70 + (0.7 + 0.15 * i) * 1000, ms: 700 }} />
+);
+
 export const LabArt = ({ reduce }: { reduce: boolean }) => {
     const go = useEntered(reduce);
     return (
         <g>
             <LabRoom x0={-10} x1={1110} floor={FLOOR} />
             <SvgText x={24} y={34} text="Potência média no percurso simulado, em relação ao controle" size={17} weight={700} color="#E5E7EB" />
-            <SvgText x={24} y={58} text="nutrição de melhor prática: refeição rica em carboidrato e bebida esportiva" size={16} weight={500} color={C.muted} />
+            <SvgReveal order={2} delay={0.9}>
+                <SvgText x={24} y={58} text="nutrição de melhor prática: refeição rica em carboidrato e bebida esportiva" size={16} weight={500} color={C.muted} />
+            </SvgReveal>
             <line x1={40} x2={1060} y1={BASE} y2={BASE} stroke="#fff" strokeOpacity={0.45} strokeDasharray="6 6" />
             <SvgText x={1060} y={BASE + 22} text="controle = 0" size={16} weight={500} anchor="end" color={C.muted} />
             {ROWS.map((b, i) => {
@@ -37,7 +45,9 @@ export const LabArt = ({ reduce }: { reduce: boolean }) => {
                             style={{ transformBox: 'fill-box', transformOrigin: b.value >= 0 ? 'center bottom' : 'center top', transform: `scaleY(${go ? 1 : 0})`, transition: `transform 1s cubic-bezier(0.22,0.8,0.24,1) ${0.15 * i}s`, filter: `drop-shadow(0 0 10px ${b.color}88)` }} />
                         {i > 0 && (
                             <g style={{ opacity: go ? 1 : 0, transition: `opacity 0.4s ease ${0.7 + 0.15 * i}s` }}>
-                                <SvgText x={x} y={valueY} text={b.text} size={28} weight={700} anchor="middle" color="#fff" />
+                                {b.id === 'br'
+                                    ? <SvgKeyFact color={C.nitrate} delay={reduce ? 0 : 1.6}>{valueText(b.text, x, valueY, i)}</SvgKeyFact>
+                                    : valueText(b.text, x, valueY, i)}
                                 <SvgText x={x} y={valueY + 22} text={b.note} size={16} weight={600} anchor="middle" color={b.value < 0 ? C.nitrateSoft : C.muted} />
                             </g>
                         )}
@@ -46,7 +56,9 @@ export const LabArt = ({ reduce }: { reduce: boolean }) => {
                     </g>
                 );
             })}
-            <SvgText x={1076} y={34} text="beterraba + cafeína × cafeína: −0,9% (p = 0,4)" size={16} weight={600} anchor="end" color={C.nitrateSoft} />
+            <SvgReveal order={2} delay={1.1}>
+                <SvgText x={1076} y={34} text="beterraba + cafeína × cafeína: −0,9% (p = 0,4)" size={16} weight={600} anchor="end" color={C.nitrateSoft} />
+            </SvgReveal>
         </g>
     );
 };

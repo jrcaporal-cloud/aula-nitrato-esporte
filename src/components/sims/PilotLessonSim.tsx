@@ -5,13 +5,16 @@ import { Panel } from './kit/ui';
 import { ClinicalArt } from './ato4/arcoArt/ClinicalArt';
 import { MonitorArt } from './ato4/arcoArt/MonitorArt';
 import { PILOT_STEPS } from './ato4/pilotContent';
-import { SimFrame, StoryPanel, Tag } from './ato4/shell';
+import { SimFrame, StoryPanel, Tag, type FactHit } from './ato4/shell';
 
 /**
  * Slide 34 — "O Arco da Insuficiência Cardíaca". Um monitor cardíaco: cada ensaio de ICFEp é um batimento cuja altura
  * é o efeito no VO₂pico (17 → 105 → 84 pacientes, bolha = n) e o sinal encolhe até a linha reta; a DPOC acende embaixo
  * (+30 m só com reabilitação); no fim, a barra viva dos 46% "positivos" contra o agrupado clínico nulo.
  */
+
+/** Dado-chave de cada passo na lista de números (contador + destaque). */
+const HITS: readonly FactHit[] = [{ index: 1, from: 11.6 }, { index: 2 }, { index: 1 }, { index: 0 }, { index: 0 }];
 
 const PilotLessonSim = () => {
     const { step, setStep } = useSlideSteps(PILOT_STEPS.length);
@@ -28,7 +31,7 @@ const PilotLessonSim = () => {
                     </motion.div>
                 </Panel>
                 <StoryPanel stepKey={step} kicker={info.kicker} headline={info.headline} text={info.text} facts={info.facts}
-                    takeaway={info.takeaway} source={info.source} />
+                    takeaway={info.takeaway} source={info.source} hit={HITS[step]} />
             </div>
         </SimFrame>
     );

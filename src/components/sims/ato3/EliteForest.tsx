@@ -1,6 +1,8 @@
 import { br } from '../kit/format';
 import { C } from '../kit/palette';
 import { SvgText } from '../kit/ui';
+import { NUMBER_DELAY_MS } from './countText';
+import { SvgCount } from './beat';
 import { ELITE_ROWS, halfWidth } from './elite.content';
 
 /** Floresta de nulos (viewBox 740 × 360, escala 1:1): ponto = diferença observada; barra = precisão esperada (cálculo). */
@@ -14,8 +16,12 @@ const ROW_H = 32;
 const sx = (v: number) => X0 + ((v - DOMAIN[0]) / (DOMAIN[1] - DOMAIN[0])) * (X1 - X0);
 const f1 = (n: number) => br(n, 0).replace('-', '−');
 
+/** Atraso (s) entre as linhas que entram no passo, de cima para baixo. */
+const ROW_GAP = 0.08;
+
 export const EliteForest = ({ step }: { step: number }) => {
     const axisY = TOP + ROW_H * ELITE_ROWS.length + 4;
+    const fresh = ELITE_ROWS.filter(r => r.from === step).map(r => r.id);
     return (
         <svg viewBox={`0 0 ${EW} ${EH}`} width={EW} height={EH} role="img" aria-label="Estudos em atletas de elite: diferenças em torno de zero">
             <rect x={sx(1)} y={TOP - 8} width={sx(3) - sx(1)} height={axisY - TOP + 8} fill={C.no} fillOpacity={0.12} />
@@ -34,13 +40,17 @@ export const EliteForest = ({ step }: { step: number }) => {
                 const cy = TOP + ROW_H * i + ROW_H / 2;
                 const hw = halfWidth(r.n);
                 const on = r.from <= step;
+                const rank = fresh.indexOf(r.id);
+                const lag = Math.max(rank, 0) * ROW_GAP;
                 return (
-                    <g key={r.id} style={{ opacity: on ? 1 : 0, transition: 'opacity 0.45s' }}>
+                    <g key={r.id} style={{ opacity: on ? 1 : 0, transition: `opacity 0.45s ${lag}s` }}>
                         <SvgText x={0} y={cy + 6} text={r.label} size={17} weight={600} color="#E5E7EB" />
                         <line x1={sx(Math.max(r.y - hw, DOMAIN[0]))} x2={sx(Math.min(r.y + hw, DOMAIN[1]))} y1={cy} y2={cy}
                             stroke={r.color} strokeWidth={step >= 3 ? 4 : 2.5} strokeLinecap="round" strokeOpacity={step >= 3 ? 0.9 : 0.55} style={{ transition: 'stroke-width 0.4s' }} />
                         <rect x={sx(r.y) - 7} y={cy - 7} width={14} height={14} fill={r.color} stroke="#fff" strokeWidth={1.5} />
-                        <SvgText x={EW} y={cy + 6} text={r.right} size={17} weight={700} anchor="end" color={r.color} />
+                        {rank >= 0
+                            ? <SvgCount x={EW} y={cy + 6} text={r.right} size={17} weight={700} anchor="end" color={r.color} count={{ delayMs: NUMBER_DELAY_MS + lag * 1000 }} />
+                            : <SvgText x={EW} y={cy + 6} text={r.right} size={17} weight={700} anchor="end" color={r.color} />}
                     </g>
                 );
             })}

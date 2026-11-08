@@ -17,13 +17,13 @@ const MouseHumanSim = () => {
     const { step, setStep } = useSlideSteps(MOUSE_STEPS.length);
     const reduce = useReducedMotion() ?? false;
     const plan = MOUSE_STEPS[step];
-    const stat = step === 1 ? <Stat value="~35%" label="mais rápida a ~100 Hz, só na fibra rápida" color={C.noSoft} />
-        : step === 2 ? <Stat value="164 × 136,5 N" label="twitch de pico, nitrato × placebo" color={C.noSoft} size={26} />
-        : step === 3 ? <Stat value="nenhuma" label="das proteínas de Ca²⁺ mudou" color={C.hypoxia} size={26} />
+    const stat = step === 1 ? <Stat value="~35%" label="mais rápida a ~100 Hz, só na fibra rápida" color={C.noSoft} keyFact />
+        : step === 2 ? <Stat value="164 × 136,5 N" label="twitch de pico, nitrato × placebo" color={C.noSoft} size={26} keyFact />
+        : step === 3 ? <Stat value="nenhuma" label="das proteínas de Ca²⁺ mudou" color={C.hypoxia} size={26} keyFact />
         : step === 4 ? (
             <>
                 <Stat value="o quê ✓" label="replicado em humanos" color={C.noSoft} size={24} />
-                <Stat value="por quê ?" label="desconhecido" color={C.hypoxia} size={24} />
+                <Stat value="por quê ?" label="desconhecido" color={C.hypoxia} size={24} keyFact />
             </>
         ) : undefined;
 

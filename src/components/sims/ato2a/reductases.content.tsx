@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { C } from '../kit/palette';
-import { Hl } from './ui';
+import { Hl, KeyNum } from './ui';
 
 export type Focus = 'hb' | 'mb' | 'xor' | 'all';
 
@@ -36,7 +36,7 @@ export const REDUCTASE_STEPS: readonly ReductaseStep[] = [
     {
         tab: 'Acidez', sat: 35, ph: 6.6, focus: 'all',
         headline: 'A acidez dá mais força ao nitrito',
-        text: <>Com 0,8 unidade a menos de pH, a <Hl c={C.hypoxia}>EC₅₀ do nitrito cai de 200 para 40 µM</Hl>: ~5× mais potente. Hipóxia e acidose chegam juntas no músculo que trabalha.</>,
+        text: <>Com 0,8 unidade a menos de pH, a <Hl c={C.hypoxia}>EC₅₀ do nitrito cai de <KeyNum c={C.hypoxia} count={false}>200 para 40 µM</KeyNum></Hl>: ~5× mais potente. Hipóxia e acidose chegam juntas no músculo que trabalha.</>,
         source: 'Modin 2001 (Acta Physiol Scand) · aorta de rato, pH do banho',
     },
     {

@@ -4,6 +4,8 @@ import { VIS_W } from './ui';
 import { Seal } from './arte/figures';
 import { T } from './arte/text';
 import { Glass, VesselDefs } from './arte/vessels';
+import { Count, SvgKeyFact } from './countText';
+import { Ord } from './svgOrderA';
 
 /** Quadros dos passos 4 e 5 do CrossoverSim (abaixo do cronograma). Coordenadas absolutas na caixa 672 × 440. */
 
@@ -51,11 +53,17 @@ export const BiologyPanel = ({ reduce }: { reduce: boolean }) => (
             return (
                 <motion.g key={t.name} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + 0.12 * i }}>
                     <path d={up ? `M486 ${312 + i * 28}l7 -13l7 13z` : `M486 ${298 + i * 28}l7 13l7 -13z`} fill={up ? C.no : C.hypoxia} />
-                    <T x={510} y={310 + i * 28} size={17} color={up ? C.noSoft : '#FDBA74'} weight={700}>{t.name} {up ? '+' : '−'}{Math.abs(t.v)}%</T>
+                    {i === 0 ? (
+                        <SvgKeyFact color={C.no} delay={0.55}>
+                            <T x={510} y={310 + i * 28} size={17} color={up ? C.noSoft : '#FDBA74'} weight={700}><Count text={`${t.name} ${up ? '+' : '−'}${Math.abs(t.v)}%`} delayMs={300 + 120 * i} ms={700} /></T>
+                        </SvgKeyFact>
+                    ) : <T x={510} y={310 + i * 28} size={17} color={up ? C.noSoft : '#FDBA74'} weight={700}><Count text={`${t.name} ${up ? '+' : '−'}${Math.abs(t.v)}%`} delayMs={300 + 120 * i} ms={700} /></T>}
                 </motion.g>
             );
         })}
-        <T x={VIS_W / 2} y={432} size={17} color={C.nitriteSoft} weight={700} anchor="middle">a beterraba do 1º braço muda o microbioma que vai ativar o 2º braço</T>
+        <Ord at={0.95}>
+            <T x={VIS_W / 2} y={432} size={17} color={C.nitriteSoft} weight={700} anchor="middle">a beterraba do 1º braço muda o microbioma que vai ativar o 2º braço</T>
+        </Ord>
     </g>
 );
 
@@ -85,11 +93,15 @@ export const GoodPanel = () => (
                 <g key={b.n}>
                     <rect x={14} y={b.y} width={b.w} height={22} rx={7} fill={b.c} fillOpacity={0.8} stroke="#fff" strokeOpacity={0.4} />
                     <T x={24} y={b.y + 17} size={16} color="#fff" weight={700}>{b.n}</T>
-                    <T x={14 + b.w + 10} y={b.y + 17} size={16} color="#E5E7EB" weight={600}>{b.m}</T>
+                    <T x={14 + b.w + 10} y={b.y + 17} size={16} color="#E5E7EB" weight={600}><Count text={b.m} delayMs={800} ms={700} /></T>
                 </g>
             ))}
-            <T x={470} y={410} size={36} color={C.noSoft} weight={700} display>+3,4%</T>
-            <T x={470} y={432} size={16} color={C.muted} weight={500}>no Yo-Yo IR1, não +15%</T>
+            <SvgKeyFact color={C.no} delay={1.0}>
+                <T x={470} y={410} size={36} color={C.noSoft} weight={700} display><Count text="+3,4%" delayMs={900} ms={800} /></T>
+            </SvgKeyFact>
         </motion.g>
+        <Ord at={1.15}>
+            <T x={470} y={432} size={16} color={C.muted} weight={500}>no Yo-Yo IR1, não +15%</T>
+        </Ord>
     </g>
 );

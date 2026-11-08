@@ -70,12 +70,19 @@ export const Meter = ({ title, range, color, delay = 0 }: { title: string; range
 };
 
 
-export const Seal = ({ c, size = 116, delay = 0.9 }: { c: CaseVerdict; size?: number; delay?: number }) => {
+/** Selo do veredito. Com `keyFact`, ao pousar ganha o destaque curto do dado-chave (anel na cor do caso que se abre e some). */
+export const Seal = ({ c, size = 116, delay = 0.9, keyFact = false }: { c: CaseVerdict; size?: number; delay?: number; keyFact?: boolean }) => {
     const reduce = useReducedMotion();
     const [a, b] = SEAL[c.id];
     return (
-        <motion.svg viewBox="0 0 120 120" width={size} height={size} aria-label={`${a} ${b}`} role="img"
+        <motion.svg viewBox="0 0 120 120" width={size} height={size} aria-label={`${a} ${b}`} role="img" style={{ overflow: 'visible' }}
             initial={reduce ? false : { opacity: 0, scale: 1.6, rotate: -30 }} animate={{ opacity: 1, scale: 1, rotate: -12 }} transition={{ delay, duration: 0.45, ease: [0.34, 1.5, 0.5, 1] }}>
+            {keyFact && !reduce && (
+                <motion.circle cx={60} cy={60} r={56} fill="none" stroke={c.color} strokeWidth={4}
+                    style={{ transformBox: 'fill-box', transformOrigin: 'center', filter: `drop-shadow(0 0 10px ${c.color})` }}
+                    initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: [0, 0.95, 0], scale: [0.9, 1.08, 1.3] }}
+                    transition={{ delay: delay + 0.4, duration: 1.1, ease: 'easeOut' }} />
+            )}
             <circle cx={60} cy={60} r={56} fill={`${c.color}22`} stroke={c.color} strokeWidth={3} />
             <circle cx={60} cy={60} r={48} fill="none" stroke={c.color} strokeWidth={1.5} strokeDasharray="4 4" />
             <SvgText x={60} y={57} text={a} anchor="middle" size={16} color="#fff" weight={800} />

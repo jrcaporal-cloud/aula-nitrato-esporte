@@ -1,11 +1,14 @@
 import { br } from '../kit/format';
 import { C } from '../kit/palette';
 import { SvgText } from '../kit/ui';
+import { NUMBER_DELAY_MS } from './countText';
+import { SvgCount, SvgKeyFact } from './beat';
 import type { ForestGroup, MetaRow } from './forest.content';
 
 /**
  * Floresta de meta-análises (viewBox 740 × 360, escala 1:1). As linhas ficam sempre no mesmo lugar;
  * as ainda não reveladas apagam, as fora de foco esmaecem. Faixa cinza = tamanho de efeito trivial (< 0,2).
+ * As linhas em foco entram de cima para baixo e o número de cada uma sobe; `hit` destaca o dado-chave do passo.
  */
 export const MW = 740;
 export const MH = 360;
@@ -25,10 +28,17 @@ interface Props {
     rows: readonly MetaRow[];
     shown: readonly ForestGroup[];
     focus: readonly ForestGroup[];
+    /** Linha (id) do dado-chave do passo. */
+    hit?: string;
 }
 
-export const MetaForest = ({ rows, shown, focus }: Props) => {
+/** Atraso (s) entre as linhas em foco, de cima para baixo. */
+const ROW_GAP = 0.08;
+
+export const MetaForest = ({ rows, shown, focus, hit }: Props) => {
     const axisY = TOP + ROW_H * rows.length + 4;
+    const focusRows = rows.filter(r => focus.includes(r.group)).map(r => r.id);
+    const focusKey = focus.join('-');
     return (
         <svg viewBox={`0 0 ${MW} ${MH}`} width={MW} height={MH} role="img" aria-label="Meta-análises do nitrato no desempenho de resistência">
             <rect x={sx(DOMAIN[0])} y={TOP - 8} width={sx(0.2) - sx(DOMAIN[0])} height={axisY - TOP + 8} fill={C.placebo} fillOpacity={0.16} />
@@ -48,8 +58,14 @@ export const MetaForest = ({ rows, shown, focus }: Props) => {
                 const dim = focus.length > 0 && !focus.includes(r.group);
                 const has = r.est !== undefined && r.lo !== undefined && r.hi !== undefined;
                 const right = has ? `${f2(r.est!)} (${f2(r.lo!)} a ${f2(r.hi!)})` : '';
+                const rank = focusRows.indexOf(r.id);
+                const lag = Math.max(rank, 0) * ROW_GAP;
+                const value = rank >= 0
+                    ? <SvgCount key={`${r.id}-${focusKey}`} x={MW} y={cy + 6} text={right} size={17} weight={700} anchor="end" color={r.color}
+                        count={{ delayMs: NUMBER_DELAY_MS + lag * 1000 }} />
+                    : <SvgText x={MW} y={cy + 6} text={right} size={17} weight={700} anchor="end" color={r.color} />;
                 return (
-                    <g key={r.id} style={{ opacity: visible ? (dim ? 0.3 : 1) : 0, transition: 'opacity 0.45s' }}>
+                    <g key={r.id} style={{ opacity: visible ? (dim ? 0.3 : 1) : 0, transition: `opacity 0.45s ${lag}s` }}>
                         <SvgText x={0} y={cy - 2} text={r.label} size={17} weight={700} color={r.group === 'geral' ? '#fff' : '#E5E7EB'} />
                         <SvgText x={0} y={cy + 15} text={r.sub} size={16} weight={400} color={C.muted} />
                         {has ? (
@@ -57,7 +73,7 @@ export const MetaForest = ({ rows, shown, focus }: Props) => {
                                 <line x1={sx(r.lo!)} x2={sx(r.hi!)} y1={cy} y2={cy} stroke={r.color} strokeWidth={3} strokeLinecap="round" />
                                 <polygon points={`${sx(r.lo!)},${cy} ${sx(r.est!)},${cy - 10} ${sx(r.hi!)},${cy} ${sx(r.est!)},${cy + 10}`}
                                     fill={r.color} fillOpacity={0.9} stroke="#fff" strokeOpacity={0.7} />
-                                <SvgText x={MW} y={cy + 6} text={right} size={17} weight={700} anchor="end" color={r.color} />
+                                {hit === r.id ? <SvgKeyFact key={focusKey} color={r.color} delay={0.16 + lag}>{value}</SvgKeyFact> : value}
                             </>
                         ) : (
                             <SvgText x={(X0 + X1) / 2} y={cy + 6} text={r.text ?? ''} size={16} weight={600} anchor="middle" color={C.muted} />

@@ -4,6 +4,8 @@ import { VIS_H, VIS_W } from './ui';
 import { Person } from './arte/figures';
 import { T } from './arte/text';
 import { MEN, WOMEN } from './SexVisuals';
+import { REVEAL_GAP } from '../kit/countUp';
+import { Count, SvgKeyFact } from './countText';
 
 /** Passos 3 e 4 do SexGapSim. Caixa 672 × 440. */
 
@@ -37,7 +39,9 @@ export const WomenInterval = () => (
             <path d={`M${AX(-0.126)} 204V246M${AX(0.358)} 204V246`} stroke="#fff" strokeWidth={2.6} strokeLinecap="round" />
             <circle cx={AX(0.116)} cy={225} r={12} fill={WOMEN} stroke="#fff" strokeWidth={2.6} />
         </motion.g>
-        <T x={AX(0.116)} y={274} size={16} color="#E5E7EB" weight={600} anchor="middle">d = 0,116 (−0,126 a 0,358)</T>
+        <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 + REVEAL_GAP, duration: 0.4 }}>
+            <T x={AX(0.116)} y={274} size={16} color="#E5E7EB" weight={600} anchor="middle">d = <Count text="0,116" delayMs={(0.5 + REVEAL_GAP) * 1000} ms={600} /> (−0,126 a 0,358)</T>
+        </motion.g>
 
         <line x1={80} x2={620} y1={300} y2={300} stroke="rgba(255,255,255,0.3)" />
         {[-0.4, -0.2, 0, 0.2, 0.4, 0.6].map(t => (
@@ -47,11 +51,15 @@ export const WomenInterval = () => (
         <T x={620} y={352} size={16} color={C.muted} weight={500} anchor="end">a favor →</T>
 
         <motion.g initial={{ opacity: 0, scale: 1.5, rotate: -10 }} animate={{ opacity: 1, scale: 1, rotate: -4 }} transition={{ delay: 1, type: 'spring', stiffness: 220, damping: 14 }} style={{ transformBox: 'fill-box', transformOrigin: 'center' }}>
-            <rect x={30} y={374} width={290} height={50} rx={10} fill="rgba(251,191,36,0.1)" stroke={C.nitrite} strokeWidth={3} />
-            <T x={175} y={407} size={24} color={C.nitrite} weight={700} anchor="middle" display>“provavelmente espúria”</T>
+            <SvgKeyFact color={C.nitrite} delay={1.25}>
+                <rect x={30} y={374} width={290} height={50} rx={10} fill="rgba(251,191,36,0.1)" stroke={C.nitrite} strokeWidth={3} />
+                <T x={175} y={407} size={24} color={C.nitrite} weight={700} anchor="middle" display>“provavelmente espúria”</T>
+            </SvgKeyFact>
         </motion.g>
-        <T x={344} y={394} size={16} color="#E5E7EB" weight={500}>o intervalo contém o zero</T>
-        <T x={344} y={414} size={16} color="#E5E7EB" weight={500}>e o efeito geral</T>
+        <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 + REVEAL_GAP, duration: 0.4 }}>
+            <T x={344} y={394} size={16} color="#E5E7EB" weight={500}>o intervalo contém o zero</T>
+            <T x={344} y={414} size={16} color="#E5E7EB" weight={500}>e o efeito geral</T>
+        </motion.g>
     </svg>
 );
 
@@ -101,7 +109,9 @@ export const DesignedTrial = () => (
                         )}
                         {i === 1 && <CycleRing cx={cx} cy={178} lit={[0, 1]} />}
                         {i === 2 && <CycleRing cx={cx} cy={178} lit={[0]} />}
-                        {c.res.map((l, j) => <T key={l} x={cx} y={300 + 21 * j} size={16} color="#E5E7EB" weight={500} anchor="middle">{l}</T>)}
+                        <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 * i + 2 * REVEAL_GAP, duration: 0.4 }}>
+                            {c.res.map((l, j) => <T key={l} x={cx} y={300 + 21 * j} size={16} color="#E5E7EB" weight={500} anchor="middle">{l}</T>)}
+                        </motion.g>
                     </motion.g>
                 );
             })}

@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import { C } from '../kit/palette';
 import { VIS_W } from './ui';
 import { T } from './arte/text';
+import { Count, SvgKeyFact } from './countText';
+import { Ord } from './svgOrderA';
 
 /** Quadros dos passos 1 a 3 do CrossoverSim (abaixo do cronograma). Coordenadas absolutas na caixa 672 × 440. */
 
@@ -59,8 +61,16 @@ export const DesignPanel = () => (
                     {i === 0 && <Calendar cx={cx} cy={296} />}
                     {i === 1 && <NoRinse cx={cx} cy={292} />}
                     {i === 2 && <Ring cx={cx} cy={292} />}
-                    <T x={cx} y={356} size={32} color={t.c} weight={700} anchor="middle" display>{t.n}</T>
-                    {t.lines.map((l, j) => <T key={l} x={cx} y={382 + 19 * j} size={16} color={j === 0 ? '#fff' : C.muted} weight={j === 0 ? 700 : 500} anchor="middle">{l}</T>)}
+                    <Ord at={0.12 * i + 0.16}>
+                        {i === 0 ? (
+                            <SvgKeyFact color={C.nitrite} delay={0.4}>
+                                <T x={cx} y={356} size={32} color={t.c} weight={700} anchor="middle" display><Count text={t.n} delayMs={160} ms={700} /></T>
+                            </SvgKeyFact>
+                        ) : <T x={cx} y={356} size={32} color={t.c} weight={700} anchor="middle" display><Count text={t.n} delayMs={120 * i + 160} ms={700} /></T>}
+                    </Ord>
+                    <Ord at={0.12 * i + 0.32}>
+                        {t.lines.map((l, j) => <T key={l} x={cx} y={382 + 19 * j} size={16} color={j === 0 ? '#fff' : C.muted} weight={j === 0 ? 700 : 500} anchor="middle">{l}</T>)}
+                    </Ord>
                 </motion.g>
             );
         })}
@@ -90,17 +100,23 @@ export const LearningPanel = ({ reduce }: { reduce: boolean }) => (
         <defs><linearGradient id="xo-learn" gradientUnits="userSpaceOnUse" x1={70} x2={340} y1={0} y2={0}><stop offset="0" stopColor={C.nitrite} /><stop offset="0.5" stopColor={C.nitrite} /><stop offset="1" stopColor={C.placebo} /></linearGradient></defs>
         {POINTS.map(([x, y], i) => <circle key={i} cx={x} cy={y} r={i === 1 ? 10 : 7} fill={i < 2 ? C.nitrite : C.placebo} stroke="#fff" strokeWidth={2} />)}
         <Gift cx={96} cy={290} />
-        <T x={130} y={284} size={28} color={C.nitrite} weight={700} display>+1,2%</T>
-        <T x={130} y={306} size={16} color={C.nitriteSoft} weight={600}>1ª → 2ª tentativa</T>
-        <T x={296} y={286} size={16} color="#E5E7EB" weight={600} anchor="middle">seguintes:</T>
-        <T x={296} y={308} size={19} color="#E5E7EB" weight={700} anchor="middle" display>+0,2%</T>
+        <Ord order={1}>
+            <SvgKeyFact color={C.nitrite} delay={0.4}>
+                <T x={130} y={284} size={28} color={C.nitrite} weight={700} display><Count text="+1,2%" /></T>
+            </SvgKeyFact>
+            <T x={296} y={308} size={19} color="#E5E7EB" weight={700} anchor="middle" display><Count text="+0,2%" /></T>
+        </Ord>
+        <Ord order={2}>
+            <T x={130} y={306} size={16} color={C.nitriteSoft} weight={600}>1ª → 2ª tentativa</T>
+            <T x={296} y={286} size={16} color="#E5E7EB" weight={600} anchor="middle">seguintes:</T>
+        </Ord>
 
         <rect x={440} y={262} width={218} height={168} rx={14} fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.14)" />
         <T x={549} y={288} size={16} color="#fff" weight={700} anchor="middle">erro típico</T>
         {[{ x: 478, h: 78, c: C.nitrite, n: '1,3×', t: '1ª → 2ª' }, { x: 564, h: 60, c: C.placebo, n: '1×', t: 'seguintes' }].map((b, i) => (
             <motion.g key={b.t} initial={{ opacity: 0, scaleY: 0.3 }} animate={{ opacity: 1, scaleY: 1 }} transition={{ delay: 0.5 + 0.15 * i }} style={{ transformBox: 'fill-box', transformOrigin: 'bottom' }}>
                 <rect x={b.x} y={400 - b.h} width={58} height={b.h} rx={8} fill={b.c} fillOpacity={0.85} />
-                <T x={b.x + 29} y={394 - b.h} size={20} color="#fff" weight={700} anchor="middle" display>{b.n}</T>
+                <T x={b.x + 29} y={394 - b.h} size={20} color="#fff" weight={700} anchor="middle" display><Count text={b.n} delayMs={500 + 150 * i} ms={600} /></T>
             </motion.g>
         ))}
         <T x={507} y={422} size={16} color="#E5E7EB" weight={600} anchor="middle">1ª → 2ª</T>
@@ -131,13 +147,15 @@ export const OrderPanel = () => (
                 <T x={14} y={r.y + 6} size={16} color="#E5E7EB" weight={600}>{r.label}</T>
                 <motion.rect x={r.v > 0 ? X0 : X0 + r.v * U} y={r.y - 13} width={Math.abs(r.v) * U} height={26} rx={7} fill={r.c} fillOpacity={0.8} stroke="#fff" strokeOpacity={0.5}
                     initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.2 * i + 0.1, duration: 0.5 }} style={{ transformBox: 'fill-box', transformOrigin: r.v > 0 ? 'left' : 'right' }} />
-                <T x={X0 + r.v * U + (r.v > 0 ? 10 : -10)} y={r.y + 6} size={16} color={r.c === C.risk ? C.risk : C.nitrateSoft} weight={700} anchor={r.v > 0 ? 'start' : 'end'}>{r.note}</T>
+                <T x={X0 + r.v * U + (r.v > 0 ? 10 : -10)} y={r.y + 6} size={16} color={r.c === C.risk ? C.risk : C.nitrateSoft} weight={700} anchor={r.v > 0 ? 'start' : 'end'}><Count text={r.note} delayMs={200 * i + 100} ms={500} /></T>
             </motion.g>
         ))}
         <motion.g initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
             <T x={14} y={414} size={16} color={C.noSoft} weight={700}>média da ordem sorteada</T>
-            <polygon points={`${X0 - 14},408 ${X0},394 ${X0 + 14},408 ${X0},422`} fill={C.no} stroke="#fff" strokeWidth={1.5} />
-            <T x={X0 + 24} y={414} size={16} color={C.noSoft} weight={700}>zero</T>
+            <SvgKeyFact color={C.no} delay={1.0}>
+                <polygon points={`${X0 - 14},408 ${X0},394 ${X0 + 14},408 ${X0},422`} fill={C.no} stroke="#fff" strokeWidth={1.5} />
+                <T x={X0 + 24} y={414} size={16} color={C.noSoft} weight={700}>zero</T>
+            </SvgKeyFact>
         </motion.g>
     </g>
 );

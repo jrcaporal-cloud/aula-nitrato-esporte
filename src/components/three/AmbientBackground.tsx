@@ -5,6 +5,7 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { useStore } from '../../store/useStore';
 import { ANIMATED_BACKGROUND_SLIDES } from '../deck/slides';
 import { rng } from './shared/math';
+import { ActTint } from '../deck/motion/ActTint';
 
 const NITRATE_COUNT = 40;
 const NITRITE_COUNT = 18;
@@ -156,6 +157,7 @@ export const AmbientBackground = () => {
     const isHero = slide === 0;
 
     return (
+        <>
         <div
             aria-hidden
             className="absolute inset-0 z-0 transition-opacity duration-1000"
@@ -180,5 +182,8 @@ export const AmbientBackground = () => {
             {/* Vinheta: garante contraste do texto sobre o fundo animado. */}
             <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(7,5,11,0.55)_60%,rgba(7,5,11,0.92)_100%)]" />
         </div>
+        {/* Cor do ato (I magenta … VI verde): camada CSS por cima do canvas, troca mesmo com o fundo congelado. */}
+        <ActTint />
+        </>
     );
 };

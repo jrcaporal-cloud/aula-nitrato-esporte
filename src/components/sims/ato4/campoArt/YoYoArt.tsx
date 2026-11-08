@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import { C } from '../../kit/palette';
 import { SvgText } from '../../kit/ui';
 import type { YoYoRun } from '../teamContent';
+import { useCountText } from '../../ato3/countText';
+import { SvgKeyFact, SvgReveal } from '../../ato3/beat';
 import { Cone, Turf } from './Pitch';
 
 /**
@@ -27,6 +29,13 @@ const laneX = (d: number) => {
     return X0 + (leg % 2 === 0 ? f : 1 - f) * (X1 - X0);
 };
 const barW = (m: number) => (m / BAR_MAX) * (BAR1 - BAR0);
+
+/** O % do artigo, em letra de placar: sobe como contador e termina no texto do dossiê. */
+const Delta = ({ text }: { text: string }) => (
+    <text x={566} y={330} textAnchor="middle" fontSize={78} fontWeight={700} fill={C.nitrateSoft} style={{ fontFamily: 'var(--font-display)', fontVariantNumeric: 'tabular-nums' }}>
+        {useCountText(text)}
+    </text>
+);
 
 interface Props {
     run: YoYoRun;
@@ -102,10 +111,16 @@ export const YoYoArt = ({ run, dose, reduce }: Props) => {
                 );
             })}
             <line x1={BAR0 + barW(run.placebo)} x2={BAR0 + barW(run.placebo)} y1={290} y2={386} stroke="#CBD5E1" strokeDasharray="3 4" />
-            <SvgText x={24} y={420} text={`+${run.gap} m (cálculo): a diferença no fim do teste`} size={16} weight={600} color="#fff" />
-            <text x={566} y={330} textAnchor="middle" fontSize={78} fontWeight={700} fill={C.nitrateSoft} style={{ fontFamily: 'var(--font-display)' }}>{run.delta}</text>
-            <SvgText x={566} y={362} text="distância total," size={16} weight={500} anchor="middle" color={C.muted} />
-            <SvgText x={566} y={384} text="beterraba vs placebo" size={16} weight={500} anchor="middle" color={C.muted} />
+            <SvgReveal order={2}>
+                <SvgText x={24} y={420} text={`+${run.gap} m (cálculo): a diferença no fim do teste`} size={16} weight={600} color="#fff" />
+                <SvgText x={566} y={362} text="distância total," size={16} weight={500} anchor="middle" color={C.muted} />
+                <SvgText x={566} y={384} text="beterraba vs placebo" size={16} weight={500} anchor="middle" color={C.muted} />
+            </SvgReveal>
+            <SvgReveal order={1}>
+                <SvgKeyFact color={C.nitrate}>
+                    <Delta text={run.delta} />
+                </SvgKeyFact>
+            </SvgReveal>
         </svg>
     );
 };

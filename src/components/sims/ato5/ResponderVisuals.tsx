@@ -4,6 +4,12 @@ import { br, signed } from '../kit/format';
 import { SvgText } from '../kit/ui';
 import { RESPONDER_CUT, TRUE_MEAN } from './responderModel';
 import { VIS_H, VIS_W } from './ui';
+import { REVEAL_GAP } from '../kit/countUp';
+import { T } from './arte/text';
+import { Count, SvgKeyFact } from './countText';
+
+/** Entrada de legenda nova (ordem 2 do ritmo). */
+const legendIn = (delay = 2 * REVEAL_GAP) => ({ initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { delay, duration: 0.4 } });
 
 /** Desenhos do ResponderSim. Caixa 672 × 440. */
 
@@ -81,10 +87,10 @@ export const OneWorld = ({ values, colored, title, sub, stats, showLiterature = 
             <line x1={64} x2={624} y1={y(TRUE_MEAN)} y2={y(TRUE_MEAN)} stroke={C.nitrite} strokeWidth={2} strokeDasharray="6 5" />
             <SvgText x={70} y={y(TRUE_MEAN) - 8} text="verdade +4,4%" size={16} color={C.nitrite} weight={700} />
             {showLiterature && [-9.6, 26.8].map(v => (
-                <g key={v}>
+                <motion.g key={v} {...legendIn()}>
                     <line x1={64} x2={624} y1={y(v)} y2={y(v)} stroke={C.nitriteSoft} strokeOpacity={0.55} strokeDasharray="2 6" strokeWidth={2} />
                     <SvgText x={628} y={y(v) + (v < 0 ? 20 : -6)} text={`Coggan: ${signed(v, 1)}%`} anchor="end" size={16} color={C.nitriteSoft} weight={600} />
-                </g>
+                </motion.g>
             ))}
             {stats && (
                 <g>
@@ -108,9 +114,11 @@ interface WorldPanelProps {
     sdSupp: number;
     sdPlac: number;
     sdTrue: number;
+    /** Destaque do passo (só um painel). */
+    keyFact?: boolean;
 }
 
-const WorldPanel = ({ x0, title, tone, supp, plac, revealed, sdSupp, sdPlac, sdTrue }: WorldPanelProps) => (
+const WorldPanel = ({ x0, title, tone, supp, plac, revealed, sdSupp, sdPlac, sdTrue, keyFact = false }: WorldPanelProps) => (
     <g>
         <rect x={x0} y={12} width={322} height={416} rx={14} fill="rgba(255,255,255,0.03)" stroke={tone} strokeOpacity={0.5} />
         <SvgText x={x0 + 161} y={42} text={title} anchor="middle" size={19} color={tone} weight={700} />
@@ -121,10 +129,18 @@ const WorldPanel = ({ x0, title, tone, supp, plac, revealed, sdSupp, sdPlac, sdT
                 <SvgText x={x0 + 14} y={226} text="braço placebo (efeito real zero)" size={16} color="#E5E7EB" weight={600} />
                 <PersonBars values={plac} colored={false} x0={x0 + 34} width={274} top={242} height={104} lo={-16} hi={32} headR={5} ticks={[0]} showTicks={false} />
                 <line x1={x0 + 14} x2={x0 + 308} y1={354} y2={354} stroke="rgba(255,255,255,0.15)" />
-                <SvgText x={x0 + 14} y={378} text="DP das mudanças" size={16} color={C.muted} weight={500} />
-                <SvgText x={x0 + 308} y={378} text={`${br(sdSupp, 1)} × ${br(sdPlac, 1)}`} anchor="end" size={19} color="#fff" weight={700} />
-                <SvgText x={x0 + 14} y={408} text="DP da resposta verdadeira" size={16} color={C.muted} weight={500} />
-                <SvgText x={x0 + 308} y={408} text={`${br(sdTrue, 1)}%`} anchor="end" size={22} color={tone} weight={700} />
+                <motion.g {...legendIn()}>
+                    <SvgText x={x0 + 14} y={378} text="DP das mudanças" size={16} color={C.muted} weight={500} />
+                    <SvgText x={x0 + 14} y={408} text="DP da resposta verdadeira" size={16} color={C.muted} weight={500} />
+                </motion.g>
+                <motion.g {...legendIn(REVEAL_GAP)}>
+                    <T x={x0 + 308} y={378} anchor="end" size={19} color="#fff" weight={700}><Count text={`${br(sdSupp, 1)} × ${br(sdPlac, 1)}`} all /></T>
+                    {keyFact ? (
+                        <SvgKeyFact color={tone}>
+                            <T x={x0 + 308} y={408} anchor="end" size={22} color={tone} weight={700}><Count text={`${br(sdTrue, 1)}%`} /></T>
+                        </SvgKeyFact>
+                    ) : <T x={x0 + 308} y={408} anchor="end" size={22} color={tone} weight={700}><Count text={`${br(sdTrue, 1)}%`} /></T>}
+                </motion.g>
             </g>
         )}
     </g>
@@ -136,7 +152,7 @@ export interface WorldData { supp: number[]; plac: number[]; sdSupp: number; sdP
 export const TwoWorlds = ({ half, all, revealed }: { half: WorldData; all: WorldData; revealed: boolean }) => (
     <svg width={VIS_W} height={VIS_H} viewBox={`0 0 ${VIS_W} ${VIS_H}`} role="img" aria-label="Dois mundos com o mesmo gráfico">
         <WorldPanel x0={14} title={revealed ? 'Metade responde' : 'Mundo 1'} tone={C.nitrate} supp={half.supp} plac={half.plac} revealed={revealed}
-            sdSupp={half.sdSupp} sdPlac={half.sdPlac} sdTrue={half.sdTrue} />
+            sdSupp={half.sdSupp} sdPlac={half.sdPlac} sdTrue={half.sdTrue} keyFact />
         <WorldPanel x0={346} title={revealed ? 'Todos iguais' : 'Mundo 2'} tone={C.no} supp={all.supp} plac={all.plac} revealed={revealed}
             sdSupp={all.sdSupp} sdPlac={all.sdPlac} sdTrue={all.sdTrue} />
     </svg>
@@ -152,8 +168,10 @@ export const MarkerNoise = () => {
                 <motion.circle key={i} cx={36 + (i % 4) * 54} cy={86 + Math.floor(i / 4) * 54} r={19} fill={i < 11 ? C.no : C.placebo} fillOpacity={i < 11 ? 0.9 : 0.4}
                     stroke="#fff" strokeOpacity={0.5} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05 * i }} />
             ))}
-            <SvgText x={14} y={368} text="11 de 20 iguais" size={18} color={C.noSoft} weight={700} />
-            <SvgText x={14} y={392} text="entre os métodos" size={16} color={C.muted} weight={500} />
+            <T x={14} y={368} size={18} color={C.noSoft} weight={700}><Count text="11 de 20 iguais" delayMs={600} ms={600} /></T>
+            <motion.g {...legendIn(0.6 + REVEAL_GAP)}>
+                <SvgText x={14} y={392} text="entre os métodos" size={16} color={C.muted} weight={500} />
+            </motion.g>
             <line x1={262} x2={262} y1={20} y2={VIS_H - 20} stroke="rgba(255,255,255,0.12)" />
 
             <SvgText x={290} y={32} text="Nitrito plasmático" size={18} color="#fff" weight={700} />
@@ -163,15 +181,17 @@ export const MarkerNoise = () => {
             <motion.g initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, duration: 0.6 }}>
                 <rect x={sx(-7.4)} y={226} width={sx(1324) - sx(-7.4)} height={24} rx={12} fill={C.nitrite} fillOpacity={0.85} />
                 <SvgText x={sx(0)} y={212} text="mesma pessoa, de semana a semana" size={16} color={C.nitriteSoft} weight={700} />
-                <SvgText x={sx(-7.4)} y={306} text="−7,4%" anchor="middle" size={17} color="#fff" weight={700} />
-                <SvgText x={sx(1324)} y={306} text="+1.324%" anchor="middle" size={17} color="#fff" weight={700} />
+                <T x={sx(-7.4)} y={306} anchor="middle" size={17} color="#fff" weight={700}><Count text="−7,4%" delayMs={400 + REVEAL_GAP * 1000} ms={700} /></T>
+                <SvgKeyFact color={C.nitrite} delay={0.4 + REVEAL_GAP}>
+                    <T x={sx(1324)} y={306} anchor="middle" size={17} color="#fff" weight={700}><Count text="+1.324%" delayMs={400 + REVEAL_GAP * 1000} ms={700} /></T>
+                </SvgKeyFact>
             </motion.g>
             {[{ v: 400, t: 'média, semana 1: +400%', y: 120 }, { v: 140, t: 'média, semana 12: +140%', y: 160 }].map(m => (
-                <g key={m.v}>
+                <motion.g key={m.v} {...legendIn(0.4 + 2 * REVEAL_GAP)}>
                     <line x1={sx(m.v)} x2={sx(m.v)} y1={m.y + 8} y2={250} stroke={C.no} strokeDasharray="4 4" />
                     <circle cx={sx(m.v)} cy={m.y} r={8} fill={C.no} stroke="#fff" strokeWidth={1.5} />
                     <SvgText x={sx(m.v) + 14} y={m.y + 6} text={m.t} size={16} color={C.noSoft} weight={700} />
-                </g>
+                </motion.g>
             ))}
             <SvgText x={290} y={VIS_H - 16} text="resumo de congresso · n = 6 no braço ativo" size={16} color={C.nitrite} weight={600} />
         </svg>

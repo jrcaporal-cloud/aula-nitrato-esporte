@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { C } from '../../kit/palette';
 import { SvgText } from '../../kit/ui';
+import { SvgKeyFact, SvgReveal } from '../beat';
 import { Athlete, Stadium } from './Stage';
 
 /** Passo 3 — no pódio: estádio, holofote, três atletas e, ao lado, o comunicado de 2012 com o carimbo RELATO. */
@@ -46,10 +47,14 @@ export const PodiumArt = ({ reduce }: { reduce: boolean }) => (
                 );
             })}
             <g transform="rotate(-8 935 294)">
-                <rect x={850} y={270} width={170} height={48} rx={8} fill="none" stroke={C.risk} strokeWidth={4} />
-                <text x={935} y={304} textAnchor="middle" fontSize={28} fontWeight={800} fill={C.risk} letterSpacing={3} style={{ fontFamily: 'var(--font-display)' }}>RELATO</text>
+                <SvgKeyFact color={C.risk} delay={reduce ? 0 : 1.0}>
+                    <rect x={850} y={270} width={170} height={48} rx={8} fill="none" stroke={C.risk} strokeWidth={4} />
+                    <text x={935} y={304} textAnchor="middle" fontSize={28} fontWeight={800} fill={C.risk} letterSpacing={3} style={{ fontFamily: 'var(--font-display)' }}>RELATO</text>
+                </SvgKeyFact>
             </g>
         </motion.g>
-        <SvgText x={520} y={354} text="Desenho esquemático. O comunicado não traz contagem independente." size={16} weight={500} color={C.muted} />
+        <SvgReveal order={2} delay={0.6}>
+            <SvgText x={520} y={354} text="Desenho esquemático. O comunicado não traz contagem independente." size={16} weight={500} color={C.muted} />
+        </SvgReveal>
     </g>
 );

@@ -5,7 +5,7 @@ import { useTween } from './kit/useTween';
 import { FiberScene, RatNotes } from './ato2a/FiberScene';
 import { ReservoirBars } from './ato2a/ReservoirBars';
 import { BARS_BY_MODE, RESERVOIR_STEPS } from './ato2a/reservoir.content';
-import { BigStat, IllustrativeChip, Narration, SimFrame, SourceLine } from './ato2a/ui';
+import { IllustrativeChip, Narration, SimFrame, SourceLine, StatList } from './ato2a/ui';
 
 /**
  * "O Músculo Guarda Nitrato" (Ato II). Músculo × plasma: nitrato ~4× e nitrito ~29× em repouso, o que a dose
@@ -40,10 +40,10 @@ const MuscleReservoirSim = () => {
             <div className="flex min-w-0 flex-1 flex-col gap-2">
                 <Panel className="flex h-[210px] flex-col gap-2 p-3.5">
                     <Narration key={step} headline={plan.headline}>{plan.text}</Narration>
-                    <SourceLine>{plan.source}</SourceLine>
+                    <SourceLine key={`src-${step}`}>{plan.source}</SourceLine>
                 </Panel>
-                <Panel className="flex min-h-0 flex-1 flex-col justify-center gap-3 p-4">
-                    {plan.stats.map(s => <BigStat key={s.label} value={s.value} label={s.label} color={s.color} size={plan.stats.length > 2 ? 30 : 38} />)}
+                <Panel key={step} className="flex min-h-0 flex-1 flex-col justify-center gap-3 p-4">
+                    <StatList items={plan.stats} size={plan.stats.length > 2 ? 30 : 38} />
                 </Panel>
             </div>
         </SimFrame>

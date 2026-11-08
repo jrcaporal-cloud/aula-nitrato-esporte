@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { C } from '../../kit/palette';
 import { SvgText } from '../../kit/ui';
 import { Flag } from '../artKit/Figures';
+import { SvgCount, SvgKeyFact, SvgReveal } from '../beat';
 
 /** Passo 3 — os nulos: bandeiras cinzas na serra e, na pista, o IC95% de Arnold 2015 que não chega à linha de chegada (51 s). */
 
@@ -45,10 +46,14 @@ export const NullsArt = ({ reduce }: { reduce: boolean }) => (
             <line x1={sx(CI.lo)} x2={sx(CI.hi)} y1={TRACK_Y + 29} y2={TRACK_Y + 29} stroke={C.nitrate} strokeWidth={8} strokeLinecap="round" />
             <line x1={sx(CI.hi) + 6} x2={sx(CI.mid) - 6} y1={TRACK_Y + 29} y2={TRACK_Y + 29} stroke={C.risk} strokeWidth={3} strokeDasharray="3 6" strokeLinecap="round" />
             <rect x={sx(CI.est) - 12} y={TRACK_Y + 17} width={24} height={24} fill={C.nitrate} stroke="#fff" strokeWidth={2.5} />
-            <SvgText x={sx(CI.est)} y={TRACK_Y - 34} text={`+${CI.est} s (IC95% −60 a +38)`} size={19} weight={700} anchor="middle" color="#fff" />
+            <SvgKeyFact color={C.nitrate} delay={reduce ? 0 : 0.8}>
+                <SvgCount x={sx(CI.est)} y={TRACK_Y - 34} text={`+${CI.est} s (IC95% −60 a +38)`} size={19} weight={700} anchor="middle" color="#fff" count={{ delayMs: 500 }} />
+            </SvgKeyFact>
             <SvgText x={(sx(CI.hi) + sx(CI.mid)) / 2} y={TRACK_Y + 82} text="não chega" size={16} weight={700} anchor="middle" color={C.risk} />
         </motion.g>
-        <SvgText x={44} y={TRACK_Y + 112} text="melhora no 10 km com beterraba × placebo · TT 2862 × 2874 s (p = 0,6)" size={16} weight={500} color="#CBD5E1" />
-        <SvgText x={1056} y={TRACK_Y + 112} text="só 3 de 10 com melhora provável" size={16} weight={600} anchor="end" color={C.nitrateSoft} />
+        <SvgReveal order={2} delay={0.5}>
+            <SvgText x={44} y={TRACK_Y + 112} text="melhora no 10 km com beterraba × placebo · TT 2862 × 2874 s (p = 0,6)" size={16} weight={500} color="#CBD5E1" />
+            <SvgText x={1056} y={TRACK_Y + 112} text="só 3 de 10 com melhora provável" size={16} weight={600} anchor="end" color={C.nitrateSoft} />
+        </SvgReveal>
     </g>
 );
