@@ -1,0 +1,1 @@
+import{j as o}from"./vendor-react-xlEdjmNm.js";import{a as e}from"./rhythm-BAtEsix8.js";import{u as i,m as s}from"./vendor-motion-4xYHv2CD.js";const c=({order:a=1,at:r,children:t})=>i()??!1?o.jsx("g",{children:t}):o.jsx(s.g,{initial:{opacity:0,y:6},animate:{opacity:1,y:0},transition:{duration:.45,delay:r??a*e,ease:[.16,1,.3,1]},children:t});export{c as O};

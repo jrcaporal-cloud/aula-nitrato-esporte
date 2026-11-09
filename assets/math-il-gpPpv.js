@@ -1,0 +1,1 @@
+const n=s=>s<0?0:s>1?1:s,r=(s,t,o)=>n((s-t)/(o-t)),c=s=>s*s*(3-2*s),e=s=>s*s*s*(s*(s*6-15)+10),a=(s,t,o)=>s+(t-s)*o,l=s=>{let t=s%2147483647;return t<=0&&(t+=2147483646),()=>(t=t*16807%2147483647,(t-1)/2147483646)};export{r as a,e as b,n as c,a as l,l as r,c as s};

@@ -1,0 +1,1 @@
+import{j as n}from"./vendor-react-xlEdjmNm.js";import{u as a}from"./countFrame-CC_2wSBy.js";const m=({text:t,className:s,style:o,...r})=>n.jsx("span",{className:s,style:{fontVariantNumeric:"tabular-nums",...o},children:a(t,r)});export{m as C};

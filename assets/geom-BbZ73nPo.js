@@ -1,0 +1,1 @@
+const l=s=>s.map(([e,t],r)=>`${r===0?"M":"L"}${e.toFixed(1)} ${t.toFixed(1)}`).join(" "),i=(s,e,t,r=80)=>Array.from({length:r+1},(o,n)=>{const a=e+(t-e)*n/r;return[a,s(a)]}),m=s=>{let e=s>>>0;return()=>{e=e+1831565813>>>0;let t=e;return t=Math.imul(t^t>>>15,t|1),t^=t+Math.imul(t^t>>>7,t|61),((t^t>>>14)>>>0)/4294967296}};export{i as a,l,m as s};

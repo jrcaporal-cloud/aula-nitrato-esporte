@@ -1,0 +1,1 @@
+const a={rucula:"#6FB083",beterraba:"#C0266B",espinafre:"#3F8A5E",aipo:"#B5D98F"},o=["po","mista","conc","suco"],e={lia:["vale","testar"],tomas:["nada","na média"],bruno:["depende do","protocolo"],helena:["ganho","incerto"]};export{o as K,e as S,a as V};

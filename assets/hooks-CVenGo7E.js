@@ -1,0 +1,1 @@
+import{r}from"./vendor-react-xlEdjmNm.js";const i=(t,e=70)=>{const[s,n]=r.useState(!1);return r.useEffect(()=>{if(t)return;const o=window.setTimeout(()=>n(!0),e);return()=>window.clearTimeout(o)},[t,e]),s||t};export{i as u};
