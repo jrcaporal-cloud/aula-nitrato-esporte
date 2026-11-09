@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useThree } from '@react-three/fiber';
-import { DRAG_PX, pinOrRelease } from './selection';
+import { DRAG_PX, pinOrRelease, useSelection } from './selection';
 
 /*
  * Camada de clique dentro do Canvas: ponteiro subiu sem arrastar → fixa a estrutura armada na
@@ -38,6 +38,40 @@ export const PickLayer = () => {
             el.removeEventListener('pointercancel', onCancel);
         };
     }, [el]);
+
+    return null;
+};
+
+/**
+ * Cursor do canvas escrito direto no elemento (sem estado do React, sem re-render do modal no hover):
+ * mãozinha sobre uma estrutura ou com algo fixado, "pegar" no vazio e "agarrando" com o botão apertado.
+ */
+export const CursorSync = () => {
+    const get = useThree(s => s.get);
+
+    useEffect(() => {
+        // lido no efeito (não do retorno do hook): o estilo do elemento é escrito aqui
+        const el = get().gl.domElement;
+        let down = false;
+        const apply = () => {
+            const s = useSelection.getState();
+            el.style.cursor = down ? 'grabbing' : s.pin || s.hoverId ? 'pointer' : 'grab';
+        };
+        const onDown = (e: PointerEvent) => { if (e.button === 0) { down = true; apply(); } };
+        const onUp = () => { if (down) { down = false; apply(); } };
+        apply();
+        const unsub = useSelection.subscribe(apply);
+        el.addEventListener('pointerdown', onDown);
+        window.addEventListener('pointerup', onUp);
+        window.addEventListener('pointercancel', onUp);
+        return () => {
+            unsub();
+            el.removeEventListener('pointerdown', onDown);
+            window.removeEventListener('pointerup', onUp);
+            window.removeEventListener('pointercancel', onUp);
+            el.style.cursor = '';
+        };
+    }, [get]);
 
     return null;
 };

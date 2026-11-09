@@ -8,7 +8,7 @@ import { Dust } from './Dust';
 import type { ClockRef } from './clock';
 import { HumanStation } from './HumanStation';
 import { LimbStation } from './LimbStation';
-import { PickLayer } from './PickLayer';
+import { CursorSync, PickLayer } from './PickLayer';
 import { StationA } from './StationA';
 import { STATION_X } from './layout';
 import { SARCO_STEPS } from './steps';
@@ -72,6 +72,7 @@ const SceneImpl = ({ step, settled, recenterKey, reduced, onSettled, onReady, cl
             <OrbitControls makeDefault enablePan={false} enableDamping dampingFactor={0.08} minDistance={3} maxDistance={26} />
             <CameraDirector step={step} pose={data.pose} recenterKey={recenterKey} reduced={reduced} onSettled={onSettled} />
             <PickLayer />
+            <CursorSync />
             <ReadyProbe onReady={onReady} />
             <StationA clockRef={clockRef} showFibers={step === 2} />
             <LimbStation clockRef={clockRef} />

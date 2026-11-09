@@ -5,9 +5,9 @@ import type { ClockRef } from './clock';
 import { COL, condColor } from './colors';
 import { GEO } from './geoms';
 import { HEADS, stroke } from './heads';
-import { signals } from './kinetics';
 import { SARC, THICK_SITES, halfLen, type UnitSpec } from './layout';
-import { baseColor, paint, setGlow, slowTint, unitDim, unitIdle } from './look';
+import { baseColor, paint, setGlow, slowTint, unitDim, unitIdle, unitSignals } from './look';
+import { PICK } from './pick';
 import { noRaycast } from './points';
 import { useStructureBind } from './selection';
 
@@ -79,7 +79,7 @@ export const Filaments = ({ spec, clockRef }: Props) => {
     useFrame((state, dt) => {
         const c = clockRef.current;
         if (unitIdle(c, spec, state.camera.position.x)) return;
-        const sig = signals(c.step, spec.cond, spec.fiber, c.t);
+        const sig = unitSignals(c, spec);
         const dim = unitDim(c, spec, sig.fatigue);
         const tint = slowTint(c, spec);
         const h = halfLen(sig.act);
@@ -116,7 +116,8 @@ export const Filaments = ({ spec, clockRef }: Props) => {
         const tm = titin.current;
         if (tm) {
             const len = Math.max(h - SARC.thickHalf, 0.05);
-            THICK_SITES.forEach(([y, z], i) => {
+            for (let i = 0; i < THICK_SITES.length; i++) {
+                const [y, z] = THICK_SITES[i];
                 const a = i * 1.1;
                 for (let sd = 0; sd < 2; sd++) {
                     const sgn = sd === 0 ? 1 : -1;
@@ -124,7 +125,7 @@ export const Filaments = ({ spec, clockRef }: Props) => {
                     P.set(sgn * SARC.thickHalf, y + 0.075 * Math.cos(a), z + 0.075 * Math.sin(a));
                     tm.setMatrixAt(i * 2 + sd, M.compose(P, Q, S.set(len, 1, 1)));
                 }
-            });
+            }
             tm.instanceMatrix.needsUpdate = true;
         }
     });
@@ -132,8 +133,8 @@ export const Filaments = ({ spec, clockRef }: Props) => {
     const bindMyo = useStructureBind('miosina');
     return (
         <>
-            <instancedMesh ref={thick} args={[GEO.thick, kit.thickM, THICK_SITES.length]} frustumCulled={false} {...bindMyo} />
-            <instancedMesh ref={heads} args={[GEO.head, kit.headM, HEADS.length]} frustumCulled={false} {...bindMyo} />
+            <instancedMesh ref={thick} args={[GEO.thick, kit.thickM, THICK_SITES.length]} frustumCulled={false} {...bindMyo} raycast={PICK.thick} />
+            <instancedMesh ref={heads} args={[GEO.head, kit.headM, HEADS.length]} frustumCulled={false} raycast={noRaycast} />
             <instancedMesh ref={bridges} args={[GEO.bridge, kit.bridgeM, BRIDGES.length]} frustumCulled={false} raycast={noRaycast} />
             <instancedMesh ref={titin} args={[GEO.titin, kit.titinM, THICK_SITES.length * 2]} frustumCulled={false} raycast={noRaycast} />
             <mesh scale={[0.4, 0.92, 0.92]} raycast={noRaycast} rotation={[0, 0, Math.PI / 2]}>

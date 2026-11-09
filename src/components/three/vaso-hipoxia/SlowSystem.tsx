@@ -5,6 +5,7 @@ import { smooth } from '../shared/math';
 import { FiberBody } from './FiberBody';
 import { SHELL_CAP } from './geometry';
 import { CAP_X0, CAP_X1, SLOW_CAP_R, SLOW_CAP_Y, SLOW_FIB_R, SLOW_FIB_Y, SLOW_MITO, SLOW_MYOFIBRILS, SLOW_NUCLEI, WEDGE_CAP } from './layout';
+import { noRaycast } from './pick';
 import { RedCells } from './RedCells';
 import { makeShell, type ShellSpec } from './shellShader';
 import type { SimRef } from './types';
@@ -40,9 +41,9 @@ export const SlowSystem = ({ simRef }: { simRef: SimRef }) => {
             <FiberBody simRef={simRef} id="fibra-lenta" cy={SLOW_FIB_Y} r={SLOW_FIB_R} fibrils={SLOW_MYOFIBRILS} mito={SLOW_MITO} nuclei={SLOW_NUCLEI}
                 fibrilR={0.24} fade={fade} />
             <group position={[CCX, SLOW_CAP_Y, 0]}>
-                <mesh geometry={SHELL_CAP} material={mats.wall} scale={[CLEN, SLOW_CAP_R, SLOW_CAP_R]} raycast={() => undefined} />
-                <mesh geometry={SHELL_CAP} material={mats.lumen} scale={[CLEN, SLOW_CAP_R, SLOW_CAP_R]} renderOrder={2} raycast={() => undefined} />
-                <mesh geometry={SHELL_CAP} material={mats.glass} scale={[CLEN, SLOW_CAP_R, SLOW_CAP_R]} renderOrder={6} raycast={() => undefined} />
+                <mesh geometry={SHELL_CAP} material={mats.wall} scale={[CLEN, SLOW_CAP_R, SLOW_CAP_R]} raycast={noRaycast} />
+                <mesh geometry={SHELL_CAP} material={mats.lumen} scale={[CLEN, SLOW_CAP_R, SLOW_CAP_R]} renderOrder={2} raycast={noRaycast} />
+                <mesh geometry={SHELL_CAP} material={mats.glass} scale={[CLEN, SLOW_CAP_R, SLOW_CAP_R]} renderOrder={6} raycast={noRaycast} />
             </group>
             <RedCells simRef={simRef} poolKey="rbcB" size={0.24} />
         </group>

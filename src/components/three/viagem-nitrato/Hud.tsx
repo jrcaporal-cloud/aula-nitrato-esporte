@@ -30,29 +30,34 @@ export const Hud = ({ stateRef }: { stateRef: VnStateRef }) => {
 
     useEffect(() => {
         let raf = 0;
-        let last = '';
+        let lastH = Number.NaN;
+        let lastTxt = '';
         const tick = () => {
+            raf = requestAnimationFrame(tick);
             const h = stateRef.current.f.hours;
+            // relógio parado (etapa assentada e varrida): nada a escrever no DOM
+            if (Math.abs(h - lastH) < 1e-4) return;
+            lastH = h;
             const txt = hoursLabel(h);
-            if (txt !== last) {
-                last = txt;
+            if (txt !== lastTxt) {
+                lastTxt = txt;
                 if (clock.current) clock.current.textContent = txt;
             }
             if (cursor.current) cursor.current.style.left = `${pos(h) * 100}%`;
-            LANES.forEach((l, i) => {
+            for (let i = 0; i < LANES.length; i++) {
+                const l = LANES[i];
                 const el = lanes.current[i];
                 if (el) el.style.opacity = h >= l.from - 0.05 && h <= l.to + 0.25 ? '1' : '0.5';
                 const fill = fills.current[i];
                 if (fill) fill.style.width = `${Math.min(Math.max((h - l.from) / (l.to - l.from), 0), 1) * 100}%`;
-            });
-            raf = requestAnimationFrame(tick);
+            }
         };
         raf = requestAnimationFrame(tick);
         return () => cancelAnimationFrame(raf);
     }, [stateRef]);
 
     return (
-        <div className="flex items-stretch gap-5 rounded-2xl px-4 py-2.5 backdrop-blur-md" style={{ background: 'linear-gradient(180deg, rgba(22,12,30,0.88), rgba(10,6,14,0.9))', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)' }}>
+        <div className="flex items-stretch gap-5 rounded-2xl px-4 py-2.5" style={{ background: 'linear-gradient(180deg, rgba(22,12,30,0.92), rgba(10,6,14,0.94))', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 8px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)' }}>
             <div className="shrink-0 flex flex-col justify-center w-[104px]">
                 <span className="text-[14px] text-gray-400 leading-tight">Relógio da dose</span>
                 <span ref={clock} className="font-mono text-[28px] font-semibold text-white leading-tight tabular-nums">0,0 h</span>

@@ -17,6 +17,7 @@ import { bumpTexture } from './textures';
 const PYRAMIDS = 8;
 const NITRATE = new THREE.Color(C.nitrate);
 const BASE_EMI = new THREE.Color('#A87888');
+const CORTEX = new THREE.Color('#8A5468');
 
 /** Esfera unitária com o entalhe do hilo (lado +x). */
 const beanGeometry = (): THREE.BufferGeometry => {
@@ -85,7 +86,7 @@ export const Kidney = ({ stateRef }: { stateRef: VnStateRef }) => {
         if (cx) {
             cx.emissive.copy(BASE_EMI).lerp(NITRATE, hot * 0.55);
             cx.emissiveIntensity = (litRef.current ? 0.6 : 0.1 + 0.3 * k) + hot * 0.45;
-            cx.color.set('#8A5468').multiplyScalar(0.55 + 0.6 * k);
+            cx.color.copy(CORTEX).multiplyScalar(0.55 + 0.6 * k);
         }
         if (core) core.emissiveIntensity = 0.15 + 0.3 * k + hot * 0.5;
     });

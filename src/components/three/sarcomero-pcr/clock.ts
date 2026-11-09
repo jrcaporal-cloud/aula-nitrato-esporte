@@ -30,19 +30,26 @@ export const damp = (from: number, to: number, rate: number, dt: number): number
 
 export interface Targets { step: number; view: View; reduced: boolean }
 
-/** Próximo estado do relógio (função pura: devolve um objeto novo). */
-export const advance = (c: Clock, dt: number, tg: Targets, loopS: number): Clock => {
+/**
+ * Próximo estado do relógio. Sem `out`, devolve um objeto novo (função pura); com `out` (pode ser o próprio
+ * `c`), escreve nele, para o laço por quadro não alocar.
+ */
+export const advance = (c: Clock, dt: number, tg: Targets, loopS: number, out?: Clock): Clock => {
     const stepped = tg.step !== c.step;
     const t = tg.reduced ? REDUCED_T[tg.step] : stepped ? 0 : (c.t + dt) % loopS;
     const wantP = tg.view === 'nitrate' ? 0.16 : 1;
     const wantN = tg.view === 'placebo' ? 0.16 : 1;
-    return {
-        t,
-        step: tg.step,
-        view: tg.view,
-        mix: damp(c.mix, tg.step === 2 ? 1 : 0, 3.2, dt),
-        nit: damp(c.nit, tg.view === 'placebo' ? 0 : 1, 4, dt),
-        dimP: damp(c.dimP, wantP, 6, dt),
-        dimN: damp(c.dimN, wantN, 6, dt),
-    };
+    const mix = damp(c.mix, tg.step === 2 ? 1 : 0, 3.2, dt);
+    const nit = damp(c.nit, tg.view === 'placebo' ? 0 : 1, 4, dt);
+    const dimP = damp(c.dimP, wantP, 6, dt);
+    const dimN = damp(c.dimN, wantN, 6, dt);
+    const o = out ?? { ...c };
+    o.t = t;
+    o.step = tg.step;
+    o.view = tg.view;
+    o.mix = mix;
+    o.nit = nit;
+    o.dimP = dimP;
+    o.dimN = dimN;
+    return o;
 };

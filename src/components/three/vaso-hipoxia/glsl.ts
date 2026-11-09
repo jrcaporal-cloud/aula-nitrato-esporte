@@ -7,6 +7,12 @@ float vnoise(vec2 p) {
     vec2 i = floor(p); vec2 f = fract(p); f = f * f * (3.0 - 2.0 * f);
     return mix(mix(hash21(i), hash21(i + vec2(1.0, 0.0)), f.x), mix(hash21(i + vec2(0.0, 1.0)), hash21(i + vec2(1.0, 1.0)), f.x), f.y);
 }
+// fbm de 3 oitavas (detalhe fino barato; nada abaixo de ~1 px nas distâncias da cena)
+float fbm3(vec2 p) {
+    float a = 0.5; float v = 0.0;
+    for (int i = 0; i < 3; i++) { v += a * vnoise(p); p = p * 2.03 + vec2(17.1, 9.2); a *= 0.5; }
+    return v / 0.875;
+}
 // (distância à célula mais próxima, à segunda, sorteio da célula)
 vec3 voro(vec2 x) {
     vec2 n = floor(x); vec2 f = fract(x);

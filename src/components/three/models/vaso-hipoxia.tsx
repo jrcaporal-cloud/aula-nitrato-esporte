@@ -50,7 +50,6 @@ const VasoHipoxiaModal = ({ onClose }: Modal3DProps) => {
     const tweenRef = useRef<gsap.core.Timeline | null>(null);
     const stepRef = useRef(0);
     const pin = useSelection(s => s.pin);
-    const hovering = useSelection(s => s.hoverId !== null);
     const release = useSelection(s => s.release);
 
     useEffect(() => {
@@ -113,7 +112,6 @@ const VasoHipoxiaModal = ({ onClose }: Modal3DProps) => {
                     camera={{ position: STEP_POSES[0].pos as [number, number, number], fov: 40, near: 0.1, far: 300 }}
                     gl={{ antialias: true, powerPreference: 'high-performance' }}
                     resize={{ offsetSize: true }}
-                    className={`${pin || hovering ? 'cursor-pointer' : 'cursor-grab'} active:cursor-grabbing`}
                 >
                     <Suspense fallback={null}>
                         <VasoScene

@@ -69,6 +69,14 @@ const REST_DIL = 0.6;
 /** Posições de repouso (âncoras dos rótulos); a cena segue a parede com `nosPoint`. */
 export const NOS_SITES: readonly Vec3[] = NOS_SPECS.map(s => wallPoint(s.x, s.phi, 0.05, REST_DIL));
 export const nosPoint = (i: number, dil: number): Vec3 => wallPoint(NOS_SPECS[i].x, NOS_SPECS[i].phi, 0.05, dil);
+/** O mesmo ponto escrito num vetor existente (uso por quadro, sem alocar). */
+export const nosPointInto = (out: number[] | Float32Array, o: number, i: number, dil: number): void => {
+    const s = NOS_SPECS[i];
+    const r = tubeR(s.x, dil) - 0.05;
+    out[o] = s.x;
+    out[o + 1] = CAP_Y + Math.sin(s.phi) * r;
+    out[o + 2] = -Math.cos(s.phi) * r;
+};
 
 /** Sítios da XOR no sarcoplasma (parte aberta da fibra, onde dá para ver o anel). */
 export const XOR_SITES: readonly Vec3[] = [-4.2, -1.4, 1.8, 4.6]

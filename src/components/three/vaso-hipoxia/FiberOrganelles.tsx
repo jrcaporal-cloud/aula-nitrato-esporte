@@ -1,8 +1,9 @@
 import { useLayoutEffect, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { SPHERE_HI } from './geometry';
+import { SPHERE_HI, SPHERE_PICK } from './geometry';
 import type { Mito, Nucleus } from './layout';
+import { noRaycast, proxyRaycast } from './pick';
 import { useStructure } from './selection';
 import type { FiberMats } from './fiberShaders';
 import type { SimRef } from './types';
@@ -15,6 +16,7 @@ const Q = new THREE.Quaternion();
 const P = new THREE.Vector3();
 const S = new THREE.Vector3();
 const X_AXIS = new THREE.Vector3(1, 0, 0);
+const PICK = proxyRaycast(SPHERE_PICK);
 
 interface Props {
     simRef: SimRef;
@@ -51,8 +53,8 @@ export const FiberOrganelles = ({ simRef, mito, nuclei, mats, interactive, fade 
     });
     return (
         <>
-            <instancedMesh ref={mitoMesh} args={[SPHERE_HI, mats.mito, mito.length]} frustumCulled={false} {...(interactive ? bind : { raycast: () => undefined })} />
-            <instancedMesh ref={nucMesh} args={[SPHERE_HI, undefined, nuclei.length]} frustumCulled={false} raycast={() => undefined}>
+            <instancedMesh ref={mitoMesh} args={[SPHERE_HI, mats.mito, mito.length]} frustumCulled={false} {...(interactive ? { ...bind, raycast: PICK } : { raycast: noRaycast })} />
+            <instancedMesh ref={nucMesh} args={[SPHERE_HI, undefined, nuclei.length]} frustumCulled={false} raycast={noRaycast}>
                 <meshStandardMaterial ref={nucMat} color="#7a5fb0" emissive="#2b1a52" emissiveIntensity={0.5} roughness={0.55} transparent={!!fade} />
             </instancedMesh>
         </>

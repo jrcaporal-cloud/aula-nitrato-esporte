@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { C } from '../../sims/kit/palette';
 import { OCTA, SPHERE } from './geometry';
 import { Halo } from './Halo';
+import { noRaycast } from './pick';
 import { POOL, type Pool, type Sim } from './sim';
 import type { SimRef } from './types';
 
@@ -37,17 +38,22 @@ const CoreMesh = ({ core, simRef }: { core: Core; simRef: SimRef }) => {
         if (!m) return;
         const pool = poolOf(simRef.current, core.key);
         const t = clock.elapsedTime;
+        // partículas ocultas não são escritas nem desenhadas: as visíveis vão em sequência e `count` corta o resto
+        let j = 0;
         for (let i = 0; i < n; i++) {
             const s = pool.scale[i] * core.size;
+            if (s <= 0) continue;
             P.set(pool.pos[i * 3], pool.pos[i * 3 + 1], pool.pos[i * 3 + 2]);
-            if (s <= 0) m.setMatrixAt(i, M.makeScale(0, 0, 0));
-            else if (core.spin) m.setMatrixAt(i, M.compose(P, Q.setFromEuler(E.set(t * 3 + i, t * 2 + i * 0.7, 0)), S.set(s, s, s)));
-            else m.setMatrixAt(i, M.makeScale(s, s, s).setPosition(P));
+            if (core.spin) m.setMatrixAt(j, M.compose(P, Q.setFromEuler(E.set(t * 3 + i, t * 2 + i * 0.7, 0)), S.set(s, s, s)));
+            else m.setMatrixAt(j, M.makeScale(s, s, s).setPosition(P));
+            j++;
         }
+        m.count = j;
+        if (j === 0) return;
         m.instanceMatrix.needsUpdate = true;
     });
     return (
-        <instancedMesh ref={mesh} args={[core.geo, undefined, n]} frustumCulled={false} raycast={() => undefined}>
+        <instancedMesh ref={mesh} args={[core.geo, undefined, n]} frustumCulled={false} raycast={noRaycast}>
             <meshBasicMaterial color={core.color} toneMapped={false} />
         </instancedMesh>
     );

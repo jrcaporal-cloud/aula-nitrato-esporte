@@ -5,9 +5,10 @@ import { clamp01, rng } from '../shared/math';
 import type { ClockRef } from './clock';
 import { COL } from './colors';
 import { GEO, TROPONIN_R, TROPONIN_X, troponinAngle } from './geoms';
-import { signals } from './kinetics';
 import { THIN_SITES, halfLen, type UnitSpec } from './layout';
-import { baseColor, paint, setGlow, slowTint, unitDim, unitIdle } from './look';
+import { baseColor, paint, setGlow, slowTint, unitDim, unitIdle, unitSignals } from './look';
+import { PICK } from './pick';
+import { noRaycast } from './points';
 import { useStructureBind } from './selection';
 
 /*
@@ -58,7 +59,7 @@ export const ThinHalf = ({ spec, clockRef, side }: Props) => {
     useFrame(state => {
         const c = clockRef.current;
         if (unitIdle(c, spec, state.camera.position.x)) return;
-        const sig = signals(c.step, spec.cond, spec.fiber, c.t);
+        const sig = unitSignals(c, spec);
         const dim = unitDim(c, spec, sig.fatigue);
         const tint = slowTint(c, spec);
         if (group.current) group.current.position.x = side * halfLen(sig.act);
@@ -72,9 +73,9 @@ export const ThinHalf = ({ spec, clockRef, side }: Props) => {
     const bindZ = useStructureBind('linhaZ');
     return (
         <group ref={group} rotation={[0, side === 1 ? 0 : Math.PI, 0]}>
-            <mesh geometry={GEO.zdisc} material={kit.zM} {...bindZ} />
-            <instancedMesh ref={thin} args={[GEO.thin, kit.thinM, THIN_SITES.length]} frustumCulled={false} {...bindAct} />
-            <instancedMesh ref={trop} args={[GEO.troponin, kit.tropM, THIN_SITES.length * TROPONIN_X.length]} frustumCulled={false} {...bindAct} />
+            <mesh geometry={GEO.zdisc} material={kit.zM} {...bindZ} raycast={PICK.zdisc} />
+            <instancedMesh ref={thin} args={[GEO.thin, kit.thinM, THIN_SITES.length]} frustumCulled={false} {...bindAct} raycast={PICK.thin} />
+            <instancedMesh ref={trop} args={[GEO.troponin, kit.tropM, THIN_SITES.length * TROPONIN_X.length]} frustumCulled={false} raycast={noRaycast} />
         </group>
     );
 };

@@ -1,8 +1,9 @@
 import { useFrame } from '@react-three/fiber';
 import { useLayoutEffect, useMemo } from 'react';
-import { SHELL_CAP } from './geometry';
+import { SHELL_CAP, SHELL_CAP_PICK } from './geometry';
 import { ART_X0, CAP_R, CAP_X0, CAP_X1, CAP_Y, WEDGE_CAP } from './layout';
 import { NosSites } from './NosSites';
+import { noRaycast, proxyRaycast } from './pick';
 import { RedCells } from './RedCells';
 import { makeShell, type ShellSpec } from './shellShader';
 import { Streaks } from './Streaks';
@@ -21,6 +22,8 @@ const VLEN = CAP_X1 - ART_X0;
 const MCX = (ART_X0 + CAP_X0) / 2;
 const MLEN = CAP_X0 - ART_X0;
 const MUSCLE_R = 1.4;
+/** Raycast do ponteiro na casca low-poly (a de desenho tem 150 anéis para o afunilamento do vertex shader). */
+const PICK = proxyRaycast(SHELL_CAP_PICK);
 
 const base: Omit<ShellSpec, 'kind'> = { cx: VCX, len: VLEN, r0: CAP_R, wedge: WEDGE_CAP };
 
@@ -48,12 +51,12 @@ export const Vessel = ({ simRef }: { simRef: SimRef }) => {
     return (
         <group>
             <group position={[VCX, CAP_Y, 0]}>
-                <mesh geometry={SHELL_CAP} material={shells.wall} scale={[VLEN, CAP_R, CAP_R]} {...bind} />
-                <mesh geometry={SHELL_CAP} material={shells.lumen} scale={[VLEN, CAP_R, CAP_R]} renderOrder={2} raycast={() => undefined} />
-                <mesh geometry={SHELL_CAP} material={shells.glass} scale={[VLEN, CAP_R, CAP_R]} renderOrder={6} raycast={() => undefined} />
+                <mesh geometry={SHELL_CAP} material={shells.wall} scale={[VLEN, CAP_R, CAP_R]} raycast={PICK} {...bind} />
+                <mesh geometry={SHELL_CAP} material={shells.lumen} scale={[VLEN, CAP_R, CAP_R]} renderOrder={2} raycast={noRaycast} />
+                <mesh geometry={SHELL_CAP} material={shells.glass} scale={[VLEN, CAP_R, CAP_R]} renderOrder={6} raycast={noRaycast} />
             </group>
             <group position={[MCX, CAP_Y, 0]}>
-                <mesh geometry={SHELL_CAP} material={shells.muscle} scale={[MLEN, MUSCLE_R, MUSCLE_R]} {...bind} />
+                <mesh geometry={SHELL_CAP} material={shells.muscle} scale={[MLEN, MUSCLE_R, MUSCLE_R]} raycast={PICK} {...bind} />
             </group>
             <Streaks simRef={simRef} />
             <NosSites simRef={simRef} />

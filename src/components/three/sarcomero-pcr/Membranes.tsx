@@ -4,10 +4,10 @@ import * as THREE from 'three';
 import type { ClockRef } from './clock';
 import { COL } from './colors';
 import { apPulse } from './pcrUse';
-import { signals } from './kinetics';
 import { SARC, halfLen, type UnitSpec } from './layout';
-import { setOpacity, unitDim, unitIdle } from './look';
-import { noRaycast, usePointCloud } from './points';
+import { setGlow, setOpacity, setU, unitDim, unitIdle, unitSignals } from './look';
+import { PICK } from './pick';
+import { noRaycast, usePointCloud, type Cloud } from './points';
 import { useStructureBind } from './selection';
 import { SLEEVE_GEO, makeSleeveMaterial } from './sleeve';
 
@@ -33,6 +33,17 @@ const ANGLES = Array.from({ length: 6 }, (_, k) => (k * Math.PI) / 3);
 const SIDES = [1, -1] as const;
 const GAPS = [-1, 1] as const;
 const N_REC = 12 + 24;
+const CIST_R = SARC.ringR + 0.03;
+/** Potenciais de ação por segundo (o mesmo trem de apPulse). */
+const AP_HZ = 2.4;
+
+/** Um ponto do brilho magenta (DHPR/CASQ1 aumentados). */
+const writeGlow = (cloud: Cloud, n: number, x: number, y: number, z: number, s: number): void => {
+    cloud.pos[n * 3] = x;
+    cloud.pos[n * 3 + 1] = y;
+    cloud.pos[n * 3 + 2] = z;
+    cloud.scale[n] = s;
+};
 
 interface Props { spec: UnitSpec; clockRef: ClockRef }
 
@@ -41,6 +52,7 @@ export const Membranes = ({ spec, clockRef }: Props) => {
     const tubes = useRef<(THREE.Mesh | null)[]>([]);
     const cist = useRef<(THREE.Mesh | null)[]>([]);
     const dhpr = useRef<THREE.InstancedMesh>(null);
+    const glowPts = useRef<THREE.Points>(null);
     const casq = useRef<THREE.InstancedMesh>(null);
     const glow = usePointCloud(N_REC, COL.nitrate, 0.34, 0.9);
 
@@ -60,71 +72,77 @@ export const Membranes = ({ spec, clockRef }: Props) => {
     useFrame(state => {
         const c = clockRef.current;
         if (unitIdle(c, spec, state.camera.position.x)) return;
-        const sig = signals(c.step, spec.cond, spec.fiber, c.t);
+        const sig = unitSignals(c, spec);
         const dim = unitDim(c, spec, sig.fatigue);
         const h = halfLen(sig.act);
         const boost = Math.min(Math.max((sig.amp - 1) / 0.75, 0), 1);
-        const pulse = apPulse(state.clock.elapsedTime, sig.act);
+        const time = state.clock.elapsedTime;
+        const pulse = apPulse(time, sig.act);
+        const tri = h - SARC.tubuleOffset;
 
         if (sleeve.current) sleeve.current.scale.x = 2 * h - 0.06;
         const u = kit.sleeveM.uniforms;
-        u.uLen.value = 2 * h - 0.06;
-        u.uOpacity.value = 0.55 * dim;
-        u.uPulse.value = pulse * dim;
+        setU(u.uLen, 2 * h - 0.06);
+        setU(u.uOpacity, 0.55 * dim);
+        setU(u.uPulse, pulse * dim);
+        setU(u.uTime, time);
+        setU(u.uTri, tri);
+        setU(u.uPhase, (time * AP_HZ) % 1);
+        setU(u.uRelease, Math.min(sig.act * 3, 1) * (0.45 + 0.4 * sig.amp) * 0.55 * dim);
         scratch.copy(TUBULE).lerp(FLASH, pulse * 0.8).multiplyScalar(dim);
         kit.tubeM.color.copy(scratch);
         kit.tubeM.emissive.copy(scratch);
-        kit.tubeM.emissiveIntensity = 0.25 + 1.4 * pulse;
+        setGlow(kit.tubeM, 0.25 + 1.4 * pulse);
         kit.cistM.color.copy(CISTERNA).multiplyScalar(dim);
         kit.cistM.emissive.copy(CISTERNA).lerp(FLASH, pulse * 0.6);
-        kit.cistM.emissiveIntensity = 0.2 + 0.9 * pulse;
+        setGlow(kit.cistM, 0.2 + 0.9 * pulse);
         setOpacity(kit.cistM, 0.7 * (0.4 + 0.6 * dim));
 
         scratch.copy(NEUTRAL).lerp(MAGENTA, boost).multiplyScalar(dim);
-        for (const m of [kit.dhprM, kit.casqM]) {
-            m.color.copy(scratch);
-            m.emissive.copy(MAGENTA).multiplyScalar(boost * 0.9 * dim);
-        }
+        kit.dhprM.color.copy(scratch);
+        kit.casqM.color.copy(scratch);
+        kit.dhprM.emissive.copy(MAGENTA).multiplyScalar(boost * 0.9 * dim);
+        kit.casqM.emissive.copy(kit.dhprM.emissive);
 
-        SIDES.forEach((side, si) => {
-            const tx = side * (h - SARC.tubuleOffset);
+        for (let si = 0; si < 2; si++) {
+            const tx = SIDES[si] * tri;
             const t = tubes.current[si];
             if (t) t.position.x = tx;
-            GAPS.forEach((g, gi) => {
+            for (let gi = 0; gi < 2; gi++) {
                 const cm = cist.current[si * 2 + gi];
-                if (cm) cm.position.x = tx + g * SARC.cisternaGap;
-            });
-        });
+                if (cm) cm.position.x = tx + GAPS[gi] * SARC.cisternaGap;
+            }
+        }
 
         const dm = dhpr.current;
         const cq = casq.current;
         if (!dm || !cq) return;
         const grow = 1 + 0.65 * boost;
+        // brilho magenta só existe onde o nitrato aumentou DHPR/CASQ1: fora disso a nuvem nem desenha
+        const glowOn = boost > 0.01;
+        if (glowPts.current) glowPts.current.visible = glowOn;
         let n = 0;
-        const put = (x: number, y: number, z: number) => {
-            glow.cloud.pos[n * 3] = x; glow.cloud.pos[n * 3 + 1] = y; glow.cloud.pos[n * 3 + 2] = z;
-            glow.cloud.scale[n] = boost * (0.6 + 0.4 * pulse + 0.15 * Math.sin(state.clock.elapsedTime * 3 + n));
-            n++;
-        };
-        SIDES.forEach((side, si) => {
-            const tx = side * (h - SARC.tubuleOffset);
-            ANGLES.forEach((a, k) => {
-                const an = a + 0.26;
+        for (let si = 0; si < 2; si++) {
+            const tx = SIDES[si] * tri;
+            for (let k = 0; k < 6; k++) {
+                const an = ANGLES[k] + 0.26;
                 const y = SARC.ringR * Math.cos(an), z = SARC.ringR * Math.sin(an);
-                dm.setMatrixAt(si * 6 + k, M.compose(P.set(tx, y, z), Q.identity(), S.set(grow, grow, grow)));
-                put(tx, y, z);
-                GAPS.forEach((g, gi) => {
-                    const ca = a + 0.78 + gi * 0.5;
-                    const r = SARC.ringR + 0.03;
-                    const cx = tx + g * SARC.cisternaGap;
-                    cq.setMatrixAt((si * 2 + gi) * 6 + k, M.compose(P.set(cx, r * Math.cos(ca), r * Math.sin(ca)), Q.identity(), S.set(grow, grow, grow)));
-                    put(cx, r * Math.cos(ca), r * Math.sin(ca));
-                });
-            });
-        });
+                dm.setMatrixAt(si * 6 + k, M.compose(P.set(tx, y, z), Q, S.setScalar(grow)));
+                if (glowOn) writeGlow(glow.cloud, n, tx, y, z, boost * (0.6 + 0.4 * pulse + 0.15 * Math.sin(time * 3 + n)));
+                n++;
+                for (let gi = 0; gi < 2; gi++) {
+                    const ca = ANGLES[k] + 0.78 + gi * 0.5;
+                    const cx = tx + GAPS[gi] * SARC.cisternaGap;
+                    const cy = CIST_R * Math.cos(ca), cz = CIST_R * Math.sin(ca);
+                    cq.setMatrixAt((si * 2 + gi) * 6 + k, M.compose(P.set(cx, cy, cz), Q, S.setScalar(grow)));
+                    if (glowOn) writeGlow(glow.cloud, n, cx, cy, cz, boost * (0.6 + 0.4 * pulse + 0.15 * Math.sin(time * 3 + n)));
+                    n++;
+                }
+            }
+        }
         dm.instanceMatrix.needsUpdate = true;
         cq.instanceMatrix.needsUpdate = true;
-        glow.flush(state, dim);
+        if (glowOn) glow.flush(state, dim);
     });
 
     const bindT = useStructureBind('tubuloT');
@@ -136,14 +154,14 @@ export const Membranes = ({ spec, clockRef }: Props) => {
         <>
             <mesh ref={sleeve} geometry={SLEEVE_GEO} material={kit.sleeveM} raycast={noRaycast} renderOrder={2} />
             {SIDES.map((s, i) => (
-                <mesh key={`t${s}`} ref={el => { tubes.current[i] = el; }} geometry={kit.tubeG} material={kit.tubeM} {...bindT} />
+                <mesh key={`t${s}`} ref={el => { tubes.current[i] = el; }} geometry={kit.tubeG} material={kit.tubeM} {...bindT} raycast={PICK.tubule} />
             ))}
             {[0, 1, 2, 3].map(i => (
-                <mesh key={`c${i}`} ref={el => { cist.current[i] = el; }} geometry={kit.cistG} material={kit.cistM} {...bindRs} />
+                <mesh key={`c${i}`} ref={el => { cist.current[i] = el; }} geometry={kit.cistG} material={kit.cistM} {...bindRs} raycast={PICK.cisterna} />
             ))}
-            <instancedMesh ref={dhpr} args={[kit.dhprG, kit.dhprM, 12]} frustumCulled={false} {...bindDhpr} />
-            <instancedMesh ref={casq} args={[kit.casqG, kit.casqM, 24]} frustumCulled={false} {...bindCasq} />
-            <points geometry={glow.geometry} material={glow.material} frustumCulled={false} raycast={noRaycast} renderOrder={3} />
+            <instancedMesh ref={dhpr} args={[kit.dhprG, kit.dhprM, 12]} frustumCulled={false} {...bindDhpr} raycast={PICK.dhpr} />
+            <instancedMesh ref={casq} args={[kit.casqG, kit.casqM, 24]} frustumCulled={false} {...bindCasq} raycast={PICK.casq} />
+            <points ref={glowPts} visible={false} geometry={glow.geometry} material={glow.material} frustumCulled={false} raycast={noRaycast} renderOrder={3} />
         </>
     );
 };

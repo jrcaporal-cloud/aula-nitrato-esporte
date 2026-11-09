@@ -5,9 +5,8 @@ import { seg, smooth } from '../shared/math';
 import type { ClockRef } from './clock';
 import { COL } from './colors';
 import { CYCLE_S, N_SLOT, SLOTS, makeParts, partsAt } from './energyMath';
-import { signals } from './kinetics';
 import type { UnitSpec } from './layout';
-import { unitDim, unitIdle } from './look';
+import { unitDim, unitIdle, unitSignals } from './look';
 import { noRaycast, usePointCloud, type Cloud } from './points';
 
 /* Partículas de energia do sarcômero (ATP, ADP, PCr, creatina, Pi) e o flash da creatina-quinase na linha M. */
@@ -22,8 +21,15 @@ const C_PCR = new THREE.Color(COL.pcr);
 const C_CR = new THREE.Color(COL.cr);
 
 const writePoint = (cloud: Cloud, i: number, at: readonly number[], scale: number): void => {
-    cloud.pos.set(at, i * 3);
+    cloud.pos[i * 3] = at[0];
+    cloud.pos[i * 3 + 1] = at[1];
+    cloud.pos[i * 3 + 2] = at[2];
     cloud.scale[i] = scale;
+};
+
+const markDirty = (m: THREE.InstancedMesh): void => {
+    m.instanceMatrix.needsUpdate = true;
+    if (m.instanceColor) m.instanceColor.needsUpdate = true;
 };
 
 /** Nível de atividade 0..1: quantas vagas do ciclo estão ligadas (proporcional ao turnover de ATP). */
@@ -35,6 +41,7 @@ export const Energy = ({ spec, clockRef }: Props) => {
     const atp = useRef<THREE.InstancedMesh>(null);
     const pcr = useRef<THREE.InstancedMesh>(null);
     const pi = useRef<THREE.InstancedMesh>(null);
+    const flashPts = useRef<THREE.Points>(null);
     const clock = useRef(0);
     const parts = useMemo(() => makeParts(), []);
     const flash = usePointCloud(N_SLOT, '#7FFFE9', 1.1, 0.95);
@@ -49,28 +56,31 @@ export const Energy = ({ spec, clockRef }: Props) => {
     useFrame((state, dt) => {
         const c = clockRef.current;
         if (unitIdle(c, spec, state.camera.position.x)) return;
-        const sig = signals(c.step, spec.cond, spec.fiber, c.t);
+        const sig = unitSignals(c, spec);
         const dim = unitDim(c, spec, sig.fatigue);
         const level = Math.min(sig.sparks / ACTIVITY_REF, 1) * (1 - smooth(seg(c.mix, 0.1, 0.5)));
         clock.current += Math.min(dt, 0.1) * Math.max(sig.cycle, 0.3);
-        const a = atp.current, p = pcr.current, q = pi.current;
-        if (!a || !p || !q) return;
+        const a = atp.current, p = pcr.current, q = pi.current, f = flashPts.current;
+        if (!a || !p || !q || !f) return;
+        // sem atividade (repouso, etapa das fibras): as três malhas e o flash nem desenham
+        const on = level > 0.001;
+        a.visible = on; p.visible = on; q.visible = on; f.visible = on;
+        if (!on) return;
         const vis = 0.3 + 0.7 * dim;
         for (let i = 0; i < N_SLOT; i++) {
-            const on = smooth(Math.min(Math.max(level * N_SLOT - i, 0), 1)) * vis;
+            const w = smooth(Math.min(Math.max(level * N_SLOT - i, 0), 1)) * vis;
             const u = (clock.current / CYCLE_S + SLOTS[i].phase) % 1;
             const r = partsAt(SLOTS[i], u, parts);
-            a.setMatrixAt(i, M.compose(P.set(...r.atp), Q, S.setScalar(0.05 * r.atpS * on)));
+            a.setMatrixAt(i, M.compose(P.fromArray(r.atp), Q, S.setScalar(0.05 * r.atpS * w)));
             a.setColorAt(i, r.atpIsAtp ? C_ATP : C_ADP);
-            p.setMatrixAt(i, M.compose(P.set(...r.pcr), Q, S.setScalar(0.055 * r.pcrS * on)));
+            p.setMatrixAt(i, M.compose(P.fromArray(r.pcr), Q, S.setScalar(0.055 * r.pcrS * w)));
             p.setColorAt(i, r.pcrIsPcr ? C_PCR : C_CR);
-            q.setMatrixAt(i, M.compose(P.set(...r.pi), Q, S.setScalar(0.032 * r.piS * on)));
-            writePoint(flash.cloud, i, r.flashAt, r.flash * on);
+            q.setMatrixAt(i, M.compose(P.fromArray(r.pi), Q, S.setScalar(0.032 * r.piS * w)));
+            writePoint(flash.cloud, i, r.flashAt, r.flash * w);
         }
-        for (const m of [a, p, q]) {
-            m.instanceMatrix.needsUpdate = true;
-            if (m.instanceColor) m.instanceColor.needsUpdate = true;
-        }
+        markDirty(a);
+        markDirty(p);
+        markDirty(q);
         flash.flush(state, 1);
     });
 
@@ -79,7 +89,7 @@ export const Energy = ({ spec, clockRef }: Props) => {
             <instancedMesh ref={atp} args={[kit.g, kit.atpM, N_SLOT]} frustumCulled={false} raycast={noRaycast} />
             <instancedMesh ref={pcr} args={[kit.g, kit.pcrM, N_SLOT]} frustumCulled={false} raycast={noRaycast} />
             <instancedMesh ref={pi} args={[kit.g, kit.piM, N_SLOT]} frustumCulled={false} raycast={noRaycast} />
-            <points geometry={flash.geometry} material={flash.material} frustumCulled={false} raycast={noRaycast} renderOrder={4} />
+            <points ref={flashPts} geometry={flash.geometry} material={flash.material} frustumCulled={false} raycast={noRaycast} renderOrder={4} />
         </>
     );
 };

@@ -5,13 +5,15 @@ import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js
 import { C } from '../../sims/kit/palette';
 import { CAPILLARIES } from './anatomy';
 import { damp, flowOf, flowify, matOf } from './fx';
+import { plasmaGeometry, plasmaMaterial, writePlasma, type PlasmaUniforms } from './plasma';
 import { useStructure } from './selection';
 import type { VnStateRef } from './state';
 import { tubeGeometry } from './tubes';
 
 /*
  * Capilares do músculo: cinco tubos finos com pulso de fluxo. Na etapa 7 o NO os dilata: uma luva verde
- * aditiva incha em volta de cada um (o aceno ao modelo vaso-hipoxia).
+ * aditiva incha em volta de cada um (o aceno ao modelo vaso-hipoxia). Por dentro corre o plasma
+ * (plasma.ts), com o brilho e a cor do nitrato/nitrito no sangue.
  */
 
 const BACK: readonly [number, number] = [Math.PI, Math.PI * 2];
@@ -26,6 +28,8 @@ export const Capillaries = ({ stateRef }: { stateRef: VnStateRef }) => {
         const wall = new THREE.MeshStandardMaterial({ color: '#4A3A40', emissive: '#CDBFB0', emissiveIntensity: 0.16, roughness: 0.4, side: THREE.DoubleSide });
         flowify(wall, { color: C.nitrate, freq: 3, speed: 0.6 });
         return {
+            plasmaGeo: plasmaGeometry(CAPILLARIES),
+            plasmaMat: plasmaMaterial({ uLevel: { value: 0 }, uMix: { value: 0 } }),
             wallGeo: merged(CAPILLARIES.map(o => tubeGeometry(o, 24, 10, BACK))),
             sleeveGeo: merged(CAPILLARIES.map(o => tubeGeometry(o, 24, 12, [0, Math.PI * 2], true))),
             wall,
@@ -35,7 +39,9 @@ export const Capillaries = ({ stateRef }: { stateRef: VnStateRef }) => {
     useEffect(() => () => {
         parts.wallGeo.dispose(); parts.sleeveGeo.dispose();
         parts.wall.dispose(); parts.sleeve.dispose();
+        parts.plasmaGeo.dispose(); parts.plasmaMat.dispose();
     }, [parts]);
+    const plasma = useRef<THREE.Mesh>(null);
     const sleeve = useRef<THREE.Mesh>(null);
     const wallRef = useRef<THREE.Mesh>(null);
     useFrame(({ clock }, delta) => {
@@ -46,6 +52,12 @@ export const Capillaries = ({ stateRef }: { stateRef: VnStateRef }) => {
         const fh = flowOf(w);
         if (w) w.emissiveIntensity = (litRef.current ? 0.5 : 0.16) * (0.5 + k);
         if (fh) fh.amount.value = 1.1 * (0.35 + 0.65 * Math.max(f.nitrate, f.nitrite)) * (0.15 + 0.85 * k);
+        const pm = matOf<THREE.ShaderMaterial>(plasma);
+        if (pm && plasma.current) {
+            const pu = pm.uniforms as unknown as PlasmaUniforms;
+            writePlasma(pu, f, k);
+            plasma.current.visible = pu.uLevel.value > 1e-3;
+        }
         const dil = f.w.noMuscle * Math.min(f.nitrite * 1.25, 1) * (1 - 0.25 * f.chx);
         const m = sleeve.current;
         if (m) {
@@ -56,6 +68,7 @@ export const Capillaries = ({ stateRef }: { stateRef: VnStateRef }) => {
     return (
         <group>
             <mesh ref={wallRef} geometry={parts.wallGeo} material={parts.wall} {...bind} />
+            <mesh ref={plasma} geometry={parts.plasmaGeo} material={parts.plasmaMat} renderOrder={4} frustumCulled={false} />
             <mesh ref={sleeve} geometry={parts.sleeveGeo} material={parts.sleeve} renderOrder={9} />
         </group>
     );

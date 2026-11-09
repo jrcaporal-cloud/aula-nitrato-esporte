@@ -19,7 +19,7 @@ const FRONT = `uniform float uTime; uniform float uK; varying vec3 vN; varying v
     void main(){
         // perto da câmera (close-ups) a casca recua: as faces laterais do perfil viram lâminas se vistas de lado
         float near = smoothstep(7.0, 22.0, distance(cameraPosition, vW));
-        float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0);
+        float f = 1.0 - abs(dot(normalize(vN), normalize(vV))); f *= f;
         vec3 col = mix(vec3(0.62,0.66,0.86), vec3(0.95,0.72,0.84), smoothstep(2.0, 16.0, vW.y) * 0.55);
         float band = 0.5 + 0.5 * sin(vW.y * 0.7 - uTime * 0.5);
         gl_FragColor = vec4(col, (0.03 + 0.5 * f * (0.35 + 0.65 * near)) * (0.88 + 0.12 * band) * uK);
@@ -27,7 +27,7 @@ const FRONT = `uniform float uTime; uniform float uK; varying vec3 vN; varying v
 
 const BACK = `uniform float uK; varying vec3 vN; varying vec3 vV; varying vec3 vW;
     void main(){
-        float f = pow(1.0 - abs(dot(normalize(vN), normalize(vV))), 2.0);
+        float f = 1.0 - abs(dot(normalize(vN), normalize(vV))); f *= f;
         float core = exp(-length(vW.xy - vec2(-2.0, 3.0)) / 11.0);
         vec3 col = mix(vec3(0.11,0.09,0.2), vec3(0.2,0.14,0.3), core);
         gl_FragColor = vec4(col, (0.2 + 0.18 * core + 0.35 * f) * uK);
@@ -80,7 +80,7 @@ export const MouthParts = () => {
     return (
         <group>
             <mesh geometry={parts.palate} material={parts.palateMat} />
-            {TEETH.map((p, i) => <mesh key={i} geometry={parts.tooth} material={parts.toothMat} position={[p[0], p[1], p[2]]} />)}
+            {TEETH.map(p => <mesh key={p.join(',')} geometry={parts.tooth} material={parts.toothMat} position={[p[0], p[1], p[2]]} />)}
         </group>
     );
 };

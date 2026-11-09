@@ -47,7 +47,8 @@ export const flowify = (mat: THREE.MeshStandardMaterial, o: FlowOptions): FlowHa
             .replace('#include <common>', `#include <common>\n${PARS}`)
             .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
                 float fl = 0.5 + 0.5 * sin((vFlowU * uFlowFreq - uTime * uFlowSpeed) * 6.2831853);
-                totalEmissiveRadiance += uFlowColor * pow(fl, 7.0) * uFlowAmt;`);
+                float fl2 = fl * fl; float fl4 = fl2 * fl2;
+                totalEmissiveRadiance += uFlowColor * (fl4 * fl2 * fl) * uFlowAmt;`);
     };
     mat.customProgramCacheKey = () => 'vn-flow';
     mat.userData.flow = h;

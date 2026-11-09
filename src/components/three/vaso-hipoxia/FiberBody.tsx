@@ -7,6 +7,7 @@ import { FiberOrganelles } from './FiberOrganelles';
 import { CAP_FIB, MYOFIBRIL, SHELL_FIB } from './geometry';
 import { FIB_X0, FIB_X1, WEDGE_FIB, type Mito, type Nucleus } from './layout';
 import { useStructure } from './selection';
+import { noRaycast } from './pick';
 import { makeShell } from './shellShader';
 import type { SimRef } from './types';
 import { setOpacity, setU } from './uniforms';
@@ -38,6 +39,7 @@ interface Props {
 export const FiberBody = ({ simRef, id, cy, r, fibrils, mito, nuclei, fibrilR, fade }: Props) => {
     const { bind, lit } = useStructure(id);
     const fibrilMesh = useRef<THREE.InstancedMesh>(null);
+    const capMesh = useRef<THREE.InstancedMesh>(null);
     const hasFade = !!fade;
     const { wall, glass, mats, cap } = useMemo(() => {
         const spec = { cx: CX, len: LEN, r0: r, wedge: WEDGE_FIB, fixedR: r, fiber: { cy }, fade: hasFade };
@@ -55,10 +57,21 @@ export const FiberBody = ({ simRef, id, cy, r, fibrils, mito, nuclei, fibrilR, f
         fibrils.forEach((f, i) => m.setMatrixAt(i, M.compose(P.set(CX, f.y, f.z), Q.identity(), S.set(LEN - 0.3, fibrilR, fibrilR))));
         m.instanceMatrix.needsUpdate = true;
     }, [fibrils, fibrilR]);
+    // as duas tampas das pontas num só desenho
+    useLayoutEffect(() => {
+        const m = capMesh.current;
+        if (!m) return;
+        m.setMatrixAt(0, M.compose(P.set(FIB_X0, cy, 0), Q.identity(), S.set(1, r, r)));
+        m.setMatrixAt(1, M.compose(P.set(FIB_X1, cy, 0), Q.identity(), S.set(1, r, r)));
+        m.instanceMatrix.needsUpdate = true;
+    }, [cy, r]);
     useFrame(() => {
         const k = fade ? fade() : 1;
         const l = lit ? 1 : 0;
-        for (const m of [wall, glass]) { setU(m, 'uFade', k); setU(m, 'uLit', l); }
+        setU(wall, 'uFade', k);
+        setU(wall, 'uLit', l);
+        setU(glass, 'uFade', k);
+        setU(glass, 'uLit', l);
         setU(mats.fibril, 'uFade', k);
         setU(mats.fibril, 'uLit', l * 0.6);
         setU(mats.mito, 'uFade', k);
@@ -68,12 +81,10 @@ export const FiberBody = ({ simRef, id, cy, r, fibrils, mito, nuclei, fibrilR, f
         <group>
             <group {...bind}>
                 <mesh geometry={SHELL_FIB} material={wall} position={[CX, cy, 0]} scale={[LEN, r, r]} />
-                <mesh geometry={SHELL_FIB} material={glass} position={[CX, cy, 0]} scale={[LEN, r, r]} renderOrder={6} raycast={() => undefined} />
-                {[FIB_X0, FIB_X1].map(x => (
-                    <mesh key={x} geometry={CAP_FIB} material={cap} position={[x, cy, 0]} scale={[1, r, r]} renderOrder={1} raycast={() => undefined} />
-                ))}
+                <mesh geometry={SHELL_FIB} material={glass} position={[CX, cy, 0]} scale={[LEN, r, r]} renderOrder={6} raycast={noRaycast} />
+                <instancedMesh ref={capMesh} args={[CAP_FIB, cap, 2]} frustumCulled={false} renderOrder={1} raycast={noRaycast} />
             </group>
-            <instancedMesh ref={fibrilMesh} args={[MYOFIBRIL, mats.fibril, fibrils.length]} raycast={() => undefined} frustumCulled={false} />
+            <instancedMesh ref={fibrilMesh} args={[MYOFIBRIL, mats.fibril, fibrils.length]} raycast={noRaycast} frustumCulled={false} />
             <FiberOrganelles simRef={simRef} mito={mito} nuclei={nuclei} mats={mats} interactive={id === 'fibra'} fade={fade} />
         </group>
     );

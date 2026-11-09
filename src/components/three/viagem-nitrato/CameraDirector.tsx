@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import * as THREE from 'three';
@@ -86,18 +86,18 @@ export const CameraDirector = ({ step, reduced, pin, recenterKey, onSettled, tim
     const camera = useThree(s => s.camera);
     const gl = useThree(s => s.gl);
     const controls = useThree(s => s.controls) as OrbitControlsImpl | null;
-    const rig = useRef<Rig | null>(null);
+    // o rig (vetores de rascunho e estado das animações) nasce uma vez, fora dos quadros
+    const [initialRig] = useState(makeRig);
+    const rig = useRef<Rig>(initialRig);
     const stepRef = useRef(step);
     const prev = useRef({ pin, key: recenterKey });
-
-    const getRig = () => (rig.current ??= makeRig());
 
     useEffect(() => { stepRef.current = step; }, [step]);
 
     // Toque do usuário: assume o comando; a varredura só volta depois de ficar parado.
     useEffect(() => {
         const el = gl.domElement;
-        const r = getRig();
+        const r = rig.current;
         const touch = () => { r.idleAt = performance.now(); r.sweepT = 0; r.pushT = PUSH_S; };
         const onDown = () => { r.down = true; r.flight.active = false; r.tween.active = false; touch(); };
         const onUp = () => { r.down = false; touch(); };
@@ -116,7 +116,7 @@ export const CameraDirector = ({ step, reduced, pin, recenterKey, onSettled, tim
     // Transição de etapa: T anima até a etapa nova; o deslocamento de onde o usuário deixou a câmera se desfaz.
     useEffect(() => {
         if (!controls) return;
-        const r = getRig();
+        const r = rig.current;
         const time = timeRef.current;
         const tw = r.tween;
         const from = time.t;
@@ -145,7 +145,7 @@ export const CameraDirector = ({ step, reduced, pin, recenterKey, onSettled, tim
         const last = prev.current;
         if (last.pin === pin && last.key === recenterKey) return;
         prev.current = { pin, key: recenterKey };
-        const r = getRig();
+        const r = rig.current;
         if (!pin && r.tween.active) return; // soltou por troca de etapa: a transição já leva a câmera
         const from: Pose = {
             pos: [camera.position.x, camera.position.y, camera.position.z],
@@ -168,7 +168,7 @@ export const CameraDirector = ({ step, reduced, pin, recenterKey, onSettled, tim
 
     useFrame((_, delta) => {
         if (!controls) return;
-        const r = getRig();
+        const r = rig.current;
         const now = performance.now();
         const f = r.flight;
         if (f.active && f.path) {

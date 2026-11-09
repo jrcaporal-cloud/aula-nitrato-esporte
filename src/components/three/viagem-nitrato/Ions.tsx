@@ -26,6 +26,12 @@ const TRAIL_GLOW: readonly number[] = [0.6, 0.28];
 const RINGS = 24;
 const RING_WINDOW = 0.05;
 
+const commit = (m: THREE.InstancedMesh, c: number): void => {
+    m.count = c;
+    m.visible = c > 0;
+    if (c > 0) m.instanceMatrix.needsUpdate = true;
+};
+
 const fade = (s: number) => Math.min(s / 0.07, 1, (1 - s) / 0.09);
 
 const makeSeeds = (): IonSeed[][] => STREAMS.map((def, si) => {
@@ -79,7 +85,9 @@ export const Ions = ({ stateRef }: { stateRef: VnStateRef }) => {
     }, []);
 
     useFrame(({ clock, camera }) => {
-        const [aN, aO, bN, bO, hA, hB, tA, tB, rg] = [nitN, nitO, itN, itO, haloA, haloB, trailA, trailB, rings].map(r => r.current);
+        // sem arrays nem closures por quadro: cada malha lida direto da sua ref
+        const aN = nitN.current, aO = nitO.current, bN = itN.current, bO = itO.current;
+        const hA = haloA.current, hB = haloB.current, tA = trailA.current, tB = trailB.current, rg = rings.current;
         if (!aN || !aO || !bN || !bO || !hA || !hB || !tA || !tB || !rg) return;
         const f = stateRef.current.f;
         const t = clock.elapsedTime;
@@ -101,11 +109,11 @@ export const Ions = ({ stateRef }: { stateRef: VnStateRef }) => {
                 const nitrate = sp === NITRATE;
                 if (nitrate) {
                     put(aN, cAN++, P, 0.4 * k);
-                    for (const [ox, oy] of NITRATE_O) put(aO, cAO++, T.set(ox * k, oy * k, 0).applyQuaternion(Q).add(P), 0.3 * k);
+                    for (let o = 0; o < NITRATE_O.length; o++) put(aO, cAO++, T.set(NITRATE_O[o][0] * k, NITRATE_O[o][1] * k, 0).applyQuaternion(Q).add(P), 0.3 * k);
                     putHalo(hA, cHA++, P, camera.quaternion, k * 3.8);
                 } else {
                     put(bN, cBN++, P, 0.4 * k);
-                    for (const [ox, oy] of NITRITE_O) put(bO, cBO++, T.set(ox * k, oy * k, 0).applyQuaternion(Q).add(P), 0.3 * k);
+                    for (let o = 0; o < NITRITE_O.length; o++) put(bO, cBO++, T.set(NITRITE_O[o][0] * k, NITRITE_O[o][1] * k, 0).applyQuaternion(Q).add(P), 0.3 * k);
                     putHalo(hB, cHB++, P, camera.quaternion, k * 3.6);
                     // o anel da conversão: abre e some logo depois de o íon virar nitrito
                     if (def.convertAt !== undefined && cR < RINGS) {
@@ -127,8 +135,9 @@ export const Ions = ({ stateRef }: { stateRef: VnStateRef }) => {
                 }
             }
         }
-        const counts: [THREE.InstancedMesh, number][] = [[aN, cAN], [aO, cAO], [bN, cBN], [bO, cBO], [hA, cHA], [hB, cHB], [tA, cTA], [tB, cTB], [rg, cR]];
-        for (const [m, c] of counts) { m.count = c; m.instanceMatrix.needsUpdate = true; }
+        // só as instâncias escritas são desenhadas e enviadas (count); malha vazia nem entra na fila
+        commit(aN, cAN); commit(aO, cAO); commit(bN, cBN); commit(bO, cBO);
+        commit(hA, cHA); commit(hB, cHB); commit(tA, cTA); commit(tB, cTB); commit(rg, cR);
         if (rg.instanceColor) rg.instanceColor.needsUpdate = true;
     });
 

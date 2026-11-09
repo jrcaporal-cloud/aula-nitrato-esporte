@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { rng } from '../shared/math';
 import { GLSL_NOISE } from './glsl';
+import { noRaycast } from './pick';
 import { U, setU } from './uniforms';
 
 /*
@@ -39,7 +40,7 @@ void main() {
 }`;
 const DUST_FRAG = /* glsl */ `
 uniform vec3 uTint; varying float vA;
-void main() { float d = length(gl_PointCoord - 0.5) * 2.0; float a = pow(max(1.0 - d, 0.0), 2.0) * vA; gl_FragColor = vec4(uTint * a, a); }`;
+void main() { float d = length(gl_PointCoord - 0.5) * 2.0; float f = max(1.0 - d, 0.0); float a = f * f * vA; gl_FragColor = vec4(uTint * a, a); }`;
 
 const DUST_N = 220;
 const COLD = new THREE.Color('#9fa8ff');
@@ -77,13 +78,13 @@ const Dust = () => {
         setU(mat, 'uPx', (size.height * gl.getPixelRatio()) / (2 * Math.tan((fov * Math.PI) / 360)));
         TINT.copy(COLD).lerp(WARM, U.uAcid.value);
     });
-    return <points geometry={geo} material={mat} frustumCulled={false} raycast={() => undefined} renderOrder={1} />;
+    return <points geometry={geo} material={mat} frustumCulled={false} raycast={noRaycast} renderOrder={1} />;
 };
 
 const Backdrop = () => {
     const mat = useMemo(() => new THREE.ShaderMaterial({ vertexShader: BACK_VERT, fragmentShader: BACK_FRAG, uniforms: { uTime: U.uTime, uAcid: U.uAcid, uHyp: U.uHyp }, depthWrite: true }), []);
     useLayoutEffect(() => () => mat.dispose(), [mat]);
-    return <mesh position={[-2, 0, -20]} material={mat} raycast={() => undefined}><planeGeometry args={[150, 80]} /></mesh>;
+    return <mesh position={[-2, 0, -20]} material={mat} raycast={noRaycast}><planeGeometry args={[150, 80]} /></mesh>;
 };
 
 export const Atmosphere = () => {

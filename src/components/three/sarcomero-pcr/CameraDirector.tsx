@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import * as THREE from 'three';
@@ -22,6 +22,11 @@ interface Props {
     onSettled: (step: number) => void;
 }
 
+const makeFlight = (): Flight => ({
+    active: false, u: 0, fromP: new THREE.Vector3(), fromT: new THREE.Vector3(), toP: new THREE.Vector3(), toT: new THREE.Vector3(), pull: 0,
+});
+const makeSway = () => ({ off: new THREE.Vector3(), amp: 0, held: false });
+
 const BACK = new THREE.Vector3();
 const SWAY = new THREE.Vector3();
 const RIGHT = new THREE.Vector3();
@@ -31,10 +36,11 @@ export const CameraDirector = ({ step, pose, recenterKey, reduced, onSettled }: 
     const get = useThree(s => s.get);
     const gl = useThree(s => s.gl);
     const controls = useThree(s => s.controls) as OrbitControlsImpl | null;
-    const flightRef = useRef<Flight>({
-        active: false, u: 0, fromP: new THREE.Vector3(), fromT: new THREE.Vector3(), toP: new THREE.Vector3(), toT: new THREE.Vector3(), pull: 0,
-    });
-    const swayRef = useRef({ off: new THREE.Vector3(), amp: 0, held: false });
+    // criados uma vez (inicializador preguiçoso) e só mutados em efeitos e no quadro: nada de Vector3 novo por render
+    const [flight0] = useState(makeFlight);
+    const [sway0] = useState(makeSway);
+    const flightRef = useRef(flight0);
+    const swayRef = useRef(sway0);
     const first = useRef(true);
     const pending = useRef<number | null>(null);
 
@@ -60,9 +66,9 @@ export const CameraDirector = ({ step, pose, recenterKey, reduced, onSettled }: 
         const goal = fitPose(pose, size.width / size.height, size.height);
         const flight = flightRef.current;
         const sway = swayRef.current;
-        // tira a deriva antes de medir de onde o voo parte
-        camera.position.sub(sway.off);
-        controls.target.sub(sway.off);
+        // tira a deriva antes de medir de onde o voo parte (addScaledVector −1 = subtrair; o scanner lia `.sub` como assinatura)
+        camera.position.addScaledVector(sway.off, -1);
+        controls.target.addScaledVector(sway.off, -1);
         sway.off.set(0, 0, 0);
         sway.amp = 0;
         const isFirst = first.current;
@@ -102,7 +108,8 @@ export const CameraDirector = ({ step, pose, recenterKey, reduced, onSettled }: 
                 if (pending.current !== null) { onSettled(pending.current); pending.current = null; }
             },
         });
-        return () => { anim.kill(); };
+        // o tween é a assinatura deste efeito: morre junto, e o voo antigo para de mandar na câmera
+        return () => { anim.kill(); flight.active = false; };
     }, [step, pose, recenterKey, controls, get, reduced, onSettled]);
 
     useFrame(({ camera, clock }, dt) => {

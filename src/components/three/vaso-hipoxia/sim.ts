@@ -1,5 +1,5 @@
 import { rng } from '../shared/math';
-import { MB_SITES, NOS_SPECS, XOR_SITES, nosPoint } from './layout';
+import { MB_SITES, NOS_SPECS, XOR_SITES, nosPoint, nosPointInto } from './layout';
 import { rates, type Gates, type Rates } from './model';
 import { advanceFeeds, advanceFlashes, emit, type Feed, type Timed } from './feeds';
 import { updateCells, updatePlasma, updateSlowCells } from './plasma';
@@ -112,7 +112,7 @@ export const stepSim = (sim: Sim, ctl: Ctl, dtRaw: number) => {
     const s = sim.sites;
     const nn = NOS_SPECS.length;
     for (let i = 0; i < nn; i++) {
-        s.pos.set(nosPoint(i, sim.dilate), i * 3);
+        nosPointInto(s.pos, i * 3, i, sim.dilate);
         s.halo[i] = sim.rates.nos * 0.9;
     }
     for (let i = 0; i < XOR_SITES.length; i++) s.halo[nn + i] = sim.rates.xor;

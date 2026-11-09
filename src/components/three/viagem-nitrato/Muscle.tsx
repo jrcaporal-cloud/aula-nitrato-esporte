@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { C } from '../../sims/kit/palette';
 import { HYPOXIA_POS, MUSCLE } from './anatomy';
-import { CutOrgan, type BumpSpec, type Tint } from './CutOrgan';
+import { CutOrgan, type Tint } from './CutOrgan';
 import { flowOf, flowify, matOf } from './fx';
 import { HALO_PLANE, haloMaterial } from './materials';
 import { useStructure } from './selection';
@@ -19,12 +19,11 @@ import { buildLut, lutPoint } from './tubes';
 const MUSCLE_RIM = '#D49A92';
 const STRANDS = 14;
 const STRAND_SAMPLES = 18;
-const BUMP: BumpSpec = { kind: 'muscle', repeat: [3, 1.5], scale: 2.2 };
 const MUSCLE_TINT: Tint = { color: C.hypoxia, amount: f => f.w.hypoxia * 0.5 };
 
 /** Feixes de fibras ao longo do fuso, só na metade de trás (a da frente fica livre para os íons). Contraem (pulsam) no esforço. */
 const Fibers = ({ stateRef }: { stateRef: VnStateRef }) => {
-    const { bind, lit } = useStructure('musculo');
+    const { lit } = useStructure('musculo');
     const litRef = useRef(lit);
     useEffect(() => { litRef.current = lit; }, [lit]);
     const parts = useMemo(() => {
@@ -50,7 +49,8 @@ const Fibers = ({ stateRef }: { stateRef: VnStateRef }) => {
         if (fm) fm.emissiveIntensity = litRef.current ? 1.1 : 0.12 + 0.3 * f.focus.musculo;
         if (fh) fh.amount.value = f.w.hypoxia * 0.55;
     });
-    return <mesh ref={mesh} geometry={parts.geo} material={parts.mat} {...bind} />;
+    // sem handlers: os feixes ficam dentro da casca do músculo, que já recebe o ponteiro
+    return <mesh ref={mesh} geometry={parts.geo} material={parts.mat} />;
 };
 
 /** Brilho laranja pulsante: região do músculo com pouco O₂ (etapa 7). */
@@ -72,7 +72,7 @@ const HypoxiaGlow = ({ stateRef }: { stateRef: VnStateRef }) => {
 
 export const Muscle = ({ stateRef }: { stateRef: VnStateRef }) => (
     <group>
-        <CutOrgan id="musculo" organ={MUSCLE} base="#7A4A4A" emissive={MUSCLE_RIM} rim={MUSCLE_RIM} cut="#E8B0A6" tubular={80} radial={32} shell={0.55} stateRef={stateRef} bump={BUMP} tint={MUSCLE_TINT} glow={0.2} />
+        <CutOrgan id="musculo" organ={MUSCLE} base="#7A4A4A" emissive={MUSCLE_RIM} rim={MUSCLE_RIM} cut="#E8B0A6" tubular={80} radial={32} shell={0.55} stateRef={stateRef} surface="muscle" tint={MUSCLE_TINT} glow={0.2} />
         <Fibers stateRef={stateRef} />
         <HypoxiaGlow stateRef={stateRef} />
     </group>

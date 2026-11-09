@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { GLSL_FIELD, GLSL_NOISE, GLSL_RADIUS } from './glsl';
 import { TAPER_X0, CAP_X0 } from './layout';
+import { C } from '../../sims/kit/palette';
 import { U, srgb } from './uniforms';
 
 /*
@@ -49,7 +50,7 @@ void main() {
 const FRAG = /* glsl */ `
 ${GLSL_NOISE}
 ${GLSL_FIELD}
-uniform float uNos; uniform float uHyp; uniform float uFlow; uniform float uRing;
+uniform float uNos; uniform float uHyp; uniform float uFlow; uniform float uRing; uniform float uDil; uniform float uNoT; uniform vec3 uNoC;
 uniform float uLit; uniform float uWedge; uniform float uX0; uniform float uX1; uniform float uFade; uniform float uCy;
 uniform float uTx0; uniform float uTx1; uniform vec3 uBase; uniform vec3 uRim;
 varying vec3 vN; varying vec3 vMV; varying float vWx; varying float vPhi; varying float vWy; varying float vR;
@@ -78,18 +79,28 @@ void main() {
     float g = vnoise(vec2(vWx * 3.0, vWy * 3.0));
     vec3 col = uBase * (0.75 + 0.5 * g) * (0.5 + 0.7 * lam) + vec3(0.55, 0.25, 0.4) * fres * 0.35;
     col += o2Field(d, 0.0) * 0.36;
+    // hipóxia: manchas laranja lentas no tecido, mais fortes longe do capilar (d → 1)
+    float mott = fbm3(vec2(vWx * 0.9, vWy * 1.3) + vec2(uTime * 0.04, -uTime * 0.025));
+    col += vec3(1.0, 0.5, 0.18) * uHyp * smoothstep(0.35, 0.85, mott) * (0.12 + 0.22 * d);
     col += uRim * lip * 0.6 + vec3(0.3, 0.12, 0.2) * uLit;
   #else
     vec2 q = vec2(vWx / 2.1, vPhi * 0.9 / 0.8);
     vec3 vo = voro(q);
-    float edge = 1.0 - smoothstep(0.0, 0.1, vo.y - vo.x);
+    // junções: grossas e escuras com o vaso contraído; finas e lisas quando o NO relaxa a parede
+    float jd = vo.y - vo.x;
+    float jw = mix(0.15, 0.06, uDil);
+    float edge = 1.0 - smoothstep(jw * 0.25, jw + fwidth(jd), jd);
     float nuc = step(vo.z, 0.84) * (1.0 - smoothstep(0.17, 0.27, vo.x));
     vec3 col = mix(uBase * 0.8, uBase * 1.55, vo.z);
-    col = mix(col, vec3(0.62, 0.30, 0.5), edge * 0.5);
+    col *= 1.0 + (1.0 - uDil) * 0.22 * (0.5 - smoothstep(0.0, 0.5, vo.x));   // células abauladas quando contraído
+    col = mix(col, vec3(0.62, 0.30, 0.5) * mix(0.7, 1.0, uDil), edge * mix(0.65, 0.4, uDil));
     col = mix(col, vec3(0.2, 0.1, 0.34) + vec3(0.1, 0.07, 0.14) * (1.0 - smoothstep(0.0, 0.17, vo.x)), nuc);
     col *= 0.5 + 0.8 * lam;
     col += vec3(0.95, 0.45, 0.62) * fres * 0.5;
     col += vec3(0.3, 0.55, 1.0) * uNos * 0.34 * (1.0 - smoothstep(0.0, 0.5, vo.x)) * (0.75 + 0.25 * sin(uTime * 1.4 + vo.z * 6.28));
+    // o NO correndo pelas junções, no sentido do fluxo
+    float wave = 0.5 + 0.5 * sin(vWx * 1.4 - uTime * 2.0 + vo.z * 2.0);
+    col += uNoC * edge * uNoT * 0.3 * wave * wave;
     col = mix(col, col * vec3(1.35, 0.85, 0.55) + vec3(0.07, 0.03, 0.0), uAcid * 0.55);
     col *= 1.0 - 0.18 * uHyp;
     col += uRim * lip * 0.75 + vec3(0.45, 0.16, 0.28) * uLit;
@@ -132,6 +143,8 @@ void main() {
 #endif
 }`;
 
+const NO_C = { value: srgb(C.no) };
+
 export const makeShell = (s: ShellSpec): THREE.ShaderMaterial => {
     const own = (v: number) => ({ value: v });
     const fixed = s.fixedR !== undefined;
@@ -141,6 +154,7 @@ export const makeShell = (s: ShellSpec): THREE.ShaderMaterial => {
         defines: { [s.kind.toUpperCase()]: '', ...(s.fiber ? { FIBER: '' } : {}) },
         uniforms: {
             uTime: U.uTime, uSat: U.uSat, uAcid: U.uAcid, uHyp: U.uHyp, uNos: U.uNos, uFlow: U.uFlow, uRing: U.uRing,
+            uDil: U.uDil, uNoT: U.uNoT, uNoC: NO_C,
             uArtR: fixed ? own(s.fixedR as number) : U.uArtR, uCapR: fixed ? own(s.fixedR as number) : U.uCapR,
             uTx0: own(fixed ? 1e4 : TAPER_X0), uTx1: own(fixed ? 1e4 + 1 : CAP_X0),
             uCx: own(s.cx), uLen: own(s.len), uR0: own(s.r0), uMul: own(s.mul ?? 1), uCy: own(s.fiber?.cy ?? 0),

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import * as THREE from 'three';
@@ -23,6 +23,9 @@ interface Props {
 }
 
 const setV = (v: THREE.Vector3, p: Pose['pos']) => v.set(p[0], p[1], p[2]);
+const makeFlight = (): Flight => ({
+    active: false, u: 0, fromP: new THREE.Vector3(), fromT: new THREE.Vector3(), toP: new THREE.Vector3(), toT: new THREE.Vector3(), lift: 0,
+});
 
 /** Respiro da câmera em repouso: balanço lateral/vertical e um avanço lento, aplicados por diferença (a órbita segue livre). */
 interface Idle { amp: number; t: number; last: THREE.Vector3; touching: boolean }
@@ -30,15 +33,17 @@ const RIGHT = new THREE.Vector3();
 const UP = new THREE.Vector3();
 const FWD = new THREE.Vector3();
 const OFF = new THREE.Vector3();
+const makeIdle = (): Idle => ({ amp: 0, t: 0, last: new THREE.Vector3(), touching: false });
 
 export const CameraDirector = ({ step, pin, recenterKey, reduced, onSettled }: Props) => {
     const get = useThree(s => s.get);
     const gl = useThree(s => s.gl);
     const controls = useThree(s => s.controls) as OrbitControlsImpl | null;
-    const flightRef = useRef<Flight>({
-        active: false, u: 0, fromP: new THREE.Vector3(), fromT: new THREE.Vector3(), toP: new THREE.Vector3(), toT: new THREE.Vector3(), lift: 0,
-    });
-    const idle = useRef<Idle>({ amp: 0, t: 0, last: new THREE.Vector3(), touching: false });
+    // criados uma vez (inicializador preguiçoso): nada de Vector3 novo a cada render
+    const [flight0] = useState(makeFlight);
+    const [idle0] = useState(makeIdle);
+    const flightRef = useRef(flight0);
+    const idle = useRef(idle0);
     const first = useRef(true);
     const pending = useRef<number | null>(null);
 
@@ -94,7 +99,7 @@ export const CameraDirector = ({ step, pin, recenterKey, reduced, onSettled }: P
                 if (pending.current !== null) { onSettled(pending.current); pending.current = null; }
             },
         });
-        return () => { anim.kill(); };
+        return () => { anim.kill(); flight.active = false; };
     }, [step, pin, recenterKey, controls, get, reduced, onSettled]);
 
     useFrame(({ camera }, dt) => {

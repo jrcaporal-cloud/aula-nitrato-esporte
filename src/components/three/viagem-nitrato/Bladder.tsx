@@ -48,7 +48,8 @@ export const Bladder = ({ stateRef }: { stateRef: VnStateRef }) => {
     const [x, y, z] = BLADDER.pos;
     return (
         <group position={[x, y, z]} scale={BLADDER.r}>
-            <mesh ref={innerRef} geometry={parts.geo} material={parts.inner} {...bind} />
+            {/* a casca (raio 1,03) envolve a parede: só ela recebe o ponteiro */}
+            <mesh ref={innerRef} geometry={parts.geo} material={parts.inner} />
             <mesh ref={liquid} geometry={parts.geo} material={parts.pool} renderOrder={1} />
             <mesh geometry={parts.geo} material={parts.shell} scale={1.03} renderOrder={2} {...bind} />
         </group>

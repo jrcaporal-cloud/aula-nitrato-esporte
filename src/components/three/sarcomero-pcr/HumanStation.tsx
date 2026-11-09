@@ -36,24 +36,33 @@ const C_I = new THREE.Color('#5A6A84');
 const C_PLACEBO = new THREE.Color(COL.placebo);
 const C_NITRATE = new THREE.Color(COL.nitrate);
 
+/** Distância em x a partir da qual a estação some (as estações ficam a 38 uma da outra). */
+const NEAR_X = 24;
+
 const height = (T: number, isII: boolean) => 0.12 + 1.5 * T * (isII ? 1 : 0.8);
 
 /** Altura (torque) e brilho das fibras de um tipo. */
 const placeFibres = (m: THREE.InstancedMesh | null, list: readonly Fibre[], base: THREE.Color, isII: boolean, T: number): void => {
     if (!m) return;
-    list.forEach((fb, i) => {
-        m.setMatrixAt(i, M.compose(P.set(fb.x, fb.y, 0), Q, S.set(1, 1, height(T, isII))));
-        m.setColorAt(i, COLR.copy(base).multiplyScalar(0.55 + 0.45 * T));
-    });
+    const hz = height(T, isII);
+    COLR.copy(base).multiplyScalar(0.55 + 0.45 * T);
+    for (let i = 0; i < list.length; i++) {
+        const fb = list[i];
+        m.setMatrixAt(i, M.compose(P.set(fb.x, fb.y, 0), Q, S.set(1, 1, hz)));
+        m.setColorAt(i, COLR);
+    }
     m.instanceMatrix.needsUpdate = true;
     if (m.instanceColor) m.instanceColor.needsUpdate = true;
 };
+
+/** A estação D está longe da câmera (outra etapa): nada a escrever no quadro. */
+const farFromD = (camX: number): boolean => Math.abs(camX - STATION_X.d) > NEAR_X;
 
 const Tile = ({ index, clockRef }: { index: 0 | 1; clockRef: ClockRef }) => {
     const fast = useRef<THREE.InstancedMesh>(null);
     const slow = useRef<THREE.InstancedMesh>(null);
     const ghost = useRef<THREE.InstancedMesh>(null);
-    const waves = useRef<(THREE.Mesh | null)[]>([]);
+    const waves = useRef<THREE.InstancedMesh>(null);
     const fibres = TILES[index];
     const split = useMemo(() => ({ II: fibres.filter(f => f.isII), I: fibres.filter(f => !f.isII) }), [fibres]);
     const kit = useMemo(() => {
@@ -77,6 +86,7 @@ const Tile = ({ index, clockRef }: { index: 0 | 1; clockRef: ClockRef }) => {
     const f50 = HUMAN_PANELS[index].f50;
 
     useFrame(state => {
+        if (farFromD(state.camera.position.x)) return;
         const c = clockRef.current;
         const f = sweepHz(c.t);
         const T = torque(f, lerp(f50.placebo, f50.nitrate, c.nit));
@@ -84,8 +94,14 @@ const Tile = ({ index, clockRef }: { index: 0 | 1; clockRef: ClockRef }) => {
         placeFibres(fast.current, split.II, C_II, true, T);
         placeFibres(slow.current, split.I, C_I, false, T);
         const gm = ghost.current;
-        if (gm) {
-            fibres.forEach((fb, i) => gm.setMatrixAt(i, M.compose(P.set(fb.x, fb.y, height(Tp, fb.isII) + 0.012), Q, S.set(1, 1, 1))));
+        if (gm) gm.visible = c.nit > 0.01;
+        if (gm?.visible) {
+            const hII = height(Tp, true) + 0.012;
+            const hI = height(Tp, false) + 0.012;
+            for (let i = 0; i < fibres.length; i++) {
+                const fb = fibres[i];
+                gm.setMatrixAt(i, M.makeTranslation(fb.x, fb.y, fb.isII ? hII : hI));
+            }
             gm.instanceMatrix.needsUpdate = true;
         }
         setOpacity(kit.ghostM, 0.32 * c.nit);
@@ -94,11 +110,15 @@ const Tile = ({ index, clockRef }: { index: 0 | 1; clockRef: ClockRef }) => {
         // ondas do estímulo: mais frequentes conforme a varredura sobe
         const time = state.clock.elapsedTime;
         const rate = 0.5 + 2.2 * (Math.log10(f) / 2);
-        waves.current.forEach((w, k) => {
-            if (!w) return;
-            const ph = (time * rate + k * 0.5) % 1;
-            w.scale.set((TILE_A + 0.1) * (0.2 + 0.85 * ph), (TILE_B + 0.1) * (0.2 + 0.85 * ph), 1);
-        });
+        const wm = waves.current;
+        if (wm) {
+            for (let k = 0; k < 2; k++) {
+                const ph = (time * rate + k * 0.5) % 1;
+                const g = 0.2 + 0.85 * ph;
+                wm.setMatrixAt(k, M.compose(P.set(0, 0, 0.005), Q, S.set((TILE_A + 0.1) * g, (TILE_B + 0.1) * g, 1)));
+            }
+            wm.instanceMatrix.needsUpdate = true;
+        }
     });
 
     return (
@@ -107,7 +127,7 @@ const Tile = ({ index, clockRef }: { index: 0 | 1; clockRef: ClockRef }) => {
             <mesh material={kit.ringM} position={[0, 0, -0.02]} scale={[(TILE_A + 0.12) / 1.5, (TILE_B + 0.12) / 1.5, 1]} raycast={noRaycast}>
                 <torusGeometry args={[1.5, 0.035, 10, 120]} />
             </mesh>
-            {[0, 1].map(k => <mesh key={k} ref={el => { waves.current[k] = el; }} geometry={kit.wave} material={kit.waveM} position={[0, 0, 0.005]} raycast={noRaycast} />)}
+            <instancedMesh ref={waves} args={[kit.wave, kit.waveM, 2]} frustumCulled={false} raycast={noRaycast} />
             <instancedMesh ref={fast} args={[kit.hex, kit.fastM, split.II.length]} frustumCulled={false} {...bind} />
             <instancedMesh ref={slow} args={[kit.hex, kit.slowM, split.I.length]} frustumCulled={false} {...bind} />
             <instancedMesh ref={ghost} args={[kit.cap, kit.ghostM, fibres.length]} frustumCulled={false} raycast={noRaycast} />
@@ -124,7 +144,7 @@ const Tile = ({ index, clockRef }: { index: 0 | 1; clockRef: ClockRef }) => {
 export const HumanStation = ({ clockRef }: { clockRef: ClockRef }) => {
     const group = useRef<THREE.Group>(null);
     useFrame(({ camera }) => {
-        if (group.current) group.current.visible = Math.abs(camera.position.x - STATION_X.d) < 24;
+        if (group.current) group.current.visible = !farFromD(camera.position.x);
     });
     return (
         <group ref={group} position={[STATION_X.d, 0, 0]}>

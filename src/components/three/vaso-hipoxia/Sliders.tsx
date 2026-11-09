@@ -45,7 +45,7 @@ export const Sliders = ({ ctlRef, onTouch }: Props) => {
             const ph = Math.round(c.ph * 20) / 20;
             sync(satIn.current, satOut.current, sat, `${sat}%`);
             sync(phIn.current, phOut.current, ph, br(ph, 2));
-            if (ecOut.current) ecOut.current.textContent = phText(c.ph);
+            sync(null, ecOut.current, 0, phText(c.ph));
             raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);

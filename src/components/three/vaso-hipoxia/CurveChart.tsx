@@ -26,11 +26,6 @@ const NOS_PATH = pathOf(sampleCurve(nosActivity));
 const redPath = (ph: number) => pathOf(sampleCurve(s => hbYield(s, ph)));
 const area = (d: string) => `${d}L${px(1)},${py(0)}L${px(0)},${py(0)}Z`;
 
-const setAttrs = (el: Element | null, attrs: Record<string, string>) => {
-    if (!el) return;
-    for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
-};
-
 export const CurveChart = ({ ctlRef }: { ctlRef: CtlRef }) => {
     const red = useRef<SVGGElement>(null);
     const redLegend = useRef<HTMLSpanElement>(null);
@@ -43,21 +38,37 @@ export const CurveChart = ({ ctlRef }: { ctlRef: CtlRef }) => {
     useEffect(() => {
         let raf = 0;
         let lastPh = Number.NaN;
+        let lastSat = Number.NaN;
+        let lastPhDot = Number.NaN;
+        let lastShown = '';
         const tick = () => {
             const c = ctlRef.current;
-            if (Math.abs(c.ph - lastPh) > 0.002 || Number.isNaN(lastPh)) {
+            const phMoved = Number.isNaN(lastPh) || Math.abs(c.ph - lastPh) > 0.002;
+            if (phMoved) {
                 lastPh = c.ph;
                 const d = redPath(c.ph);
-                setAttrs(redPathEl.current, { d });
-                setAttrs(redArea.current, { d: area(d) });
+                redPathEl.current?.setAttribute('d', d);
+                redArea.current?.setAttribute('d', area(d));
             }
-            setAttrs(cursor.current, { x1: px(c.sat).toFixed(1), x2: px(c.sat).toFixed(1) });
-            setAttrs(nosDot.current, { cx: px(c.sat).toFixed(1), cy: py(nosActivity(c.sat)).toFixed(1) });
-            setAttrs(redDot.current, { cx: px(c.sat).toFixed(1), cy: py(hbYield(c.sat, c.ph)).toFixed(1) });
+            // o DOM só é tocado quando o valor muda (em repouso, nada a escrever por quadro)
+            if (c.sat !== lastSat || c.ph !== lastPhDot) {
+                lastSat = c.sat;
+                lastPhDot = c.ph;
+                const x = px(c.sat).toFixed(1);
+                cursor.current?.setAttribute('x1', x);
+                cursor.current?.setAttribute('x2', x);
+                nosDot.current?.setAttribute('cx', x);
+                nosDot.current?.setAttribute('cy', py(nosActivity(c.sat)).toFixed(1));
+                redDot.current?.setAttribute('cx', x);
+                redDot.current?.setAttribute('cy', py(hbYield(c.sat, c.ph)).toFixed(1));
+            }
             // a curva de redução só entra na história na 3ª etapa
             const shown = c.stage >= 2 ? '1' : '0';
-            if (red.current) red.current.style.opacity = shown;
-            if (redLegend.current) redLegend.current.style.opacity = shown;
+            if (shown !== lastShown) {
+                lastShown = shown;
+                if (red.current) red.current.style.opacity = shown;
+                if (redLegend.current) redLegend.current.style.opacity = shown;
+            }
             raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);

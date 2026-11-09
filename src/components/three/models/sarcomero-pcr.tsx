@@ -40,11 +40,11 @@ const SarcomeroPcrModal = ({ onClose }: Modal3DProps) => {
     const [ready, setReady] = useState(false);
     const [recenterKey, setRecenterKey] = useState(0);
     const [reduced] = useState(prefersReduced);
-    const clockRef = useRef<Clock>(makeClock(reduced));
+    // relógio criado uma vez (inicializador preguiçoso) e reescrito no lugar a cada quadro
+    const [clock0] = useState<Clock>(() => makeClock(reduced));
+    const clockRef = useRef<Clock>(clock0);
     const targetRef = useRef<Targets>({ step: 0, view: 'both', reduced });
     const stepRef = useRef(0);
-    const pin = useSelection(s => s.pin);
-    const hovering = useSelection(s => s.hoverId !== null);
     const release = useSelection(s => s.release);
 
     // relógio do modelo: o 3D e o HUD leem o mesmo objeto por quadro, sem re-render
@@ -56,7 +56,7 @@ const SarcomeroPcrModal = ({ onClose }: Modal3DProps) => {
             const dt = Math.min((now - last) / 1000, 0.1);
             last = now;
             const tg = targetRef.current;
-            clockRef.current = advance(clockRef.current, dt, tg, LOOP_S[tg.step]);
+            advance(clockRef.current, dt, tg, LOOP_S[tg.step], clockRef.current);
             raf = requestAnimationFrame(loop);
         };
         raf = requestAnimationFrame(loop);
@@ -122,7 +122,6 @@ const SarcomeroPcrModal = ({ onClose }: Modal3DProps) => {
                         camera={{ position: [...SARCO_STEPS[0].pose.pos], fov: 40, near: 0.1, far: 300 }}
                         gl={{ antialias: true, powerPreference: 'high-performance' }}
                         resize={{ offsetSize: true }}
-                        className={`${pin || hovering ? 'cursor-pointer' : 'cursor-grab'} active:cursor-grabbing`}
                     >
                         <Suspense fallback={null}>
                             <Scene step={step} settled={settled} recenterKey={recenterKey} reduced={reduced}
@@ -140,7 +139,7 @@ const SarcomeroPcrModal = ({ onClose }: Modal3DProps) => {
                             <Timeline steps={SARCO_STEPS} step={step} playing={playing} onGo={go} onPlay={togglePlay} />
                         </div>
                         <button type="button" onClick={recenter} aria-label="Recentrar a câmera na pose da etapa (R)" title="Recentrar (R)"
-                            className="pointer-events-auto shrink-0 w-10 h-10 flex items-center justify-center rounded-full text-gray-100 hover:text-white bg-black/60 hover:bg-white/15 border border-white/15 backdrop-blur-xl">
+                            className="pointer-events-auto shrink-0 w-10 h-10 flex items-center justify-center rounded-full text-gray-100 hover:text-white bg-black/70 hover:bg-white/15 border border-white/15">
                             <LocateFixed size={17} aria-hidden />
                         </button>
                     </header>
@@ -149,7 +148,7 @@ const SarcomeroPcrModal = ({ onClose }: Modal3DProps) => {
                 <Hud step={step} clockRef={clockRef} />
             </div>
 
-            <aside className="absolute right-5 top-5 bottom-5 flex flex-col rounded-2xl border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden"
+            <aside className="absolute right-5 top-5 bottom-5 flex flex-col rounded-2xl border border-white/10 shadow-2xl overflow-hidden"
                 style={{ width: `calc(${PANEL_W} - 30px)`, background: 'rgba(12,8,20,0.88)' }}>
                 <button type="button" onClick={onClose} aria-label="Fechar modelo 3D (Esc)"
                     className="absolute z-10 top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center text-gray-300 hover:text-white bg-white/5 hover:bg-white/15 border border-white/10">

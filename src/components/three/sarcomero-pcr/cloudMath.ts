@@ -76,8 +76,8 @@ const spawn = (st: SparkState, cloud: Cloud, slot: number): void => {
     st.alive[slot] = 1;
 };
 
-/** Faíscas brancas de ATP: nascem junto aos filamentos grossos à taxa `rate` (por segundo) e sobem apagando. */
-export const stepSparks = (st: SparkState, cloud: Cloud, dt: number, rate: number): void => {
+/** Faíscas brancas de ATP: nascem junto aos filamentos grossos à taxa `rate` (por segundo) e sobem apagando. Devolve quantas estão vivas. */
+export const stepSparks = (st: SparkState, cloud: Cloud, dt: number, rate: number): number => {
     st.acc += rate * dt;
     while (st.acc >= 1) {
         st.acc -= 1;
@@ -90,6 +90,7 @@ export const stepSparks = (st: SparkState, cloud: Cloud, dt: number, rate: numbe
         st.cursor = (slot + 1) % N_SPARK;
         spawn(st, cloud, slot);
     }
+    let live = 0;
     for (let i = 0; i < N_SPARK; i++) {
         if (!st.alive[i]) { cloud.scale[i] = 0; continue; }
         st.age[i] += dt;
@@ -99,5 +100,7 @@ export const stepSparks = (st: SparkState, cloud: Cloud, dt: number, rate: numbe
         cloud.pos[o + 1] += st.vel[o + 1] * dt;
         cloud.pos[o + 2] += st.vel[o + 2] * dt;
         cloud.scale[i] = Math.sin((Math.PI * st.age[i]) / st.life[i]);
+        live++;
     }
+    return live;
 };

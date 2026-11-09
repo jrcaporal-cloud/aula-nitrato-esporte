@@ -27,6 +27,8 @@ const CELLS = slots(POOLS.rbc, 14, 0.04, 0.3).map((s, i) => ({ ...s, a: i * 2.39
 const CELLS_B = slots(POOLS.rbcB, 15, 0.1, 0.5).map((s, i) => ({ ...s, a: i * 2.399 }));
 
 const wrap = (u: number, len: number) => ((u % len) + len) % len;
+/** Ângulo do slot com um leve balanço no tempo. */
+const wob = (s: Slot, clock: number) => s.a + Math.sin(clock * 1.3 + s.ph) * 0.25;
 
 /** Some perto das pontas do percurso (a parede também se apaga ali). */
 export const edge = (x: number) => smooth(clamp01((x - PATH_X0) / 2)) * (1 - smooth(clamp01((x - (CAP_X1 - 2)) / 2)));
@@ -43,7 +45,8 @@ const place = (arr: Float32Array, i: number, u: number, a: number, rr: number, d
 export const updateCells = (sim: Sim, ctl: Ctl) => {
     const p = sim.rbc;
     const dens = 0.45 + 0.55 * sim.dilate;
-    CELLS.forEach((s, i) => {
+    for (let i = 0; i < CELLS.length; i++) {
+        const s = CELLS[i];
         const x = place(p.pos, i, wrap(s.u0 + sim.flow * s.sp, PATH_L), s.a, s.rr, sim.dilate);
         const prog = clamp01((x - CAP_X0) / (CAP_X1 - CAP_X0));
         const sat = clamp01(ctl.sat + (0.5 - prog) * 0.14 + Math.sin(s.ph * 3) * 0.03);
@@ -51,13 +54,14 @@ export const updateCells = (sim: Sim, ctl: Ctl) => {
         const vis = clamp01((dens - s.th) * 8) * edge(x);
         p.scale[i] = vis;
         p.halo[i] = vis * Math.pow(hbYield(sat, ctl.ph) * sim.gate.hb, 0.4);
-    });
+    }
 };
 
 export const updateSlowCells = (sim: Sim) => {
     const p = sim.rbcB;
     const len = CAP_X1 - CAP_X0;
-    CELLS_B.forEach((s, i) => {
+    for (let i = 0; i < CELLS_B.length; i++) {
+        const s = CELLS_B[i];
         const x = CAP_X0 + wrap(s.u0 * (len / PATH_L) + sim.flowB * s.sp, len);
         const R = SLOW_CAP_R * s.rr;
         p.pos[i * 3] = x;
@@ -65,7 +69,7 @@ export const updateSlowCells = (sim: Sim) => {
         p.pos[i * 3 + 2] = Math.sin(s.a) * R;
         p.sat[i] = 0.62;
         p.scale[i] = sim.slow * smooth(clamp01((x - CAP_X0) / 1.5)) * (1 - smooth(clamp01((x - (CAP_X1 - 1.5)) / 1.5)));
-    });
+    }
 };
 
 /** Partícula "consumida" (virou uma esfera que voa para o redutor): some até `hold` zerar. */
@@ -75,28 +79,31 @@ const shown = (sim: Sim, pool: { scale: Float32Array; hold: Float32Array }, i: n
 };
 
 export const updatePlasma = (sim: Sim, ctl: Ctl) => {
-    const wob = (s: Slot) => s.a + Math.sin(sim.clock * 1.3 + s.ph) * 0.25;
     const nitriteDens = 1 - 0.45 * sim.rates.hb;
-    NITRITE.forEach((s, i) => {
-        const x = place(sim.nitrite.pos, i, wrap(s.u0 + sim.flow * s.sp, PATH_L), wob(s), s.rr, sim.dilate);
+    for (let i = 0; i < NITRITE.length; i++) {
+        const s = NITRITE[i];
+        const x = place(sim.nitrite.pos, i, wrap(s.u0 + sim.flow * s.sp, PATH_L), wob(s, sim.clock), s.rr, sim.dilate);
         shown(sim, sim.nitrite, i, clamp01((nitriteDens - s.th) * 10) * edge(x));
-    });
-    O2.forEach((s, i) => {
-        const x = place(sim.o2.pos, i, wrap(s.u0 + sim.flow * s.sp, PATH_L), wob(s), s.rr, sim.dilate);
+    }
+    for (let i = 0; i < O2.length; i++) {
+        const s = O2[i];
+        const x = place(sim.o2.pos, i, wrap(s.u0 + sim.flow * s.sp, PATH_L), wob(s, sim.clock), s.rr, sim.dilate);
         shown(sim, sim.o2, i, clamp01((ctl.sat - s.th) * 8) * edge(x));
-    });
+    }
     const hDens = 0.05 + 0.95 * acidity(ctl.ph);
     const t = sim.clock;
-    H_SLOTS.forEach((s, i) => {
-        const x = place(sim.h.pos, i, wrap(s.u0 + sim.flow * s.sp, PATH_L), wob(s), s.rr, sim.dilate);
+    for (let i = 0; i < H_SLOTS.length; i++) {
+        const s = H_SLOTS[i];
+        const x = place(sim.h.pos, i, wrap(s.u0 + sim.flow * s.sp, PATH_L), wob(s, sim.clock), s.rr, sim.dilate);
         sim.h.scale[i] = clamp01((hDens - s.th) * 10) * edge(x);
-    });
-    H_FIBER_HOME.forEach((home, k) => {
+    }
+    for (let k = 0; k < H_FIBER_HOME.length; k++) {
+        const home = H_FIBER_HOME[k];
         const i = H_PLASMA + k;
         const ph = H_SLOTS[k % H_PLASMA].ph + k;
         sim.h.pos[i * 3] = home[0] + Math.sin(t * 1.7 + ph) * 0.22;
         sim.h.pos[i * 3 + 1] = home[1] + Math.sin(t * 1.3 + ph * 2) * 0.22;
         sim.h.pos[i * 3 + 2] = home[2] + Math.cos(t * 1.5 + ph) * 0.22;
         sim.h.scale[i] = clamp01((hDens - H_SLOTS[k % H_PLASMA].th) * 10);
-    });
+    }
 };

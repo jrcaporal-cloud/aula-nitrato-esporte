@@ -69,17 +69,21 @@ const Gland = ({ pos, r, seed, stateRef }: GlandProps & { stateRef: VnStateRef }
         // cores por instância só quando há secreção ou o destaque mudou (o resto do tempo ficam paradas)
         if (act < 0.01 && Math.abs(k - lastK.current) < 0.01) return;
         lastK.current = k;
-        parts.seeds.forEach((sd, i) => {
-            const flash = Math.max(Math.sin(t * 2.1 + sd.ph), 0) ** 6 * Math.min(act * 1.4, 1);
-            m.setColorAt(i, COL.copy(ACINUS_BASE).multiplyScalar(0.55 + 0.45 * k).lerp(ACINUS_HOT, flash));
-        });
+        const seeds = parts.seeds;
+        const gain = Math.min(act * 1.4, 1);
+        for (let i = 0; i < seeds.length; i++) {
+            const s = Math.max(Math.sin(t * 2.1 + seeds[i].ph), 0);
+            const s2 = s * s;
+            m.setColorAt(i, COL.copy(ACINUS_BASE).multiplyScalar(0.55 + 0.45 * k).lerp(ACINUS_HOT, s2 * s2 * s2 * gain));
+        }
         if (m.instanceColor) m.instanceColor.needsUpdate = true;
     });
 
     return (
         <group position={[pos[0], pos[1], pos[2]]}>
             <mesh ref={bodyRef} geometry={parts.geo} material={parts.body} scale={[r[0], r[1], r[2]]} renderOrder={2} {...bind} />
-            <instancedMesh ref={lobes} args={[SPHERE_MID, parts.lobe, ACINI]} frustumCulled={false} {...bind} />
+            {/* ácinos sem handlers: ficam dentro da cápsula, que já recebe o ponteiro (110 esferas a menos no raio) */}
+            <instancedMesh ref={lobes} args={[SPHERE_MID, parts.lobe, ACINI]} frustumCulled={false} />
         </group>
     );
 };

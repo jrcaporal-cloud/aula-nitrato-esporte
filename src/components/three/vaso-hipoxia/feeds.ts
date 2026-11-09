@@ -1,4 +1,4 @@
-import { MB_SITES, NOS_SPECS, XOR_SITES, nosPoint } from './layout';
+import { MB_SITES, NOS_SPECS, XOR_SITES, nosPointInto } from './layout';
 import type { Pool, Sim } from './sim';
 import { spawnNo } from './sparks';
 
@@ -17,7 +17,7 @@ const OUT: [number, number, number] = [0, 0, 0];
 
 const target = (sim: Sim, kind: number, idx: number): [number, number, number] => {
     if (kind === 0) { const p = sim.rbc.pos; OUT[0] = p[idx * 3]; OUT[1] = p[idx * 3 + 1]; OUT[2] = p[idx * 3 + 2]; }
-    else if (kind === 3) { const p = nosPoint(idx, sim.dilate); OUT[0] = p[0]; OUT[1] = p[1]; OUT[2] = p[2]; }
+    else if (kind === 3) nosPointInto(OUT, 0, idx, sim.dilate);
     else { const p = kind === 1 ? MB_SITES[idx] : XOR_SITES[idx]; OUT[0] = p[0]; OUT[1] = p[1]; OUT[2] = p[2]; }
     return OUT;
 };
@@ -76,7 +76,7 @@ export const emit = (sim: Sim, dt: number) => {
     for (let g = 0; acc[0] >= 1 && g < 6; g++) {
         acc[0] -= 1;
         const site = pick(NOS_SPECS.length);
-        startFeed(sim, sim.feedB, sim.o2, nearestVisible(sim.o2, nosPoint(site, sim.dilate)[0]), 3, site);
+        startFeed(sim, sim.feedB, sim.o2, nearestVisible(sim.o2, NOS_SPECS[site].x), 3, site);
     }
     for (let g = 0; acc[1] >= 1 && g < 6; g++) {
         acc[1] -= 1;

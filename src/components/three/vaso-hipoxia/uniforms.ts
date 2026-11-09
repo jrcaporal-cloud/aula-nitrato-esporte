@@ -19,6 +19,9 @@ export const U = {
     uRing: { value: 0 },
     uArtR: { value: 1.2 },
     uCapR: { value: 0.9 },
+    /** Dilatação da arteríola (0–1) e NO total: o endotélio relaxa (junções finas) quando o NO chega. */
+    uDil: { value: 0.5 },
+    uNoT: { value: 0 },
 };
 
 export const driveUniforms = (sim: Sim, ctl: Ctl) => {
@@ -31,6 +34,8 @@ export const driveUniforms = (sim: Sim, ctl: Ctl) => {
     U.uRing.value = Math.min(sim.ring, 1.2);
     U.uArtR.value = artR(sim.dilate);
     U.uCapR.value = capR(sim.dilate);
+    U.uDil.value = sim.dilate;
+    U.uNoT.value = Math.min(sim.rates.total, 1.2);
 };
 
 /** Cor em sRGB "como autorada" (sem conversão para linear): os shaders escrevem direto na tela. */

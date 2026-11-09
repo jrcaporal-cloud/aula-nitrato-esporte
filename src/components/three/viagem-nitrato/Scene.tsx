@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Environment, Lightformer, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -15,11 +15,12 @@ import { Ions } from './Ions';
 import { labelsForStep } from './labels';
 import { Muscle } from './Muscle';
 import { Organs } from './Organs';
-import { PickLayer } from './PickLayer';
+import { CursorSync, PickLayer } from './PickLayer';
 import { Sparks } from './Sparks';
 import { Spotlight } from './Spotlight';
 import { writeFrame, type VnStateRef } from './state';
 import type { StructureId } from './structures';
+import { writeTissue } from './tissue';
 import { Tongue } from './Tongue';
 
 /*
@@ -31,6 +32,7 @@ const SceneClock = ({ stateRef, timeRef }: { stateRef: VnStateRef; timeRef: Time
     useFrame(({ clock }, delta) => {
         FX_TIME.value = clock.elapsedTime;
         writeFrame(stateRef.current, timeRef.current.t, Math.min(delta, 0.1));
+        writeTissue(stateRef.current.f);
     });
     return null;
 };
@@ -54,10 +56,12 @@ const Backdrop = () => {
         fragmentShader: `varying vec3 vP; void main(){
             float h = vP.y * 0.5 + 0.5;
             vec3 c = mix(vec3(0.027,0.020,0.043), vec3(0.052,0.034,0.075), smoothstep(0.2, 0.95, h));
-            c += vec3(0.05,0.0,0.03) * pow(max(vP.y, 0.0), 2.0) * 0.5;
+            float up = max(vP.y, 0.0);
+            c += vec3(0.05,0.0,0.03) * (up * up) * 0.5;
             gl_FragColor = vec4(c, 1.0);
         }`,
     }), []);
+    useEffect(() => () => mat.dispose(), [mat]);
     return <mesh material={mat} scale={180}><sphereGeometry args={[1, 32, 16]} /></mesh>;
 };
 
@@ -99,6 +103,7 @@ const SceneImpl = ({ step, settled, reduced, pin, recenterKey, onSettled, onRead
             <OrbitControls makeDefault enablePan={false} enableDamping dampingFactor={0.08} minDistance={3.5} maxDistance={70} />
             <CameraDirector step={step} reduced={reduced} pin={pin} recenterKey={recenterKey} onSettled={onSettled} timeRef={timeRef} path={path} />
             <PickLayer />
+            <CursorSync />
             <ReadyProbe onReady={onReady} />
 
             <BodyShell />

@@ -33,32 +33,42 @@ export const SLOTS: readonly Slot[] = Array.from({ length: N_SLOT }, () => {
 
 export const ease = (x: number): number => smooth(Math.min(Math.max(x, 0), 1));
 
+type Out3 = [number, number, number];
+
 export interface Parts {
-    atp: V3; atpS: number; atpIsAtp: boolean;
-    pcr: V3; pcrS: number; pcrIsPcr: boolean;
-    pi: V3; piS: number;
+    atp: Out3; atpS: number; atpIsAtp: boolean;
+    pcr: Out3; pcrS: number; pcrIsPcr: boolean;
+    pi: Out3; piS: number;
     flash: number; flashAt: V3;
 }
 
+/** Interpola `a`→`b` em `k` (com arco `lift` em z) escrevendo em `out`, sem alocar. */
+const lerp3 = (out: Out3, a: V3, b: V3, k: number, lift = 0): void => {
+    out[0] = lerp(a[0], b[0], k);
+    out[1] = lerp(a[1], b[1], k);
+    out[2] = lerp(a[2], b[2], k) + lift * Math.sin(Math.PI * k);
+};
+const copy3 = (out: Out3, a: V3): void => { out[0] = a[0]; out[1] = a[1]; out[2] = a[2]; };
+
 /** Posição e escala de cada partícula da vaga no ponto `u` (0..1) do ciclo. Escreve em `out` (sem alocar). */
 export const partsAt = (s: Slot, u: number, out: Parts): Parts => {
-    const lerp3 = (a: V3, b: V3, k: number, lift = 0): V3 => [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k) + lift * Math.sin(Math.PI * k)];
     const grow = smooth(seg(u, 0, 0.06));
     const fade = 1 - smooth(seg(u, 0.86, 1));
-    if (u < 0.3) { out.atp = lerp3(s.mline, s.head, ease(u / 0.3)); out.atpIsAtp = true; out.atpS = grow; }
-    else if (u < 0.62) { out.atp = lerp3(s.head, s.mline, ease((u - 0.3) / 0.32)); out.atpIsAtp = false; out.atpS = 0.9; }
-    else { out.atp = s.mline; out.atpIsAtp = true; out.atpS = fade; }
+    if (u < 0.3) { lerp3(out.atp, s.mline, s.head, ease(u / 0.3)); out.atpIsAtp = true; out.atpS = grow; }
+    else if (u < 0.62) { lerp3(out.atp, s.head, s.mline, ease((u - 0.3) / 0.32)); out.atpIsAtp = false; out.atpS = 0.9; }
+    else { copy3(out.atp, s.mline); out.atpIsAtp = true; out.atpS = fade; }
 
     if (u >= 0.36 && u < 0.62) {
-        const k = ease((u - 0.36) / 0.26);
-        out.pcr = lerp3(s.pcrFrom, s.mline, k, 0.7); out.pcrIsPcr = true; out.pcrS = smooth(seg(u, 0.36, 0.42));
+        lerp3(out.pcr, s.pcrFrom, s.mline, ease((u - 0.36) / 0.26), 0.7); out.pcrIsPcr = true; out.pcrS = smooth(seg(u, 0.36, 0.42));
     } else if (u >= 0.62 && u < 0.94) {
-        const k = ease((u - 0.62) / 0.32);
-        out.pcr = lerp3(s.mline, s.crTo, k, 0.7); out.pcrIsPcr = false; out.pcrS = 1 - smooth(seg(u, 0.88, 0.94));
-    } else { out.pcr = s.mline; out.pcrIsPcr = true; out.pcrS = 0; }
+        lerp3(out.pcr, s.mline, s.crTo, ease((u - 0.62) / 0.32), 0.7); out.pcrIsPcr = false; out.pcrS = 1 - smooth(seg(u, 0.88, 0.94));
+    } else { copy3(out.pcr, s.mline); out.pcrIsPcr = true; out.pcrS = 0; }
 
     const kp = seg(u, 0.3, 0.85);
-    out.pi = [s.head[0] + s.piDir[0] * ease(kp), s.head[1] + s.piDir[1] * ease(kp), s.head[2] + s.piDir[2] * ease(kp)];
+    const e = ease(kp);
+    out.pi[0] = s.head[0] + s.piDir[0] * e;
+    out.pi[1] = s.head[1] + s.piDir[1] * e;
+    out.pi[2] = s.head[2] + s.piDir[2] * e;
     out.piS = kp > 0 && kp < 1 ? Math.sin(Math.PI * kp) : 0;
     out.flash = u > 0.6 && u < 0.76 ? Math.sin((Math.PI * (u - 0.6)) / 0.16) : 0;
     out.flashAt = s.mline;

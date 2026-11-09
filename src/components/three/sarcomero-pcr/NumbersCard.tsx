@@ -16,13 +16,20 @@ const LiveRow = ({ stat, clockRef }: { stat: StatSpec; clockRef: ClockRef }) => 
     useEffect(() => {
         let raf = 0;
         const kind = stat.live;
+        // o DOM só é tocado quando o texto ou a opacidade mudam de fato (não a cada quadro)
+        const last = { p: '', n: '', op: -1, on: -1 };
         const paint = () => {
             const c = clockRef.current;
-            if (kind && p.current && n.current) {
-                p.current.textContent = liveValue(kind, 'placebo', c.t);
-                n.current.textContent = liveValue(kind, 'nitrate', c.t);
-                p.current.style.opacity = String(0.4 + 0.6 * c.dimP);
-                n.current.style.opacity = String(0.4 + 0.6 * c.dimN);
+            const pe = p.current, ne = n.current;
+            if (kind && pe && ne) {
+                const pv = liveValue(kind, 'placebo', c.t);
+                const nv = liveValue(kind, 'nitrate', c.t);
+                const op = Math.round((0.4 + 0.6 * c.dimP) * 100) / 100;
+                const on = Math.round((0.4 + 0.6 * c.dimN) * 100) / 100;
+                if (pv !== last.p) { pe.textContent = pv; last.p = pv; }
+                if (nv !== last.n) { ne.textContent = nv; last.n = nv; }
+                if (op !== last.op) { pe.style.opacity = String(op); last.op = op; }
+                if (on !== last.on) { ne.style.opacity = String(on); last.on = on; }
             }
             raf = requestAnimationFrame(paint);
         };

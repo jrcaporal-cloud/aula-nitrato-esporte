@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { rng } from '../shared/math';
@@ -13,7 +13,7 @@ varying float vA;
 void main() {
     vec3 p = position;
     p.x += sin(uTime * 0.11 + aSeed * 40.0) * 0.35;
-    p.y += sin(uTime * 0.14 + aSeed * 23.0) * 0.3 + mod(uTime * 0.03 * (0.4 + aSeed) + aSeed * 9.0, 1.0) * 0.0;
+    p.y += sin(uTime * 0.14 + aSeed * 23.0) * 0.3;
     p.z += cos(uTime * 0.09 + aSeed * 31.0) * 0.4;
     vec4 mv = modelViewMatrix * vec4(p, 1.0);
     gl_Position = projectionMatrix * mv;
@@ -25,9 +25,13 @@ const FS = `
 uniform vec3 uColor; varying float vA;
 void main() {
     float d = length(gl_PointCoord - 0.5) * 2.0;
-    float a = pow(max(1.0 - d, 0.0), 2.0) * vA;
+    float r = max(1.0 - d, 0.0);
+    float a = r * r * vA;
     gl_FragColor = vec4(uColor * a, a);
 }`;
+
+/** Distância em x da câmera até a estação a partir da qual a poeira some (as estações ficam a 38 de distância). */
+const NEAR_X = 26;
 
 interface Props { x: number; count?: number; spread?: readonly [number, number, number]; color?: string }
 
@@ -53,9 +57,14 @@ export const Dust = ({ x, count = 150, spread = [9, 5, 7], color = '#B8A8FF' }: 
         return { geometry, material };
     }, [x, count, spread, color]);
     useEffect(() => () => { built.geometry.dispose(); built.material.dispose(); }, [built]);
+    const pts = useRef<THREE.Points>(null);
     useFrame(state => {
+        // poeira de outra estação: fora de vista, não desenha nem atualiza
+        const near = Math.abs(state.camera.position.x - x) < NEAR_X;
+        if (pts.current) pts.current.visible = near;
+        if (!near) return;
         setUniform(built.material, 'uTime', state.clock.elapsedTime);
         setUniform(built.material, 'uPx', pxPerUnit(state));
     });
-    return <points geometry={built.geometry} material={built.material} frustumCulled={false} raycast={() => undefined} />;
+    return <points ref={pts} geometry={built.geometry} material={built.material} frustumCulled={false} raycast={() => undefined} />;
 };

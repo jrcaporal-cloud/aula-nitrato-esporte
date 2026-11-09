@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
@@ -59,6 +59,37 @@ const makeDrifters = (count: number, seed: number, speed: [number, number], scal
     }));
 };
 
+/*
+ * Passos do laço de quadros fora dos componentes e em `for` simples: sem closure nova por quadro
+ * (o forEach criava uma a cada um dos 60 quadros por segundo).
+ */
+const advanceIons = (ions: Drifter[], dt: number, dummy: THREE.Object3D, mesh: THREE.InstancedMesh) => {
+    for (let i = 0; i < ions.length; i++) {
+        const c = ions[i];
+        c.pos.x += c.speed * dt;
+        c.pos.y += Math.sin(c.pos.x * 0.15 + i) * 0.1 * dt;
+        if (c.pos.x > FIELD.x) c.pos.x = -FIELD.x;
+        c.rot.x += c.spin.x * dt;
+        c.rot.y += c.spin.y * dt;
+        c.rot.z += c.spin.z * dt;
+        dummy.position.copy(c.pos);
+        dummy.rotation.copy(c.rot);
+        dummy.scale.setScalar(c.scale);
+        dummy.updateMatrix();
+        mesh.setMatrixAt(i, dummy.matrix);
+    }
+};
+
+const advanceSparks = (drifters: Drifter[], dt: number, attr: THREE.BufferAttribute) => {
+    for (let i = 0; i < drifters.length; i++) {
+        const p = drifters[i];
+        p.pos.x += p.speed * dt;
+        p.pos.y += Math.sin(p.pos.x * 0.3 + i * 1.7) * 0.25 * dt;
+        if (p.pos.x > FIELD.x) p.pos.x = -FIELD.x;
+        attr.setXYZ(i, p.pos.x, p.pos.y, p.pos.z);
+    }
+};
+
 interface IonsProps {
     geometry: THREE.BufferGeometry;
     count: number;
@@ -77,20 +108,7 @@ const Ions = ({ geometry, count, seed, scale, color, emissive }: IonsProps) => {
     useFrame((_, delta) => {
         const mesh = meshRef.current;
         if (!mesh) return;
-        const dt = Math.min(delta, 0.05);
-        ions.forEach((c, i) => {
-            c.pos.x += c.speed * dt;
-            c.pos.y += Math.sin(c.pos.x * 0.15 + i) * 0.1 * dt;
-            if (c.pos.x > FIELD.x) c.pos.x = -FIELD.x;
-            c.rot.x += c.spin.x * dt;
-            c.rot.y += c.spin.y * dt;
-            c.rot.z += c.spin.z * dt;
-            dummy.position.copy(c.pos);
-            dummy.rotation.copy(c.rot);
-            dummy.scale.setScalar(c.scale);
-            dummy.updateMatrix();
-            mesh.setMatrixAt(i, dummy.matrix);
-        });
+        advanceIons(ions, Math.min(delta, 0.05), dummy, mesh);
         mesh.instanceMatrix.needsUpdate = true;
     });
 
@@ -113,16 +131,11 @@ const NitricOxide = () => {
         geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NO_COUNT * 3), 3));
         return geo;
     }, []);
+    useEffect(() => () => geometry.dispose(), [geometry]);
     useFrame((_, delta) => {
         const attr = ref.current?.geometry.getAttribute('position') as THREE.BufferAttribute | undefined;
         if (!attr) return;
-        const dt = Math.min(delta, 0.05);
-        drifters.forEach((p, i) => {
-            p.pos.x += p.speed * dt;
-            p.pos.y += Math.sin(p.pos.x * 0.3 + i * 1.7) * 0.25 * dt;
-            if (p.pos.x > FIELD.x) p.pos.x = -FIELD.x;
-            attr.setXYZ(i, p.pos.x, p.pos.y, p.pos.z);
-        });
+        advanceSparks(drifters, Math.min(delta, 0.05), attr);
         attr.needsUpdate = true;
     });
     return (
@@ -135,10 +148,11 @@ const NitricOxide = () => {
 /** Parallax suave com o mouse + leve aproximação ao avançar na aula. */
 const CameraDrift = () => {
     const slide = useStore(s => s.currentSlide);
-    const target = useRef(new THREE.Vector3());
+    // criado uma vez (inicializador preguiçoso); o useFrame só reescreve o vetor
+    const [target] = useState(() => new THREE.Vector3());
     useFrame(({ camera, pointer }, delta) => {
-        target.current.set(pointer.x * 1.6, pointer.y * 1.0, 16 - Math.min(slide, 40) * 0.08);
-        camera.position.lerp(target.current, Math.min(delta * 1.5, 1));
+        target.set(pointer.x * 1.6, pointer.y * 1.0, 16 - Math.min(slide, 40) * 0.08);
+        camera.position.lerp(target, Math.min(delta * 1.5, 1));
         camera.lookAt(0, 0, -10);
     });
     return null;
@@ -152,6 +166,7 @@ const CameraDrift = () => {
 export const AmbientBackground = () => {
     const nitrate = useMemo(() => makeNitrateGeometry(), []);
     const nitrite = useMemo(() => makeNitriteGeometry(), []);
+    useEffect(() => () => { nitrate.dispose(); nitrite.dispose(); }, [nitrate, nitrite]);
     const slide = useStore(s => s.currentSlide);
     const modalOpen = useStore(s => s.modalOpen);
     const isHero = slide === 0;
@@ -164,7 +179,7 @@ export const AmbientBackground = () => {
             style={{ opacity: isHero ? 0.95 : 0.4 }}
         >
             <Canvas
-                dpr={[1, 1.5]}
+                dpr={1}
                 frameloop={modalOpen ? 'never' : ANIMATED_BACKGROUND_SLIDES.has(slide) ? 'always' : 'demand'}
                 camera={{ position: [0, 0, 16], fov: 50 }}
                 gl={{ antialias: true, powerPreference: 'low-power' }}

@@ -4,8 +4,9 @@ import * as THREE from 'three';
 import { C } from '../../sims/kit/palette';
 import { MB_SITES, NOS_SPECS, XOR_SITES } from './layout';
 import { POOL, type Pool, type Sim } from './sim';
+import { noRaycast } from './pick';
 import type { SimRef } from './types';
-import { dirty, setU } from './uniforms';
+import { setU } from './uniforms';
 
 /*
  * Brilhos: UM só Points aditivo para tudo (halo dos íons, eritrócitos que reduzem nitrito, sítios da
@@ -91,11 +92,12 @@ export const Halo = ({ simRef }: { simRef: SimRef }) => {
             }
             off += l.count;
         }
-        dirty(pos);
-        dirty(sc);
-        dirty(al);
+        // as posições vêm da simulação na CPU (voos, faíscas com velocidade): sobem inteiras uma vez por quadro
+        pos.needsUpdate = true;
+        sc.needsUpdate = true;
+        al.needsUpdate = true;
         const fov = camera instanceof THREE.PerspectiveCamera ? camera.fov : 40;
         setU(mat, 'uPx', (size.height * gl.getPixelRatio()) / (2 * Math.tan((fov * Math.PI) / 360)));
     });
-    return <points ref={points} geometry={geo} material={mat} frustumCulled={false} raycast={() => undefined} renderOrder={8} />;
+    return <points ref={points} geometry={geo} material={mat} frustumCulled={false} raycast={noRaycast} renderOrder={8} />;
 };

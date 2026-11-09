@@ -12,10 +12,13 @@ export const Vignette = ({ ctlRef }: { ctlRef: CtlRef }) => {
     const hyp = useRef<HTMLDivElement>(null);
     useEffect(() => {
         let raf = 0;
+        let lastPh = Number.NaN;
+        let lastSat = Number.NaN;
         const tick = () => {
             const c = ctlRef.current;
-            if (acid.current) acid.current.style.opacity = (0.75 * acidity(c.ph)).toFixed(3);
-            if (hyp.current) hyp.current.style.opacity = (0.7 * Math.min(Math.max((0.85 - c.sat) / 0.5, 0), 1)).toFixed(3);
+            // estilo escrito só quando o controle muda
+            if (c.ph !== lastPh && acid.current) { lastPh = c.ph; acid.current.style.opacity = (0.75 * acidity(c.ph)).toFixed(3); }
+            if (c.sat !== lastSat && hyp.current) { lastSat = c.sat; hyp.current.style.opacity = (0.7 * Math.min(Math.max((0.85 - c.sat) / 0.5, 0), 1)).toFixed(3); }
             raf = requestAnimationFrame(tick);
         };
         raf = requestAnimationFrame(tick);

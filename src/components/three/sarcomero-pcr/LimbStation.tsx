@@ -83,7 +83,9 @@ export const LimbStation = ({ clockRef }: { clockRef: ClockRef }) => {
 
     useFrame(state => {
         const c = clockRef.current;
-        if (group.current) group.current.visible = Math.abs(state.camera.position.x - STATION_X.c) < 24;
+        const near = Math.abs(state.camera.position.x - STATION_X.c) < 24;
+        if (group.current) group.current.visible = near;
+        if (!near) return;
         const time = state.clock.elapsedTime;
         setUniform(flow.material, 'uTime', time);
         setUniform(flow.material, 'uNit', c.nit);
@@ -91,7 +93,13 @@ export const LimbStation = ({ clockRef }: { clockRef: ClockRef }) => {
         const rm = rings.current;
         const hm = halos.current;
         if (!rm || !hm) return;
-        MUSCLES.forEach((mu, i) => {
+        // placebo: sem ganho de fluxo, anéis e halos (aditivos, cor zero) nem desenham
+        const on = c.nit > 0.005;
+        rm.visible = on;
+        hm.visible = on;
+        if (!on) return;
+        for (let i = 0; i < N; i++) {
+            const mu = MUSCLES[i];
             // anel de NO: maior e mais brilhante onde o ganho de fluxo é maior; duas ondas saem dele
             const g = c.nit * mu.gain;
             const breathe = 0.92 + 0.08 * Math.sin(time * 2.2 + i);
@@ -107,7 +115,7 @@ export const LimbStation = ({ clockRef }: { clockRef: ClockRef }) => {
             const hr = mu.radius * (2.4 + 1.2 * g);
             hm.setMatrixAt(i, M4.compose(P.set(mu.x, mu.y, CAP_Z + 0.02), Q, S.set(hr, hr, 1)));
             hm.setColorAt(i, COLR.copy(NO_COLOR).multiplyScalar(g * g * g * 0.22 * breathe));
-        });
+        }
         rm.instanceMatrix.needsUpdate = true;
         hm.instanceMatrix.needsUpdate = true;
         if (rm.instanceColor) rm.instanceColor.needsUpdate = true;

@@ -18,15 +18,16 @@ const COUNT = 1100;
 const UP = new THREE.Vector3(0, 1, 0);
 const BASE = new THREE.Color('#C58E9E');
 const HOT = new THREE.Color(C.nitrate);
+const BODY = new THREE.Color('#B27C8C');
 
 export const Villi = ({ stateRef }: { stateRef: VnStateRef }) => {
-    const { bind, lit } = useStructure('intestino');
+    const { lit } = useStructure('intestino');
     const litRef = useRef(lit);
     useEffect(() => { litRef.current = lit; }, [lit]);
     const mesh = useRef<THREE.InstancedMesh>(null);
     const dim = useRef(0.5);
     const geo = useMemo(() => new THREE.ConeGeometry(0.032, 0.14, 6, 1).translate(0, 0.07, 0), []);
-    const mat = useMemo(() => new THREE.MeshStandardMaterial({ color: '#B27C8C', emissive: BASE, emissiveIntensity: 0.2, roughness: 0.45 }), []);
+    const mat = useMemo(() => new THREE.MeshStandardMaterial({ color: BODY, emissive: BASE, emissiveIntensity: 0.2, roughness: 0.45 }), []);
     useEffect(() => () => { geo.dispose(); mat.dispose(); }, [geo, mat]);
 
     useEffect(() => {
@@ -60,10 +61,11 @@ export const Villi = ({ stateRef }: { stateRef: VnStateRef }) => {
         const hot = f.w.absorb * (0.6 + 0.4 * Math.sin(clock.elapsedTime * 3));
         const vm = matOf<THREE.MeshStandardMaterial>(mesh);
         if (!vm) return;
-        vm.color.set('#B27C8C').multiplyScalar(0.55 + 0.45 * k);
+        vm.color.copy(BODY).multiplyScalar(0.55 + 0.45 * k);
         vm.emissive.copy(BASE).lerp(HOT, Math.min(hot, 1) * 0.8);
         vm.emissiveIntensity = (litRef.current ? 0.55 : 0.14 + 0.2 * k) + hot * 0.45;
     });
 
-    return <instancedMesh ref={mesh} args={[geo, mat, COUNT]} frustumCulled={false} {...bind} />;
+    // sem handlers: 1100 cones testados a cada movimento do ponteiro; a parede do intestino já recebe o hover
+    return <instancedMesh ref={mesh} args={[geo, mat, COUNT]} frustumCulled={false} />;
 };

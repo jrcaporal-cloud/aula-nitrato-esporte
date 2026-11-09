@@ -7,6 +7,7 @@ import { useStructure } from './selection';
 import type { VnFrame, VnStateRef } from './state';
 import type { StructureId } from './structures';
 import { bumpTexture, type BumpKind } from './textures';
+import { withStriations } from './tissue';
 import { sectionGeometry, tubeGeometry, type Organ } from './tubes';
 
 /*
@@ -52,9 +53,11 @@ export interface CutOrganProps {
     flow?: FlowSpec;
     /** Brilho de repouso da parede (padrão 0,16). */
     glow?: number;
+    /** Tecido procedural da parede (tissue.ts): 'muscle' = fibras e estrias. */
+    surface?: 'muscle';
 }
 
-export const CutOrgan = ({ id, organ, base, emissive, rim, cut = '#D8B9BF', tubular, radial, shell = 0.5, stateRef, tint, bump, flow, glow = 0.16 }: CutOrganProps) => {
+export const CutOrgan = ({ id, organ, base, emissive, rim, cut = '#D8B9BF', tubular, radial, shell = 0.5, stateRef, tint, bump, flow, glow = 0.16, surface }: CutOrganProps) => {
     const geo = useMemo(() => ({
         wall: tubeGeometry(organ, tubular, radial, BACK),
         shell: shell > 0 ? tubeGeometry(organ, tubular, radial, [0, Math.PI * 2], true) : null,
@@ -76,12 +79,13 @@ export const CutOrgan = ({ id, organ, base, emissive, rim, cut = '#D8B9BF', tubu
             wall.bumpScale = bump.scale;
         }
         if (flow) flowify(wall, { color: flow.color, freq: flow.freq, speed: flow.speed });
+        if (surface === 'muscle') withStriations(wall);
         return {
             tex, wall,
             shell: shell > 0 ? fresnelMaterial(rim, shell) : null,
             cut: new THREE.MeshStandardMaterial({ color: new THREE.Color(cut), emissive: new THREE.Color(cut), emissiveIntensity: 0.3, roughness: 0.6, side: THREE.DoubleSide }),
         };
-    }, [base, emissive, glow, bump, flow, shell, rim, cut]);
+    }, [base, emissive, glow, bump, flow, shell, rim, cut, surface]);
 
     const { bind, lit } = useStructure(id);
     const litRef = useRef(lit);
@@ -123,7 +127,8 @@ export const CutOrgan = ({ id, organ, base, emissive, rim, cut = '#D8B9BF', tubu
 
     return (
         <group>
-            <mesh ref={wallRef} geometry={geo.wall} material={res.wall} {...bind} />
+            {/* com casca, só ela recebe o raio do ponteiro (envolve a parede): metade dos triângulos testados */}
+            <mesh ref={wallRef} geometry={geo.wall} material={res.wall} {...(geo.shell ? undefined : bind)} />
             {geo.shell && res.shell && <mesh ref={shellRef} geometry={geo.shell} material={res.shell} renderOrder={2} {...bind} />}
             <mesh ref={cutRef} geometry={geo.cut} material={res.cut} />
         </group>

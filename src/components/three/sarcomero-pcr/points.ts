@@ -22,8 +22,9 @@ uniform vec3 uColor;
 uniform float uOpacity;
 void main() {
     float d = length(gl_PointCoord - 0.5) * 2.0;
-    float halo = pow(max(1.0 - d, 0.0), 2.0);
-    float core = smoothstep(0.38, 0.0, d);
+    float r = max(1.0 - d, 0.0);
+    float halo = r * r;
+    float core = 1.0 - smoothstep(0.0, 0.38, d);
     vec3 c = mix(uColor, vec3(1.0), core * 0.55);
     float a = (halo * 0.8 + core) * uOpacity;
     gl_FragColor = vec4(c * a, a);

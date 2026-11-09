@@ -6,11 +6,15 @@ import { WEDGE_CAP, WEDGE_FIB } from './layout';
 const alongX = (g: THREE.BufferGeometry) => g.rotateZ(-Math.PI / 2);
 
 /** Casca de raio 1 e comprimento 1 ao longo de x, sem a fatia da frente (θ = 0 aponta para +z). */
-const shell = (w: number, segs: number) => alongX(new THREE.CylinderGeometry(1, 1, 1, 72, segs, true, w, Math.PI * 2 - 2 * w));
+const shell = (w: number, segs: number, radial = 72) => alongX(new THREE.CylinderGeometry(1, 1, 1, radial, segs, true, w, Math.PI * 2 - 2 * w));
 
 /** Muitos segmentos em x: o raio é levado pelo vertex shader (afunilamento e dilatação). */
 export const SHELL_CAP = shell(WEDGE_CAP, 150);
 export const SHELL_FIB = shell(WEDGE_FIB, 4);
+
+/* Cópias low-poly só para o raycast do ponteiro (ver `pick.ts`): mesmo contorno, ~1% dos triângulos. */
+export const SHELL_CAP_PICK = shell(WEDGE_CAP, 1, 24);
+export const DISC_PICK = new THREE.CylinderGeometry(1, 1, 0.42, 10, 1);
 
 /** Tampa da ponta da fibra, com a mesma abertura (o círculo fica no plano YZ). */
 export const CAP_FIB = new THREE.CircleGeometry(1, 48, WEDGE_FIB, Math.PI * 2 - 2 * WEDGE_FIB).rotateY(-Math.PI / 2);
@@ -27,6 +31,7 @@ export const DISC = (() => {
 })();
 
 export const SPHERE = new THREE.SphereGeometry(1, 12, 9);
+export const SPHERE_PICK = new THREE.SphereGeometry(1, 8, 6);
 export const SPHERE_HI = new THREE.SphereGeometry(1, 24, 16);
 export const OCTA = new THREE.OctahedronGeometry(1, 0);
 /** Anel da XOR (eixo z). */

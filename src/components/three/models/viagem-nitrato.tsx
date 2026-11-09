@@ -12,7 +12,7 @@ import { FADE_STYLE, useScrollFade } from '../viagem-nitrato/useScrollFade';
 import { ChxSwitch } from '../viagem-nitrato/Panel';
 import { Scene } from '../viagem-nitrato/Scene';
 import { useSelection } from '../viagem-nitrato/selection';
-import { makeState, type VnState } from '../viagem-nitrato/state';
+import { makeState, type VnStateRef } from '../viagem-nitrato/state';
 import { useVnKeys } from '../viagem-nitrato/useKeys';
 
 /*
@@ -35,16 +35,16 @@ const ViagemNitrato = ({ onClose }: Modal3DProps) => {
     const [chx, setChx] = useState(false);
     const [reduced] = useState(prefersReduced);
     const timeRef = useRef<TimeState>({ t: 0 });
-    const stateRef = useRef<VnState>(makeState());
+    // estado por quadro criado uma vez só (o inicializador de useRef rodaria a cada render)
+    const [stateRef] = useState<VnStateRef>(() => ({ current: makeState() }));
     /** Etapa atual, atualizada na hora: várias teclas no mesmo quadro somam em vez de repetir o alvo. */
     const stepRef = useRef(0);
     const scroller = useRef<HTMLDivElement>(null);
     const moreBelow = useScrollFade(scroller, `${step}-${chx}`);
     const pin = useSelection(s => s.pin);
-    const hovering = useSelection(s => s.hoverId !== null);
     const release = useSelection(s => s.release);
 
-    useEffect(() => { stateRef.current.in.chx = chx; }, [chx]);
+    useEffect(() => { stateRef.current.in.chx = chx; }, [chx, stateRef]);
 
     // trocar de etapa solta a fixação e invalida o "assentou" até a câmera chegar à etapa nova
     const go = useCallback((target: number) => {
@@ -85,12 +85,11 @@ const ViagemNitrato = ({ onClose }: Modal3DProps) => {
         return () => window.clearTimeout(t);
     }, [playing, settled, step, go]);
 
+    // atualizador puro: a troca de etapa (efeito colateral) fica fora do setPlaying
     const togglePlay = useCallback(() => {
-        setPlaying(p => {
-            if (!p && stepRef.current === LAST_STEP) go(0);
-            return !p;
-        });
-    }, [go]);
+        if (!playing && stepRef.current === LAST_STEP) go(0);
+        setPlaying(!playing);
+    }, [go, playing]);
 
     useVnKeys({
         next: () => goManual(stepRef.current + 1),
@@ -122,7 +121,6 @@ const ViagemNitrato = ({ onClose }: Modal3DProps) => {
                     camera={{ position: [...STEPS[0].pose.pos], fov: 40, near: 0.1, far: 400 }}
                     gl={{ antialias: true, powerPreference: 'high-performance' }}
                     resize={{ offsetSize: true }}
-                    className={`${pin || hovering ? 'cursor-pointer' : 'cursor-grab'} active:cursor-grabbing`}
                 >
                     <Suspense fallback={null}>
                         <Scene
@@ -138,7 +136,7 @@ const ViagemNitrato = ({ onClose }: Modal3DProps) => {
                 <div aria-hidden className="absolute inset-0 z-[5] pointer-events-none" style={{ background: VIGNETTE }} />
                 <button
                     type="button" onClick={recenter} aria-label="Recentrar a câmera na pose da etapa (R)"
-                    className="absolute z-[46] top-6 right-6 flex items-center gap-2 pl-3.5 pr-4 h-10 rounded-full text-[14px] font-semibold text-gray-100 hover:text-white bg-black/60 hover:bg-white/15 border border-white/15 backdrop-blur-xl"
+                    className="absolute z-[46] top-6 right-6 flex items-center gap-2 pl-3.5 pr-4 h-10 rounded-full text-[14px] font-semibold text-gray-100 hover:text-white bg-black/70 hover:bg-white/15 border border-white/15"
                 >
                     <LocateFixed size={16} aria-hidden /> Recentrar
                 </button>

@@ -28,8 +28,8 @@ uniform vec3 uColor; varying float vA;
 void main() {
     vec2 q = gl_PointCoord - 0.5;
     float d = length(q) * 2.0;
-    float disc = smoothstep(1.0, 0.75, d);
-    float dimple = 1.0 - 0.45 * smoothstep(0.45, 0.0, d);
+    float disc = 1.0 - smoothstep(0.75, 1.0, d);
+    float dimple = 1.0 - 0.45 * (1.0 - smoothstep(0.0, 0.45, d));
     float a = disc * vA;
     gl_FragColor = vec4(uColor * dimple * a, a);
 }`;

@@ -60,14 +60,14 @@ export const Sparks = ({ stateRef }: { stateRef: VnStateRef }) => {
         if (!b || !h || !rg) return;
         const f = stateRef.current.f;
         const t = clock.elapsedTime;
-        const dens = [
-            f.w.noStomach * (0.4 + 0.6 * f.nitrate) * (1 - 0.9 * f.chx),
-            f.w.noMuscle * Math.min(f.nitrite * 1.25, 1) * (1 - 0.25 * f.chx),
-        ];
         let c = 0;
         let cr = 0;
-        groups.forEach((list, gi) => {
-            const want = Math.min(Math.max(dens[gi], 0), 1) * PER;
+        for (let gi = 0; gi < groups.length; gi++) {
+            const list = groups[gi];
+            const dens = gi === 0
+                ? f.w.noStomach * (0.4 + 0.6 * f.nitrate) * (1 - 0.9 * f.chx)
+                : f.w.noMuscle * Math.min(f.nitrite * 1.25, 1) * (1 - 0.25 * f.chx);
+            const want = Math.min(Math.max(dens, 0), 1) * PER;
             for (let i = 0; i < Math.ceil(want); i++) {
                 const sp = list[i];
                 const p = (t * 0.42 * sp.sp + sp.ph) % 1;
@@ -83,14 +83,21 @@ export const Sparks = ({ stateRef }: { stateRef: VnStateRef }) => {
                     rg.setColorAt(cr++, COL.setScalar(1.1 * (1 - kk) ** 1.4));
                 }
             }
-        });
+        }
         b.count = c;
         h.count = c;
         rg.count = cr;
-        rg.instanceMatrix.needsUpdate = true;
-        if (rg.instanceColor) rg.instanceColor.needsUpdate = true;
-        b.instanceMatrix.needsUpdate = true;
-        h.instanceMatrix.needsUpdate = true;
+        // sem faíscas na etapa: nada é enviado nem desenhado
+        b.visible = h.visible = c > 0;
+        rg.visible = cr > 0;
+        if (cr > 0) {
+            rg.instanceMatrix.needsUpdate = true;
+            if (rg.instanceColor) rg.instanceColor.needsUpdate = true;
+        }
+        if (c > 0) {
+            b.instanceMatrix.needsUpdate = true;
+            h.instanceMatrix.needsUpdate = true;
+        }
     });
 
     return (

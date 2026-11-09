@@ -8,7 +8,7 @@ import type { StructureId } from './content';
 import { STEP_LABELS } from './director';
 import { Fiber } from './Fiber';
 import { Particles } from './Particles';
-import { PickLayer } from './PickLayer';
+import { CursorSync, PickLayer } from './PickLayer';
 import { SlowSystem } from './SlowSystem';
 import { stepSim } from './sim';
 import { driveUniforms } from './uniforms';
@@ -62,6 +62,7 @@ const VasoSceneImpl = ({ step, settled, pin, recenterKey, reduced, onSettled, on
             <OrbitControls makeDefault enablePan={false} enableDamping dampingFactor={0.08} minDistance={4} maxDistance={44} />
             <CameraDirector step={step} pin={pin} recenterKey={recenterKey} reduced={reduced} onSettled={onSettled} />
             <PickLayer />
+            <CursorSync />
             <ReadyProbe onReady={onReady} />
 
             <Vessel simRef={simRef} />

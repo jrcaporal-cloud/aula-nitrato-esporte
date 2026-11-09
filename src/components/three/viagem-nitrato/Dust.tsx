@@ -28,7 +28,7 @@ const VERT = `uniform float uTime; uniform float uDpr; attribute vec3 aSeed; var
 const FRAG = `varying float vA; varying float vT;
     void main(){
         float d = length(gl_PointCoord - 0.5) * 2.0;
-        float a = smoothstep(1.0, 0.0, d); a *= a;
+        float a = 1.0 - smoothstep(0.0, 1.0, d); a *= a;
         vec3 col = mix(vec3(0.72,0.7,1.0), vec3(1.0,0.55,0.78), step(0.72, vT));
         gl_FragColor = vec4(col, a * vA * 0.5);
     }`;
